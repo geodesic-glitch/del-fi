@@ -19,10 +19,10 @@ def _write_config(tmp_path, content: str) -> str:
 
 class TestValidConfig:
     def test_minimal_config(self, tmp_path):
-        path = _write_config(tmp_path, 'node_name: "TEST-1"\nmodel: "qwen2.5:7b"\n')
+        path = _write_config(tmp_path, 'node_name: "TEST-1"\nmodel: "qwen3:4b"\n')
         cfg = load_config(path)
         assert cfg["node_name"] == "TEST-1"
-        assert cfg["model"] == "qwen2.5:7b"
+        assert cfg["model"] == "qwen3:4b"
         # Check defaults applied
         assert cfg["max_response_bytes"] == 230
         assert cfg["rate_limit_seconds"] == 60
@@ -75,7 +75,7 @@ class TestInvalidConfig:
     def test_missing_model_uses_default(self, tmp_path):
         path = _write_config(tmp_path, 'node_name: "TEST"\n')
         cfg = load_config(path)
-        assert cfg["model"] == "gemma3:12b"
+        assert cfg["model"] == "qwen3:4b"
 
     def test_wrong_type_max_bytes(self, tmp_path):
         path = _write_config(tmp_path,

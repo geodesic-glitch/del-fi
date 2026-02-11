@@ -52,7 +52,13 @@ MESH_DEFAULTS = {
 def load_config(config_path: str | None = None) -> dict:
     """Load, validate, and return config dict. Exits on error."""
     if config_path is None:
-        config_path = os.path.expanduser("~/del-fi/config.yaml")
+        # Check for config.yaml next to the script first, then ~/del-fi/
+        script_dir = Path(__file__).resolve().parent
+        local_config = script_dir / "config.yaml"
+        if local_config.exists():
+            config_path = str(local_config)
+        else:
+            config_path = os.path.expanduser("~/del-fi/config.yaml")
 
     path = Path(config_path)
     if not path.exists():

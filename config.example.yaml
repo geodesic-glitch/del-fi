@@ -3,7 +3,7 @@
 
 # --- Required ---
 node_name: "DEL-FI-001"
-model: "gemma3:4b"
+model: "qwen3:4b"
 
 # --- Optional (sensible defaults shown) ---
 
