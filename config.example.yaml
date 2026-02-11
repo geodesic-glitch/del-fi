@@ -15,6 +15,9 @@ model: "qwen3:4b"
 # rate_limit_seconds: 30
 # response_cache_ttl: 300
 # embedding_model: "nomic-embed-text"
+# num_ctx: 2048                  # context window size (lower = faster)
+# num_predict: 128               # max output tokens (lower = faster)
+# persistent_cache: true         # cache responses to disk across restarts
 # channels: []                   # empty = listen on all channels
 # log_level: info
 # ollama_host: "http://localhost:11434"

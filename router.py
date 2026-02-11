@@ -5,6 +5,7 @@ routes freeform queries through the RAG pipeline, and manages
 response buffering for the !more chunking system.
 """
 
+import json
 import logging
 import os
 import time
@@ -78,9 +79,13 @@ class Router:
         self._more_buffers: dict[str, MoreBuffer] = {}
         self._response_cache: dict[str, tuple[str, float]] = {}
         self._seen_senders: set[str] = set()
+        self._last_query: dict[str, str] = {}  # sender_id -> last query text
         self._start_time = time.time()
         self._query_count = 0
+        self._cache_file = os.path.join(cfg["_cache_dir"], "response_cache.json")
         self._load_seen_senders()
+        if cfg.get("persistent_cache", True):
+            self._load_disk_cache()
 
     # --- Main entry point ---
 
@@ -122,6 +127,7 @@ class Router:
             "!ping": self._cmd_ping,
             "!peers": self._cmd_peers,
             "!more": self._cmd_more,
+            "!retry": self._cmd_retry,
         }
 
         handler = handlers.get(cmd)
@@ -138,7 +144,7 @@ class Router:
             f"{name} · community AI oracle\n"
             f"Ask questions in plain text. I search local "
             f"docs and answer concisely. DM only.\n"
-            f"Commands: !help !topics !status !more !ping !peers\n"
+            f"Commands: !help !topics !status !more !retry !ping !peers\n"
             f"Powered by {model} · {docs} docs indexed"
         )
 
@@ -191,11 +197,29 @@ class Router:
             return chunk
         return "End of response. No more chunks."
 
+    def _cmd_retry(self, sender_id: str, arg: str) -> str:
+        """Re-run the last query, bypassing and replacing the cache."""
+        last = self._last_query.get(sender_id)
+        if not last:
+            return "No previous query to retry. Ask a question first."
+
+        # Evict the old cached answer
+        key = last.lower().strip()
+        if key in self._response_cache:
+            del self._response_cache[key]
+            if self.cfg.get("persistent_cache", True):
+                self._save_disk_cache()
+            log.info(f"  cache evicted for retry: {key[:40]}")
+
+        # Re-run through the full query pipeline
+        return self._handle_query(sender_id, last)
+
     # --- Query handling ---
 
     def _handle_query(self, sender_id: str, text: str) -> str:
         """Process a freeform query through the RAG pipeline."""
         self._query_count += 1
+        self._last_query[sender_id] = text  # track for !retry
 
         # Handle simple greetings
         if self._is_greeting(text) and sender_id not in self._seen_senders:
@@ -222,8 +246,10 @@ class Router:
 
         # Route based on what we found
         provenance = None
+        had_context = False
         if chunks:
             # Good local match — generate from operator knowledge
+            had_context = True
             response = self.rag.generate(text, context_chunks=chunks)
         else:
             # No local match — check peer cache (Tier 2)
@@ -232,6 +258,7 @@ class Router:
                 peer_result = self.mesh.check_peer_cache(text)
 
             if peer_result:
+                had_context = True
                 log.info(f"  peer: found match from {peer_result['peer_name']}")
                 provenance = peer_result["peer_name"]
                 peer_ctx = f"[{peer_result['peer_name']}]: {peer_result['response']}"
@@ -249,8 +276,13 @@ class Router:
         if not response:
             return "I'm having trouble thinking right now. Try again in a minute."
 
-        # Cache the successful response
-        self._cache_response(text, response)
+        # Only cache responses backed by good RAG retrieval or peer data.
+        # Raw LLM fallback (no context) is more likely to hallucinate,
+        # so we don't cache those.
+        if had_context:
+            self._cache_response(text, response)
+        else:
+            log.info("  skipping cache — no RAG context (hallucination risk)")
 
         return self._finalize(sender_id, response, provenance=provenance)
 
@@ -312,6 +344,41 @@ class Router:
                 for k, (v, t) in self._response_cache.items()
                 if now - t < ttl
             }
+
+        if self.cfg.get("persistent_cache", True):
+            self._save_disk_cache()
+
+    # --- Persistent disk cache ---
+
+    def _load_disk_cache(self):
+        """Load response cache from disk. Losing this is harmless."""
+        try:
+            if os.path.exists(self._cache_file):
+                with open(self._cache_file) as f:
+                    data = json.load(f)
+                now = time.time()
+                ttl = self.cfg["response_cache_ttl"]
+                for key, entry in data.items():
+                    if now - entry["ts"] < ttl:
+                        self._response_cache[key] = (entry["response"], entry["ts"])
+                loaded = len(self._response_cache)
+                if loaded:
+                    log.info(f"loaded {loaded} cached responses from disk")
+        except Exception as e:
+            log.warning(f"could not load response cache: {e}")
+
+    def _save_disk_cache(self):
+        """Persist response cache to disk. Best effort."""
+        try:
+            os.makedirs(os.path.dirname(self._cache_file), exist_ok=True)
+            data = {
+                k: {"response": v, "ts": t}
+                for k, (v, t) in self._response_cache.items()
+            }
+            with open(self._cache_file, "w") as f:
+                json.dump(data, f)
+        except Exception:
+            pass  # best effort
 
     # --- Seen senders persistence ---
 

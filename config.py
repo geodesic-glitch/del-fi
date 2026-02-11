@@ -27,6 +27,9 @@ DEFAULTS = {
     "log_level": "info",
     "ollama_host": "http://localhost:11434",
     "ollama_timeout": 120,
+    "num_ctx": 2048,
+    "num_predict": 128,
+    "persistent_cache": True,
 }
 
 MESH_DEFAULTS = {
