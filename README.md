@@ -68,7 +68,7 @@ ollama pull qwen2.5:3b              # generation (pick your size)
 ollama pull nomic-embed-text         # embeddings (required for RAG)
 
 # 3. Clone Del-Fi
-git clone https://github.com/your-user/del-fi.git
+git clone https://github.com/geodesic-glitch/del-fi.git
 cd del-fi
 
 # 4. Install Python dependencies
