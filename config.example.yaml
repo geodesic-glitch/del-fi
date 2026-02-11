@@ -1,0 +1,47 @@
+# Del-Fi configuration
+# Copy this file to ~/del-fi/config.yaml and edit it.
+
+# --- Required ---
+node_name: "DEL-FI-001"
+model: "gemma3:4b"
+
+# --- Optional (sensible defaults shown) ---
+
+# personality: "Helpful and concise community assistant."
+# knowledge_folder: ~/del-fi/knowledge
+# max_response_bytes: 230
+# radio_connection: serial       # serial | tcp | ble
+# radio_port: /dev/ttyUSB0       # or hostname:port for TCP
+# rate_limit_seconds: 30
+# response_cache_ttl: 300
+# embedding_model: "nomic-embed-text"
+# channels: []                   # empty = listen on all channels
+# log_level: info
+# ollama_host: "http://localhost:11434"
+# ollama_timeout: 120            # seconds
+
+# --- Mesh Knowledge (entirely optional — uncomment to enable) ---
+#
+# mesh_knowledge:
+#   gossip:
+#     enabled: true
+#     announce_interval: 14400    # seconds (4 hours)
+#     directory_ttl: 86400        # seconds (24 hours)
+#
+#   peers:
+#     - node_id: "!a1b2c3d4"
+#       name: "MARINA-ORACLE"
+#     - node_id: "!e5f6g7h8"
+#       name: "TRAIL-ANGEL-AT"
+#
+#   sync:
+#     enabled: true
+#     window_start: "02:00"       # local time
+#     window_end: "05:00"
+#     max_cache_age: 7d
+#     max_cache_entries: 500
+#
+#   serve_to_peers: false         # OFF by default — privacy first
+#   tag_responses: true           # always show provenance to users
+#   reject_contradictions: true   # discard peer answers that conflict
+#                                 # with local documents

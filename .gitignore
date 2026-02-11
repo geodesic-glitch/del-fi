@@ -1,0 +1,29 @@
+# Runtime data
+vectorstore/
+cache/
+gossip/
+seen_senders.txt
+
+# User config (contains local paths, not portable)
+config.yaml
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+
+# IDE
+.github/
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
