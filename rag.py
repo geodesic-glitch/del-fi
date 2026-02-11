@@ -24,7 +24,7 @@ DEFAULT_CHUNK_OVERLAP = 32 * CHARS_PER_TOKEN  # ~128 chars
 # Similarity = 1 - distance. Threshold of 0.55 similarity = 0.45 distance.
 # Tighter threshold avoids pulling in loosely related chunks that confuse
 # the model. Better to fall back to raw LLM than inject bad context.
-DISTANCE_THRESHOLD = 0.45
+DISTANCE_THRESHOLD = 0.5
 
 
 class RAGEngine:
@@ -329,7 +329,7 @@ class RAGEngine:
 
     # --- Retrieval ---
 
-    def query(self, text: str, top_k: int = 2) -> list[dict]:
+    def query(self, text: str, top_k: int = 3) -> list[dict]:
         """Retrieve relevant document chunks for a query.
 
         Returns list of {text, source, file, similarity} dicts,
@@ -353,7 +353,6 @@ class RAGEngine:
                 results["metadatas"][0],
                 results["distances"][0],
             ):
-                # Filter by distance threshold (lower = more similar)
                 if dist <= DISTANCE_THRESHOLD:
                     chunks.append({
                         "text": doc,
@@ -364,7 +363,8 @@ class RAGEngine:
 
             if chunks:
                 sims = ", ".join(str(c["similarity"]) for c in chunks)
-                log.info(f"  rag: {len(chunks)} chunks retrieved (similarity: {sims})")
+                files = ", ".join(dict.fromkeys(c["file"] for c in chunks))
+                log.info(f"  rag: {len(chunks)} chunks from [{files}] (similarity: {sims})")
             else:
                 log.info("  rag: no relevant chunks found")
 
@@ -423,8 +423,9 @@ class RAGEngine:
         return (
             f"You are {name}, a helpful AI assistant serving a community over "
             f"low-bandwidth mesh radio. {personality} "
-            f"Answer concisely using the provided context. "
-            f"If the context doesn't contain the answer, say so briefly. "
+            f"Use the provided context to answer the question. "
+            f"Combine information from multiple context sections if needed. "
+            f"Only say you don't know if the context is truly unrelated. "
             f"Keep responses under {max_chars} characters. "
             f"Do not use markdown formatting. Write plain text only."
         )

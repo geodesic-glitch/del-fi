@@ -199,12 +199,15 @@ class SimulatorInterface:
 
     def _read_loop(self):
         """Read lines from stdin and enqueue as messages."""
-        print("DEL-FI simulator ready. Type messages (or SENDER> message):")
-        print("─" * 50)
+        node = self.cfg["node_name"]
+        print(f"\n  📻 Meshtastic Text Chat — {node} (simulator)")
+        print(f"  ─────────────────────────────────────────────")
+        print(f"  Type a message, or !nodeID> message to set sender")
+        print(f"  Commands start with ! (e.g. !help, !topics)\n")
 
         while self._should_run:
             try:
-                line = input()
+                line = input(f"  \033[90mSend ➜\033[0m ")
                 if not line.strip():
                     continue
 
@@ -216,6 +219,10 @@ class SimulatorInterface:
                     sender = match.group(1)
                     text = match.group(2)
 
+                # Echo the sent message in chat format
+                ts = time.strftime("%H:%M")
+                print(f"  \033[36m{sender}\033[0m \033[90m[{ts}]\033[0m {text}")
+
                 # Rate limit freeform queries (commands bypass)
                 is_command = text.startswith("!")
                 if not is_command:
@@ -224,7 +231,7 @@ class SimulatorInterface:
                     if now - last < self.cfg["rate_limit_seconds"]:
                         wait = int(self.cfg["rate_limit_seconds"] - (now - last))
                         print(
-                            f"[rate limited: {sender} — wait {wait}s between queries]"
+                            f"  \033[33m⏳ rate limited — wait {wait}s\033[0m"
                         )
                         continue
                     self._rate_limits[sender] = now
@@ -242,9 +249,11 @@ class SimulatorInterface:
         size = len(text.encode("utf-8"))
 
         if size > max_bytes:
-            print(f"[WARN: message {size} bytes exceeds {max_bytes} limit]")
+            print(f"  \033[31m⚠ {size}B exceeds {max_bytes}B limit\033[0m")
 
-        print(f"\n→ {dest_id}: {text}\n")
+        ts = time.strftime("%H:%M")
+        node = self.cfg["node_name"]
+        print(f"  \033[32m{node}\033[0m \033[90m[{ts}] ➜ {dest_id}\033[0m {text}\n")
         return True
 
     @property
