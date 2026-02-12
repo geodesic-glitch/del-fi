@@ -1,0 +1,583 @@
+[19:57:40] config loaded
+[19:57:40] vectorstore ready (17 chunks indexed)
+[19:57:41] ollama connected at http://localhost:11434
+[19:57:44] indexed 5 files (17 chunks total)
+[19:57:44] initial indexing: 5 files
+[19:57:44] loaded 1 cached responses from disk
+[19:57:44] listening...
+[19:58:00]   rag: no relevant chunks found
+[19:58:02]   skipping cache — no RAG context (hallucination risk)
+[19:58:02]   ✓ response: 186 bytes → !sim00001
+[19:58:36]   rag: no relevant chunks found
+[19:58:37]   skipping cache — no RAG context (hallucination risk)
+[19:58:37]   ✓ response: 161 bytes → !sim00001
+[19:59:36]   ✓ response: 211 bytes → !sim00001
+[19:59:41]   rag: no relevant chunks found
+[19:59:42]   skipping cache — no RAG context (hallucination risk)
+[19:59:42]   ✓ response: 161 bytes → !sim00001
+[19:59:49]   ✓ response: 43 bytes → !sim00001
+[19:59:53]   ✓ response: 20 bytes → !sim00001
+[20:00:48]   rag: 3 chunks from [event-overview.md, faq.md, zones-and-map.md] (similarity: 0.53, 0.53, 0.52)
+[20:00:52]   ✓ response: 100 bytes → !sim00001
+[20:01:00]   rag: no relevant chunks found
+[20:01:02]   skipping cache — no RAG context (hallucination risk)
+[20:01:02]   ✓ response: 110 bytes → !sim00001
+[20:01:13] shutting down...
+[20:01:30] config loaded
+[20:01:31] vectorstore ready (17 chunks indexed)
+[20:01:32] ollama connected at http://localhost:11434
+[20:01:34] indexed 5 files (17 chunks total)
+[20:01:34] initial indexing: 5 files
+[20:01:34] loaded 1 cached responses from disk
+[20:01:34] listening...
+[20:01:48]   rag: no relevant chunks found
+[20:01:50]   skipping cache — no RAG context (hallucination risk)
+[20:01:50]   ✓ response: 219 bytes → !sim00001
+[20:02:04]   rag: no relevant chunks found
+[20:02:06]   skipping cache — no RAG context (hallucination risk)
+[20:02:06]   ✓ response: 191 bytes → !sim00001
+[20:02:18]   rag: 3 chunks from [event-overview.md, faq.md, zones-and-map.md] (similarity: 0.53, 0.53, 0.52)
+[20:02:22]   ✓ response: 117 bytes → !sim00001
+[20:03:05]   rag: no relevant chunks found
+[20:03:07]   skipping cache — no RAG context (hallucination risk)
+[20:03:07]   ✓ response: 138 bytes → !sim00001
+[20:04:03] shutting down...
+[20:04:05] config loaded
+[20:04:06] vectorstore ready (17 chunks indexed)
+[20:04:06] ollama connected at http://localhost:11434
+[20:04:09] indexed 5 files (17 chunks total)
+[20:04:09] initial indexing: 5 files
+[20:04:09] loaded 2 cached responses from disk
+[20:04:09] listening...
+[20:04:14]   cache hit
+[20:04:14]   ✓ response: 117 bytes → !sim00001
+[20:04:25]   cache hit
+[20:04:25]   ✓ response: 100 bytes → !sim00001
+[20:04:40] shutting down...
+[20:04:50] config loaded
+[20:04:51] vectorstore ready (0 chunks indexed)
+[20:04:52] ollama connected at http://localhost:11434
+[20:04:54] indexed 5 files (17 chunks total)
+[20:04:54] initial indexing: 5 files
+[20:04:54] loaded 2 cached responses from disk
+[20:04:54] listening...
+[20:05:00]   cache hit
+[20:05:00]   ✓ response: 100 bytes → !sim00001
+[20:10:32] shutting down...
+[20:11:23] config loaded
+[20:11:24] vectorstore ready (0 chunks indexed)
+[20:11:25] ollama connected at http://localhost:11434
+[20:11:28] indexed 5 files (26 chunks total)
+[20:11:28] initial indexing: 5 files
+[20:11:28] listening...
+[20:11:46]   rag: 3 chunks from [faq.md] (similarity: 0.58, 0.54, 0.54)
+[20:11:59]   ✓ response: 89 bytes → !sim00001
+[20:13:56] shutting down...
+[20:14:11] config loaded
+[20:14:12] vectorstore ready (0 chunks indexed)
+[20:14:13] ollama connected at http://localhost:11434
+[20:14:17] indexed 5 files (26 chunks total)
+[20:14:17] initial indexing: 5 files
+[20:14:17] loaded 1 cached responses from disk
+[20:14:17] listening...
+[20:14:20]   cache hit
+[20:14:20]   ✓ response: 89 bytes → !sim00001
+[20:14:32]   rag: 3 chunks from [faq.md] (similarity: 0.58, 0.54, 0.54)
+[20:14:32]   === SYSTEM PROMPT ===
+You are DEL-FI-001, a helpful AI assistant serving a community over low-bandwidth mesh radio. Friendly and concise Maker Faire guide. Keep your responses around 100-230 bytes. You help attendees find events, workshops, booths, food, and answers about the Faire. Your knowledge base has the schedule, zone map, exhibitor info, and FAQ. You are fastidious about accuracy. Keep answers short and practical. If you don't know something, say so rather than guessing. Use the provided context to answer the question. Combine information from multiple context sections if needed. Only say you don't know if the context is truly unrelated. Keep responses under 230 characters. Do not use markdown formatting. Write plain text only.
+[20:14:32]   === USER PROMPT ===
+Context from local documents:
+[faq.md] # Maker Faire 2026 — Frequently Asked Questions
+
+## Is there phone charging?
+
+Yes. Free charging stations at Zone A (near the info booth) and Zone F (food court). Bring your own cable. Don't leave devices unattended.
+[faq.md] # Maker Faire 2026 — Frequently Asked Questions
+
+## Can I buy things at the Faire?
+
+Yes! Many exhibitors sell kits, boards, tools, stickers, and handmade goods. Cash and card accepted at most booths. There is no ATM on-site — bring cash if you prefer it.
+[faq.md] # Maker Faire 2026 — Frequently Asked Questions
+
+## Emergency contacts
+
+- Event security: find any staff in orange vests
+- First aid: Zone A or Zone D stations
+- Lost children: Info Booth at Gate 2
+- Non-emergency venue phone: (650) 555-0142
+
+Question: Where Sparkfun?
+[20:14:32]   === END PROMPT ===
+[20:14:46]   ✓ response: 81 bytes → !sim00001
+[20:17:43] shutting down...
+[20:18:02] config loaded
+[20:18:02] vectorstore ready (0 chunks indexed)
+[20:18:03] ollama connected at http://localhost:11434
+[20:18:03]   chunk event-overview.md#0: (464 chars) # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is your pocket guide via 
+[20:18:03]   chunk event-overview.md#1: (396 chars) # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is your pocket guide via 
+[20:18:03]   chunk event-overview.md#2: (485 chars) # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is your pocket guide via 
+[20:18:04]   chunk exhibitors-highlights.md#0: (307 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors |  | # Maker Faire 2026 — Exhi
+[20:18:04]   chunk exhibitors-highlights.md#1: (221 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Adafruit — Booth D-12 | 
+[20:18:04]   chunk exhibitors-highlights.md#2: (206 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### SparkFun — Booth D-15 | 
+[20:18:04]   chunk exhibitors-highlights.md#3: (443 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Prusa Research — Booth D
+[20:18:04]   chunk exhibitors-highlights.md#4: (334 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Bay Area Maker Spaces | 
+[20:18:04]   chunk exhibitors-highlights.md#5: (380 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Art Installations |  | - "The Breathing Wall" — A 
+[20:18:04]   chunk exhibitors-highlights.md#6: (381 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Food Truck Lineup (Zone F) |  | - Señor Sisig — Fi
+[20:18:05]   chunk faq.md#0: (428 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Can I bring my own tools? |  | No outside to
+[20:18:05]   chunk faq.md#1: (254 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Can I buy things at the Faire? |  | Yes! Man
+[20:18:05]   chunk faq.md#2: (216 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Is there phone charging? |  | Yes. Free char
+[20:18:05]   chunk faq.md#3: (572 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## What if it rains? |  | The event runs rain o
+[20:18:05]   chunk faq.md#4: (248 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## What about accessibility? |  | The venue is 
+[20:18:05]   chunk faq.md#5: (241 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Emergency contacts |  | - Event security: fi
+[20:18:06]   chunk schedule.md#0: (967 chars) # Maker Faire 2026 — Schedule |  | ## Saturday, March 14 |  | - 10:00 AM — Gates open | - 10:30 AM —
+[20:18:06]   chunk schedule.md#1: (843 chars) # Maker Faire 2026 — Schedule |  | ## Sunday, March 15 |  | - 10:00 AM — Gates open | - 10:30 AM — "
+[20:18:06]   chunk zones-and-map.md#0: (354 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[20:18:06]   chunk zones-and-map.md#1: (332 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[20:18:06]   chunk zones-and-map.md#2: (492 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[20:18:06]   chunk zones-and-map.md#3: (429 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[20:18:06]   chunk zones-and-map.md#4: (345 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[20:18:06]   chunk zones-and-map.md#5: (327 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[20:18:06]   chunk zones-and-map.md#6: (238 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[20:18:06]   chunk zones-and-map.md#7: (255 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[20:18:07] indexed 5 files (26 chunks total)
+[20:18:07] initial indexing: 5 files
+[20:18:07] loaded 1 cached responses from disk
+[20:18:07] listening...
+[20:18:35] shutting down...
+[20:18:37] config loaded
+[20:18:37] vectorstore ready (26 chunks indexed)
+[20:18:38] ollama connected at http://localhost:11434
+[20:18:38]   chunk event-overview.md#0: (464 chars) # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is your pocket guide via 
+[20:18:38]   chunk event-overview.md#1: (396 chars) # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is your pocket guide via 
+[20:18:38]   chunk event-overview.md#2: (485 chars) # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is your pocket guide via 
+[20:18:39]   chunk exhibitors-highlights.md#0: (307 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors |  | # Maker Faire 2026 — Exhi
+[20:18:39]   chunk exhibitors-highlights.md#1: (221 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Adafruit — Booth D-12 | 
+[20:18:39]   chunk exhibitors-highlights.md#2: (206 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### SparkFun — Booth D-15 | 
+[20:18:39]   chunk exhibitors-highlights.md#3: (443 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Prusa Research — Booth D
+[20:18:39]   chunk exhibitors-highlights.md#4: (334 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Bay Area Maker Spaces | 
+[20:18:39]   chunk exhibitors-highlights.md#5: (380 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Art Installations |  | - "The Breathing Wall" — A 
+[20:18:39]   chunk exhibitors-highlights.md#6: (381 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Food Truck Lineup (Zone F) |  | - Señor Sisig — Fi
+[20:18:39]   chunk faq.md#0: (428 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Can I bring my own tools? |  | No outside to
+[20:18:39]   chunk faq.md#1: (254 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Can I buy things at the Faire? |  | Yes! Man
+[20:18:39]   chunk faq.md#2: (216 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Is there phone charging? |  | Yes. Free char
+[20:18:39]   chunk faq.md#3: (572 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## What if it rains? |  | The event runs rain o
+[20:18:39]   chunk faq.md#4: (248 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## What about accessibility? |  | The venue is 
+[20:18:39]   chunk faq.md#5: (241 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Emergency contacts |  | - Event security: fi
+[20:18:40]   chunk schedule.md#0: (967 chars) # Maker Faire 2026 — Schedule |  | ## Saturday, March 14 |  | - 10:00 AM — Gates open | - 10:30 AM —
+[20:18:40]   chunk schedule.md#1: (843 chars) # Maker Faire 2026 — Schedule |  | ## Sunday, March 15 |  | - 10:00 AM — Gates open | - 10:30 AM — "
+[20:18:40]   chunk zones-and-map.md#0: (354 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[20:18:40]   chunk zones-and-map.md#1: (332 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[20:18:40]   chunk zones-and-map.md#2: (492 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[20:18:40]   chunk zones-and-map.md#3: (429 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[20:18:40]   chunk zones-and-map.md#4: (345 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[20:18:40]   chunk zones-and-map.md#5: (327 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[20:18:40]   chunk zones-and-map.md#6: (238 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[20:18:40]   chunk zones-and-map.md#7: (255 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[20:18:41] indexed 5 files (26 chunks total)
+[20:18:41] initial indexing: 5 files
+[20:18:41] could not load response cache: Expecting value: line 1 column 1 (char 0)
+[20:18:41] listening...
+[20:18:44]   ✓ [faq.md] sim=0.58 dist=0.421: # Maker Faire 2026 — Frequently Asked Questions |  | ## Is there phone charging?
+[20:18:44]   ✓ [faq.md] sim=0.54 dist=0.457: # Maker Faire 2026 — Frequently Asked Questions |  | ## Can I buy things at the 
+[20:18:44]   ✓ [faq.md] sim=0.54 dist=0.459: # Maker Faire 2026 — Frequently Asked Questions |  | ## Emergency contacts |  | 
+[20:18:44]   ✓ [faq.md] sim=0.53 dist=0.469: # Maker Faire 2026 — Frequently Asked Questions |  | ## What about accessibility
+[20:18:44]   ✓ [exhibitors-highlights.md] sim=0.53 dist=0.472: # Maker Faire 2026 — Exhibitor Highlights |  | ## Art Installations |  | - "The 
+[20:18:44]   ✓ [faq.md] sim=0.52 dist=0.478: # Maker Faire 2026 — Frequently Asked Questions |  | ## What if it rains? |  | T
+[20:18:44]   ✓ [zones-and-map.md] sim=0.51 dist=0.486: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[20:18:44]   ✓ [exhibitors-highlights.md] sim=0.51 dist=0.486: # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Adaf
+[20:18:44]   ✓ [event-overview.md] sim=0.51 dist=0.488: # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is yo
+[20:18:44]   ✓ [zones-and-map.md] sim=0.51 dist=0.489: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[20:18:44]   rag: 3 chunks from [faq.md] (similarity: 0.58, 0.54, 0.54)
+[20:18:44]   === SYSTEM PROMPT ===
+You are DEL-FI-001, a helpful AI assistant serving a community over low-bandwidth mesh radio. Friendly and concise Maker Faire guide. Keep your responses around 100-230 bytes. You help attendees find events, workshops, booths, food, and answers about the Faire. Your knowledge base has the schedule, zone map, exhibitor info, and FAQ. You are fastidious about accuracy. Keep answers short and practical. If you don't know something, say so rather than guessing. Use the provided context to answer the question. Combine information from multiple context sections if needed. Only say you don't know if the context is truly unrelated. Keep responses under 230 characters. Do not use markdown formatting. Write plain text only.
+[20:18:44]   === USER PROMPT ===
+Context from local documents:
+[faq.md] # Maker Faire 2026 — Frequently Asked Questions
+
+## Is there phone charging?
+
+Yes. Free charging stations at Zone A (near the info booth) and Zone F (food court). Bring your own cable. Don't leave devices unattended.
+[faq.md] # Maker Faire 2026 — Frequently Asked Questions
+
+## Can I buy things at the Faire?
+
+Yes! Many exhibitors sell kits, boards, tools, stickers, and handmade goods. Cash and card accepted at most booths. There is no ATM on-site — bring cash if you prefer it.
+[faq.md] # Maker Faire 2026 — Frequently Asked Questions
+
+## Emergency contacts
+
+- Event security: find any staff in orange vests
+- First aid: Zone A or Zone D stations
+- Lost children: Info Booth at Gate 2
+- Non-emergency venue phone: (650) 555-0142
+
+Question: Where Sparkfun?
+[20:18:44]   === END PROMPT ===
+[20:18:58]   ✓ response: 106 bytes → !sim00001
+[20:21:04] shutting down...
+[20:54:29] config loaded
+[20:54:30] vectorstore ready (0 chunks indexed)
+[20:54:31] ollama connected at http://localhost:11434
+[20:54:31]   chunk event-overview.md#0: (464 chars) # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is your pocket guide via 
+[20:54:31]   chunk event-overview.md#1: (396 chars) # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is your pocket guide via 
+[20:54:31]   chunk event-overview.md#2: (485 chars) # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is your pocket guide via 
+[20:54:32]   chunk exhibitors-highlights.md#0: (307 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors |  | # Maker Faire 2026 — Exhi
+[20:54:32]   chunk exhibitors-highlights.md#1: (221 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Adafruit — Booth D-12 | 
+[20:54:32]   chunk exhibitors-highlights.md#2: (206 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### SparkFun — Booth D-15 | 
+[20:54:32]   chunk exhibitors-highlights.md#3: (443 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Prusa Research — Booth D
+[20:54:32]   chunk exhibitors-highlights.md#4: (334 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Bay Area Maker Spaces | 
+[20:54:32]   chunk exhibitors-highlights.md#5: (380 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Art Installations |  | - "The Breathing Wall" — A 
+[20:54:32]   chunk exhibitors-highlights.md#6: (381 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Food Truck Lineup (Zone F) |  | - Señor Sisig — Fi
+[20:54:32]   chunk faq.md#0: (428 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Can I bring my own tools? |  | No outside to
+[20:54:32]   chunk faq.md#1: (254 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Can I buy things at the Faire? |  | Yes! Man
+[20:54:32]   chunk faq.md#2: (216 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Is there phone charging? |  | Yes. Free char
+[20:54:32]   chunk faq.md#3: (572 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## What if it rains? |  | The event runs rain o
+[20:54:32]   chunk faq.md#4: (248 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## What about accessibility? |  | The venue is 
+[20:54:32]   chunk faq.md#5: (241 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Emergency contacts |  | - Event security: fi
+[20:54:33]   chunk schedule.md#0: (967 chars) # Maker Faire 2026 — Schedule |  | ## Saturday, March 14 |  | - 10:00 AM — Gates open | - 10:30 AM —
+[20:54:33]   chunk schedule.md#1: (843 chars) # Maker Faire 2026 — Schedule |  | ## Sunday, March 15 |  | - 10:00 AM — Gates open | - 10:30 AM — "
+[20:54:33]   chunk zones-and-map.md#0: (354 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[20:54:33]   chunk zones-and-map.md#1: (332 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[20:54:33]   chunk zones-and-map.md#2: (492 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[20:54:33]   chunk zones-and-map.md#3: (429 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[20:54:33]   chunk zones-and-map.md#4: (345 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[20:54:33]   chunk zones-and-map.md#5: (327 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[20:54:33]   chunk zones-and-map.md#6: (238 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[20:54:33]   chunk zones-and-map.md#7: (255 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[20:54:34] indexed 5 files (26 chunks total)
+[20:54:34] initial indexing: 5 files
+[20:54:34] could not load response cache: Expecting value: line 1 column 1 (char 0)
+[20:54:34] listening...
+[20:54:41]   ✓ [exhibitors-highlights.md] sim=0.47→0.62 dist=0.529→0.379 kw=['sparkfun']: # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Spar
+[20:54:41]   ✓ [zones-and-map.md] sim=0.45→0.6 dist=0.55→0.4 kw=['sparkfun']: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[20:54:41]   ✓ [faq.md] sim=0.58→0.58 dist=0.421→0.421: # Maker Faire 2026 — Frequently Asked Questions |  | ## Is there phone charging?
+[20:54:41]   ✓ [faq.md] sim=0.54→0.54 dist=0.457→0.457: # Maker Faire 2026 — Frequently Asked Questions |  | ## Can I buy things at the 
+[20:54:41]   ✓ [faq.md] sim=0.54→0.54 dist=0.459→0.459: # Maker Faire 2026 — Frequently Asked Questions |  | ## Emergency contacts |  | 
+[20:54:41]   ✓ [faq.md] sim=0.53→0.53 dist=0.469→0.469: # Maker Faire 2026 — Frequently Asked Questions |  | ## What about accessibility
+[20:54:41]   ✓ [exhibitors-highlights.md] sim=0.53→0.53 dist=0.472→0.472: # Maker Faire 2026 — Exhibitor Highlights |  | ## Art Installations |  | - "The 
+[20:54:41]   ✓ [faq.md] sim=0.52→0.52 dist=0.478→0.478: # Maker Faire 2026 — Frequently Asked Questions |  | ## What if it rains? |  | T
+[20:54:41]   ✓ [zones-and-map.md] sim=0.51→0.51 dist=0.486→0.486: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[20:54:41]   ✓ [exhibitors-highlights.md] sim=0.51→0.51 dist=0.486→0.486: # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Adaf
+[20:54:41]   ✓ [event-overview.md] sim=0.51→0.51 dist=0.488→0.488: # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is yo
+[20:54:41]   ✓ [zones-and-map.md] sim=0.51→0.51 dist=0.489→0.489: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[20:54:41]   ✓ [exhibitors-highlights.md] sim=0.51→0.51 dist=0.491→0.491: # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Bay 
+[20:54:41]   ✓ [schedule.md] sim=0.51→0.51 dist=0.492→0.492: # Maker Faire 2026 — Schedule |  | ## Sunday, March 15 |  | - 10:00 AM — Gates o
+[20:54:41]   ✓ [event-overview.md] sim=0.51→0.51 dist=0.492→0.492: # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is yo
+[20:54:41]   ✓ [exhibitors-highlights.md] sim=0.5→0.5 dist=0.499→0.499: # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Prus
+[20:54:41]   ✗ [exhibitors-highlights.md] sim=0.5→0.5 dist=0.501→0.501: # Maker Faire 2026 — Exhibitor Highlights |  | ## Food Truck Lineup (Zone F) |  
+[20:54:41]   ✗ [zones-and-map.md] sim=0.49→0.49 dist=0.505→0.505: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[20:54:41]   ✗ [schedule.md] sim=0.49→0.49 dist=0.507→0.507: # Maker Faire 2026 — Schedule |  | ## Saturday, March 14 |  | - 10:00 AM — Gates
+[20:54:41]   ✗ [event-overview.md] sim=0.49→0.49 dist=0.508→0.508: # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is yo
+[20:54:41]   ✗ [faq.md] sim=0.48→0.48 dist=0.52→0.52: # Maker Faire 2026 — Frequently Asked Questions |  | ## Can I bring my own tools
+[20:54:41]   ✗ [zones-and-map.md] sim=0.48→0.48 dist=0.523→0.523: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[20:54:41]   ✗ [zones-and-map.md] sim=0.47→0.47 dist=0.527→0.527: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[20:54:41]   ✗ [exhibitors-highlights.md] sim=0.47→0.47 dist=0.527→0.527: # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors |  | # Mak
+[20:54:41]   ✗ [zones-and-map.md] sim=0.45→0.45 dist=0.546→0.546: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[20:54:41]   ✗ [zones-and-map.md] sim=0.45→0.45 dist=0.546→0.546: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[20:54:41]   rag: 3 chunks from [exhibitors-highlights.md, zones-and-map.md, faq.md] (similarity: 0.62, 0.6, 0.58)
+[20:54:41]   === SYSTEM PROMPT ===
+You are DEL-FI-001, a helpful AI assistant serving a community over low-bandwidth mesh radio. Friendly and concise Maker Faire guide. Keep your responses around 100-230 bytes. You help attendees find events, workshops, booths, food, and answers about the Faire. Your knowledge base has the schedule, zone map, exhibitor info, and FAQ. You are fastidious about accuracy. Keep answers short and practical. If you don't know something, say so rather than guessing. Use the provided context to answer the question. Combine information from multiple context sections if needed. Only say you don't know if the context is truly unrelated. Keep responses under 230 characters. Do not use markdown formatting. Write plain text only.
+[20:54:41]   === USER PROMPT ===
+Context from local documents:
+[exhibitors-highlights.md] # Maker Faire 2026 — Exhibitor Highlights
+
+## Featured Exhibitors
+### SparkFun — Booth D-15
+Showcasing their new Artemis line. Hands-on demos of environmental sensor arrays. Free soldering intro every hour.
+[zones-and-map.md] # Maker Faire 2026 — Zones & Map Guide
+
+The event center is divided into six zones. Here's what's where.
+
+## Zone D — Exhibitor Booths
+
+South side. Over 200 maker booths showcasing projects, gadgets, art, and inventions. Notable exhibitors include:
+- Adafruit (Booth D-12)
+- SparkFun (Booth D-15)
+- Prusa Research (Booth D-22)
+- Arduino (Booth D-30)
+- Meshtastic Project (Booth D-45)
+- Local maker spaces from across the Bay Area
+[faq.md] # Maker Faire 2026 — Frequently Asked Questions
+
+## Is there phone charging?
+
+Yes. Free charging stations at Zone A (near the info booth) and Zone F (food court). Bring your own cable. Don't leave devices unattended.
+
+Question: Where SparkFun?
+[20:54:41]   === END PROMPT ===
+[20:54:56]   ✓ response: 153 bytes → !sim00001
+[20:55:06] shutting down...
+[09:36:50] config loaded
+[09:36:50] vectorstore ready (26 chunks indexed)
+[09:36:51] ollama connected at http://localhost:11434
+[09:36:51]   chunk event-overview.md#0: (464 chars) # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is your pocket guide via 
+[09:36:51]   chunk event-overview.md#1: (396 chars) # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is your pocket guide via 
+[09:36:51]   chunk event-overview.md#2: (485 chars) # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is your pocket guide via 
+[09:36:53]   chunk exhibitors-highlights.md#0: (307 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors |  | # Maker Faire 2026 — Exhi
+[09:36:53]   chunk exhibitors-highlights.md#1: (221 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Adafruit — Booth D-12 | 
+[09:36:53]   chunk exhibitors-highlights.md#2: (206 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### SparkFun — Booth D-15 | 
+[09:36:53]   chunk exhibitors-highlights.md#3: (443 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Prusa Research — Booth D
+[09:36:53]   chunk exhibitors-highlights.md#4: (334 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Bay Area Maker Spaces | 
+[09:36:53]   chunk exhibitors-highlights.md#5: (380 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Art Installations |  | - "The Breathing Wall" — A 
+[09:36:53]   chunk exhibitors-highlights.md#6: (381 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Food Truck Lineup (Zone F) |  | - Señor Sisig — Fi
+[09:36:54]   chunk faq.md#0: (428 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Can I bring my own tools? |  | No outside to
+[09:36:54]   chunk faq.md#1: (254 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Can I buy things at the Faire? |  | Yes! Man
+[09:36:54]   chunk faq.md#2: (216 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Is there phone charging? |  | Yes. Free char
+[09:36:54]   chunk faq.md#3: (572 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## What if it rains? |  | The event runs rain o
+[09:36:54]   chunk faq.md#4: (248 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## What about accessibility? |  | The venue is 
+[09:36:54]   chunk faq.md#5: (241 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Emergency contacts |  | - Event security: fi
+[09:36:54]   chunk schedule.md#0: (967 chars) # Maker Faire 2026 — Schedule |  | ## Saturday, March 14 |  | - 10:00 AM — Gates open | - 10:30 AM —
+[09:36:54]   chunk schedule.md#1: (843 chars) # Maker Faire 2026 — Schedule |  | ## Sunday, March 15 |  | - 10:00 AM — Gates open | - 10:30 AM — "
+[09:36:55]   chunk zones-and-map.md#0: (354 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:36:55]   chunk zones-and-map.md#1: (332 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:36:55]   chunk zones-and-map.md#2: (492 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:36:55]   chunk zones-and-map.md#3: (429 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:36:55]   chunk zones-and-map.md#4: (345 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:36:55]   chunk zones-and-map.md#5: (327 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:36:55]   chunk zones-and-map.md#6: (238 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:36:55]   chunk zones-and-map.md#7: (255 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:36:55] indexed 5 files (26 chunks total)
+[09:36:55] initial indexing: 5 files
+[09:37:18] config loaded
+[09:37:18] vectorstore ready (26 chunks indexed)
+[09:37:19] ollama connected at http://localhost:11434
+[09:37:19]   chunk event-overview.md#0: (464 chars) # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is your pocket guide via 
+[09:37:19]   chunk event-overview.md#1: (396 chars) # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is your pocket guide via 
+[09:37:19]   chunk event-overview.md#2: (485 chars) # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is your pocket guide via 
+[09:37:19]   chunk exhibitors-highlights.md#0: (307 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors |  | # Maker Faire 2026 — Exhi
+[09:37:19]   chunk exhibitors-highlights.md#1: (221 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Adafruit — Booth D-12 | 
+[09:37:19]   chunk exhibitors-highlights.md#2: (206 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### SparkFun — Booth D-15 | 
+[09:37:19]   chunk exhibitors-highlights.md#3: (443 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Prusa Research — Booth D
+[09:37:19]   chunk exhibitors-highlights.md#4: (334 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Bay Area Maker Spaces | 
+[09:37:19]   chunk exhibitors-highlights.md#5: (380 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Art Installations |  | - "The Breathing Wall" — A 
+[09:37:19]   chunk exhibitors-highlights.md#6: (381 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Food Truck Lineup (Zone F) |  | - Señor Sisig — Fi
+[09:37:20]   chunk faq.md#0: (428 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Can I bring my own tools? |  | No outside to
+[09:37:20]   chunk faq.md#1: (254 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Can I buy things at the Faire? |  | Yes! Man
+[09:37:20]   chunk faq.md#2: (216 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Is there phone charging? |  | Yes. Free char
+[09:37:20]   chunk faq.md#3: (572 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## What if it rains? |  | The event runs rain o
+[09:37:20]   chunk faq.md#4: (248 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## What about accessibility? |  | The venue is 
+[09:37:20]   chunk faq.md#5: (241 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Emergency contacts |  | - Event security: fi
+[09:37:21]   chunk schedule.md#0: (967 chars) # Maker Faire 2026 — Schedule |  | ## Saturday, March 14 |  | - 10:00 AM — Gates open | - 10:30 AM —
+[09:37:21]   chunk schedule.md#1: (843 chars) # Maker Faire 2026 — Schedule |  | ## Sunday, March 15 |  | - 10:00 AM — Gates open | - 10:30 AM — "
+[09:37:21]   chunk zones-and-map.md#0: (354 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:37:21]   chunk zones-and-map.md#1: (332 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:37:21]   chunk zones-and-map.md#2: (492 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:37:21]   chunk zones-and-map.md#3: (429 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:37:21]   chunk zones-and-map.md#4: (345 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:37:21]   chunk zones-and-map.md#5: (327 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:37:21]   chunk zones-and-map.md#6: (238 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:37:21]   chunk zones-and-map.md#7: (255 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:37:22] indexed 5 files (26 chunks total)
+[09:37:22] initial indexing: 5 files
+[09:37:22] listening...
+[09:37:22]   ✓ response: 212 bytes → !sim00001
+[09:37:59] config loaded
+[09:38:00] vectorstore ready (26 chunks indexed)
+[09:38:00] ollama connected at http://localhost:11434
+[09:38:00]   chunk event-overview.md#0: (464 chars) # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is your pocket guide via 
+[09:38:00]   chunk event-overview.md#1: (396 chars) # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is your pocket guide via 
+[09:38:00]   chunk event-overview.md#2: (485 chars) # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is your pocket guide via 
+[09:38:01]   chunk exhibitors-highlights.md#0: (307 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors |  | # Maker Faire 2026 — Exhi
+[09:38:01]   chunk exhibitors-highlights.md#1: (221 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Adafruit — Booth D-12 | 
+[09:38:01]   chunk exhibitors-highlights.md#2: (206 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### SparkFun — Booth D-15 | 
+[09:38:01]   chunk exhibitors-highlights.md#3: (443 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Prusa Research — Booth D
+[09:38:01]   chunk exhibitors-highlights.md#4: (334 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Bay Area Maker Spaces | 
+[09:38:01]   chunk exhibitors-highlights.md#5: (380 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Art Installations |  | - "The Breathing Wall" — A 
+[09:38:01]   chunk exhibitors-highlights.md#6: (381 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Food Truck Lineup (Zone F) |  | - Señor Sisig — Fi
+[09:38:01]   chunk faq.md#0: (428 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Can I bring my own tools? |  | No outside to
+[09:38:01]   chunk faq.md#1: (254 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Can I buy things at the Faire? |  | Yes! Man
+[09:38:01]   chunk faq.md#2: (216 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Is there phone charging? |  | Yes. Free char
+[09:38:01]   chunk faq.md#3: (572 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## What if it rains? |  | The event runs rain o
+[09:38:01]   chunk faq.md#4: (248 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## What about accessibility? |  | The venue is 
+[09:38:01]   chunk faq.md#5: (241 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Emergency contacts |  | - Event security: fi
+[09:38:02]   chunk schedule.md#0: (967 chars) # Maker Faire 2026 — Schedule |  | ## Saturday, March 14 |  | - 10:00 AM — Gates open | - 10:30 AM —
+[09:38:02]   chunk schedule.md#1: (843 chars) # Maker Faire 2026 — Schedule |  | ## Sunday, March 15 |  | - 10:00 AM — Gates open | - 10:30 AM — "
+[09:38:03]   chunk zones-and-map.md#0: (354 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:38:03]   chunk zones-and-map.md#1: (332 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:38:03]   chunk zones-and-map.md#2: (492 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:38:03]   chunk zones-and-map.md#3: (429 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:38:03]   chunk zones-and-map.md#4: (345 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:38:03]   chunk zones-and-map.md#5: (327 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:38:03]   chunk zones-and-map.md#6: (238 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:38:03]   chunk zones-and-map.md#7: (255 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:38:03] indexed 5 files (26 chunks total)
+[09:38:03] initial indexing: 5 files
+[09:38:03] listening...
+[09:38:03]   ✓ response: 212 bytes → !sim00001
+[09:39:53] config loaded
+[09:39:53] vectorstore ready (26 chunks indexed)
+[09:39:54] ollama connected at http://localhost:11434
+[09:39:54]   chunk event-overview.md#0: (464 chars) # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is your pocket guide via 
+[09:39:54]   chunk event-overview.md#1: (396 chars) # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is your pocket guide via 
+[09:39:54]   chunk event-overview.md#2: (485 chars) # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is your pocket guide via 
+[09:39:55]   chunk exhibitors-highlights.md#0: (307 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors |  | # Maker Faire 2026 — Exhi
+[09:39:55]   chunk exhibitors-highlights.md#1: (221 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Adafruit — Booth D-12 | 
+[09:39:55]   chunk exhibitors-highlights.md#2: (206 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### SparkFun — Booth D-15 | 
+[09:39:55]   chunk exhibitors-highlights.md#3: (443 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Prusa Research — Booth D
+[09:39:55]   chunk exhibitors-highlights.md#4: (334 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Bay Area Maker Spaces | 
+[09:39:55]   chunk exhibitors-highlights.md#5: (380 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Art Installations |  | - "The Breathing Wall" — A 
+[09:39:55]   chunk exhibitors-highlights.md#6: (381 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Food Truck Lineup (Zone F) |  | - Señor Sisig — Fi
+[09:39:55]   chunk faq.md#0: (428 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Can I bring my own tools? |  | No outside to
+[09:39:55]   chunk faq.md#1: (254 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Can I buy things at the Faire? |  | Yes! Man
+[09:39:55]   chunk faq.md#2: (216 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Is there phone charging? |  | Yes. Free char
+[09:39:55]   chunk faq.md#3: (572 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## What if it rains? |  | The event runs rain o
+[09:39:55]   chunk faq.md#4: (248 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## What about accessibility? |  | The venue is 
+[09:39:55]   chunk faq.md#5: (241 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Emergency contacts |  | - Event security: fi
+[09:39:56]   chunk schedule.md#0: (967 chars) # Maker Faire 2026 — Schedule |  | ## Saturday, March 14 |  | - 10:00 AM — Gates open | - 10:30 AM —
+[09:39:56]   chunk schedule.md#1: (843 chars) # Maker Faire 2026 — Schedule |  | ## Sunday, March 15 |  | - 10:00 AM — Gates open | - 10:30 AM — "
+[09:39:56]   chunk zones-and-map.md#0: (354 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:39:56]   chunk zones-and-map.md#1: (332 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:39:56]   chunk zones-and-map.md#2: (492 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:39:56]   chunk zones-and-map.md#3: (429 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:39:56]   chunk zones-and-map.md#4: (345 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:39:56]   chunk zones-and-map.md#5: (327 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:39:56]   chunk zones-and-map.md#6: (238 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:39:56]   chunk zones-and-map.md#7: (255 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[09:39:57] indexed 5 files (26 chunks total)
+[09:39:57] initial indexing: 5 files
+[09:39:57] listening...
+[09:40:03]   ✓ [faq.md] sim=0.43→0.58 dist=0.567→0.417 kw=['find']: # Maker Faire 2026 — Frequently Asked Questions |  | ## Emergency contacts |  | 
+[09:40:03]   ✗ [zones-and-map.md] sim=0.49→0.49 dist=0.507→0.507: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[09:40:03]   ✗ [faq.md] sim=0.48→0.48 dist=0.518→0.518: # Maker Faire 2026 — Frequently Asked Questions |  | ## Is there phone charging?
+[09:40:03]   ✗ [event-overview.md] sim=0.48→0.48 dist=0.521→0.521: # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is yo
+[09:40:03]   ✗ [event-overview.md] sim=0.48→0.48 dist=0.523→0.523: # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is yo
+[09:40:03]   ✗ [faq.md] sim=0.46→0.46 dist=0.545→0.545: # Maker Faire 2026 — Frequently Asked Questions |  | ## Can I buy things at the 
+[09:40:03]   ✗ [zones-and-map.md] sim=0.45→0.45 dist=0.547→0.547: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[09:40:03]   ✗ [zones-and-map.md] sim=0.44→0.44 dist=0.559→0.559: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[09:40:03]   ✗ [exhibitors-highlights.md] sim=0.44→0.44 dist=0.561→0.561: # Maker Faire 2026 — Exhibitor Highlights |  | ## Food Truck Lineup (Zone F) |  
+[09:40:03]   ✗ [zones-and-map.md] sim=0.44→0.44 dist=0.561→0.561: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[09:40:03]   ✗ [exhibitors-highlights.md] sim=0.44→0.44 dist=0.564→0.564: # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors |  | # Mak
+[09:40:03]   ✗ [zones-and-map.md] sim=0.43→0.43 dist=0.568→0.568: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[09:40:03]   ✗ [exhibitors-highlights.md] sim=0.43→0.43 dist=0.569→0.569: # Maker Faire 2026 — Exhibitor Highlights |  | ## Art Installations |  | - "The 
+[09:40:03]   ✗ [exhibitors-highlights.md] sim=0.43→0.43 dist=0.571→0.571: # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Prus
+[09:40:03]   ✗ [faq.md] sim=0.42→0.42 dist=0.578→0.578: # Maker Faire 2026 — Frequently Asked Questions |  | ## What if it rains? |  | T
+[09:40:03]   ✗ [zones-and-map.md] sim=0.42→0.42 dist=0.583→0.583: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[09:40:03]   ✗ [faq.md] sim=0.41→0.41 dist=0.587→0.587: # Maker Faire 2026 — Frequently Asked Questions |  | ## Can I bring my own tools
+[09:40:03]   ✗ [event-overview.md] sim=0.41→0.41 dist=0.59→0.59: # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is yo
+[09:40:03]   ✗ [zones-and-map.md] sim=0.41→0.41 dist=0.592→0.592: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[09:40:03]   ✗ [zones-and-map.md] sim=0.4→0.4 dist=0.598→0.598: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[09:40:03]   ✗ [exhibitors-highlights.md] sim=0.4→0.4 dist=0.601→0.601: # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Bay 
+[09:40:03]   ✗ [faq.md] sim=0.4→0.4 dist=0.602→0.602: # Maker Faire 2026 — Frequently Asked Questions |  | ## What about accessibility
+[09:40:03]   ✗ [exhibitors-highlights.md] sim=0.38→0.38 dist=0.616→0.616: # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Adaf
+[09:40:03]   ✗ [schedule.md] sim=0.37→0.37 dist=0.626→0.626: # Maker Faire 2026 — Schedule |  | ## Saturday, March 14 |  | - 10:00 AM — Gates
+[09:40:03]   ✗ [exhibitors-highlights.md] sim=0.37→0.37 dist=0.628→0.628: # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Spar
+[09:40:03]   ✗ [schedule.md] sim=0.36→0.36 dist=0.639→0.639: # Maker Faire 2026 — Schedule |  | ## Sunday, March 15 |  | - 10:00 AM — Gates o
+[09:40:03]   rag: 1 chunks from [faq.md] (similarity: 0.58)
+[09:40:03]   === SYSTEM PROMPT ===
+You are DEL-FI-001, a helpful AI assistant serving a community over low-bandwidth mesh radio. Friendly and concise Maker Faire guide. Keep your responses around 100-230 bytes. You help attendees find events, workshops, booths, food, and answers about the Faire. Your knowledge base has the schedule, zone map, exhibitor info, and FAQ. You are fastidious about accuracy. Keep answers short and practical. If you don't know something, say so rather than guessing. Use the provided context to answer the question. Combine information from multiple context sections if needed. Only say you don't know if the context is truly unrelated. Keep responses under 230 characters. Do not use markdown formatting. Write plain text only.
+[09:40:03]   === USER PROMPT ===
+Context from local documents:
+[faq.md] # Maker Faire 2026 — Frequently Asked Questions
+
+## Emergency contacts
+
+- Event security: find any staff in orange vests
+- First aid: Zone A or Zone D stations
+- Lost children: Info Booth at Gate 2
+- Non-emergency venue phone: (650) 555-0142
+
+Question: where do I find the beans?
+[09:40:03]   === END PROMPT ===
+[09:40:16]   ✓ response: 96 bytes → !sim00001
+[09:42:39]   ✗ [faq.md] sim=0.38→0.38 dist=0.618→0.618: # Maker Faire 2026 — Frequently Asked Questions |  | ## Can I bring my own tools
+[09:42:39]   ✗ [faq.md] sim=0.38→0.38 dist=0.619→0.619: # Maker Faire 2026 — Frequently Asked Questions |  | ## Is there phone charging?
+[09:42:39]   ✗ [exhibitors-highlights.md] sim=0.38→0.38 dist=0.624→0.624: # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Adaf
+[09:42:39]   ✗ [exhibitors-highlights.md] sim=0.37→0.37 dist=0.625→0.625: # Maker Faire 2026 — Exhibitor Highlights |  | ## Art Installations |  | - "The 
+[09:42:39]   ✗ [exhibitors-highlights.md] sim=0.37→0.37 dist=0.631→0.631: # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors |  | # Mak
+[09:42:39]   ✗ [exhibitors-highlights.md] sim=0.36→0.36 dist=0.635→0.635: # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Spar
+[09:42:39]   ✗ [faq.md] sim=0.36→0.36 dist=0.639→0.639: # Maker Faire 2026 — Frequently Asked Questions |  | ## Emergency contacts |  | 
+[09:42:39]   ✗ [exhibitors-highlights.md] sim=0.36→0.36 dist=0.641→0.641: # Maker Faire 2026 — Exhibitor Highlights |  | ## Food Truck Lineup (Zone F) |  
+[09:42:39]   ✗ [zones-and-map.md] sim=0.36→0.36 dist=0.644→0.644: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[09:42:39]   ✗ [event-overview.md] sim=0.35→0.35 dist=0.647→0.647: # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is yo
+[09:42:39]   ✗ [faq.md] sim=0.35→0.35 dist=0.651→0.651: # Maker Faire 2026 — Frequently Asked Questions |  | ## What about accessibility
+[09:42:39]   ✗ [zones-and-map.md] sim=0.35→0.35 dist=0.651→0.651: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[09:42:39]   ✗ [faq.md] sim=0.34→0.34 dist=0.655→0.655: # Maker Faire 2026 — Frequently Asked Questions |  | ## What if it rains? |  | T
+[09:42:39]   ✗ [event-overview.md] sim=0.34→0.34 dist=0.655→0.655: # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is yo
+[09:42:39]   ✗ [zones-and-map.md] sim=0.34→0.34 dist=0.657→0.657: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[09:42:39]   ✗ [faq.md] sim=0.34→0.34 dist=0.658→0.658: # Maker Faire 2026 — Frequently Asked Questions |  | ## Can I buy things at the 
+[09:42:39]   ✗ [zones-and-map.md] sim=0.34→0.34 dist=0.658→0.658: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[09:42:39]   ✗ [zones-and-map.md] sim=0.34→0.34 dist=0.661→0.661: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[09:42:39]   ✗ [schedule.md] sim=0.34→0.34 dist=0.664→0.664: # Maker Faire 2026 — Schedule |  | ## Sunday, March 15 |  | - 10:00 AM — Gates o
+[09:42:39]   ✗ [exhibitors-highlights.md] sim=0.33→0.33 dist=0.666→0.666: # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Bay 
+[09:42:39]   ✗ [event-overview.md] sim=0.33→0.33 dist=0.671→0.671: # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is yo
+[09:42:39]   ✗ [exhibitors-highlights.md] sim=0.32→0.32 dist=0.681→0.681: # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Prus
+[09:42:39]   ✗ [schedule.md] sim=0.32→0.32 dist=0.682→0.682: # Maker Faire 2026 — Schedule |  | ## Saturday, March 14 |  | - 10:00 AM — Gates
+[09:42:39]   ✗ [zones-and-map.md] sim=0.32→0.32 dist=0.683→0.683: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[09:42:39]   ✗ [zones-and-map.md] sim=0.32→0.32 dist=0.684→0.684: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[09:42:39]   ✗ [zones-and-map.md] sim=0.3→0.3 dist=0.702→0.702: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[09:42:39]   rag: no relevant chunks found
+[09:42:39]   === SYSTEM PROMPT ===
+You are DEL-FI-001, a helpful AI assistant serving a community over low-bandwidth mesh radio. Friendly and concise Maker Faire guide. Keep your responses around 100-230 bytes. You help attendees find events, workshops, booths, food, and answers about the Faire. Your knowledge base has the schedule, zone map, exhibitor info, and FAQ. You are fastidious about accuracy. Keep answers short and practical. If you don't know something, say so rather than guessing. Use the provided context to answer the question. Combine information from multiple context sections if needed. Only say you don't know if the context is truly unrelated. Keep responses under 230 characters. Do not use markdown formatting. Write plain text only.
+[09:42:39]   === USER PROMPT ===
+Question: hell yeah, brother
+[09:42:39]   === END PROMPT ===
+[09:42:50]   skipping cache — no RAG context (hallucination risk)
+[09:42:50]   ✓ response: 164 bytes → !sim00001
+[09:43:06] shutting down...
+[11:08:16] config loaded
+[11:08:17] vectorstore ready (26 chunks indexed)
+[11:08:17] ollama connected at http://localhost:11434
+[11:08:17]   chunk event-overview.md#0: (464 chars) # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is your pocket guide via 
+[11:08:17]   chunk event-overview.md#1: (396 chars) # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is your pocket guide via 
+[11:08:17]   chunk event-overview.md#2: (485 chars) # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is your pocket guide via 
+[11:08:19]   chunk exhibitors-highlights.md#0: (307 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors |  | # Maker Faire 2026 — Exhi
+[11:08:19]   chunk exhibitors-highlights.md#1: (221 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Adafruit — Booth D-12 | 
+[11:08:19]   chunk exhibitors-highlights.md#2: (206 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### SparkFun — Booth D-15 | 
+[11:08:19]   chunk exhibitors-highlights.md#3: (443 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Prusa Research — Booth D
+[11:08:19]   chunk exhibitors-highlights.md#4: (334 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Bay Area Maker Spaces | 
+[11:08:19]   chunk exhibitors-highlights.md#5: (380 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Art Installations |  | - "The Breathing Wall" — A 
+[11:08:19]   chunk exhibitors-highlights.md#6: (381 chars) # Maker Faire 2026 — Exhibitor Highlights |  | ## Food Truck Lineup (Zone F) |  | - Señor Sisig — Fi
+[11:08:19]   chunk faq.md#0: (428 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Can I bring my own tools? |  | No outside to
+[11:08:19]   chunk faq.md#1: (254 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Can I buy things at the Faire? |  | Yes! Man
+[11:08:19]   chunk faq.md#2: (216 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Is there phone charging? |  | Yes. Free char
+[11:08:19]   chunk faq.md#3: (572 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## What if it rains? |  | The event runs rain o
+[11:08:19]   chunk faq.md#4: (248 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## What about accessibility? |  | The venue is 
+[11:08:19]   chunk faq.md#5: (241 chars) # Maker Faire 2026 — Frequently Asked Questions |  | ## Emergency contacts |  | - Event security: fi
+[11:08:20]   chunk schedule.md#0: (967 chars) # Maker Faire 2026 — Schedule |  | ## Saturday, March 14 |  | - 10:00 AM — Gates open | - 10:30 AM —
+[11:08:20]   chunk schedule.md#1: (843 chars) # Maker Faire 2026 — Schedule |  | ## Sunday, March 15 |  | - 10:00 AM — Gates open | - 10:30 AM — "
+[11:08:20]   chunk zones-and-map.md#0: (354 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[11:08:20]   chunk zones-and-map.md#1: (332 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[11:08:20]   chunk zones-and-map.md#2: (492 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[11:08:20]   chunk zones-and-map.md#3: (429 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[11:08:20]   chunk zones-and-map.md#4: (345 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[11:08:20]   chunk zones-and-map.md#5: (327 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[11:08:20]   chunk zones-and-map.md#6: (238 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[11:08:20]   chunk zones-and-map.md#7: (255 chars) # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six zones. Here's what'
+[11:08:21] indexed 5 files (26 chunks total)
+[11:08:21] initial indexing: 5 files
+[11:08:21] listening...
+[11:08:35]   ✗ [exhibitors-highlights.md] sim=0.44→0.44 dist=0.558→0.558: # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Adaf
+[11:08:35]   ✗ [faq.md] sim=0.42→0.42 dist=0.577→0.577: # Maker Faire 2026 — Frequently Asked Questions |  | ## Can I bring my own tools
+[11:08:35]   ✗ [event-overview.md] sim=0.42→0.42 dist=0.581→0.581: # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is yo
+[11:08:35]   ✗ [event-overview.md] sim=0.42→0.42 dist=0.583→0.583: # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is yo
+[11:08:35]   ✗ [exhibitors-highlights.md] sim=0.42→0.42 dist=0.583→0.583: # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Spar
+[11:08:35]   ✗ [schedule.md] sim=0.41→0.41 dist=0.589→0.589: # Maker Faire 2026 — Schedule |  | ## Sunday, March 15 |  | - 10:00 AM — Gates o
+[11:08:35]   ✗ [faq.md] sim=0.4→0.4 dist=0.596→0.596: # Maker Faire 2026 — Frequently Asked Questions |  | ## What about accessibility
+[11:08:35]   ✗ [exhibitors-highlights.md] sim=0.4→0.4 dist=0.599→0.599: # Maker Faire 2026 — Exhibitor Highlights |  | ## Art Installations |  | - "The 
+[11:08:35]   ✗ [faq.md] sim=0.4→0.4 dist=0.6→0.6: # Maker Faire 2026 — Frequently Asked Questions |  | ## What if it rains? |  | T
+[11:08:35]   ✗ [faq.md] sim=0.4→0.4 dist=0.604→0.604: # Maker Faire 2026 — Frequently Asked Questions |  | ## Emergency contacts |  | 
+[11:08:35]   ✗ [exhibitors-highlights.md] sim=0.39→0.39 dist=0.606→0.606: # Maker Faire 2026 — Exhibitor Highlights |  | ## Food Truck Lineup (Zone F) |  
+[11:08:35]   ✗ [exhibitors-highlights.md] sim=0.39→0.39 dist=0.606→0.606: # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Prus
+[11:08:35]   ✗ [faq.md] sim=0.39→0.39 dist=0.607→0.607: # Maker Faire 2026 — Frequently Asked Questions |  | ## Is there phone charging?
+[11:08:35]   ✗ [zones-and-map.md] sim=0.39→0.39 dist=0.609→0.609: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[11:08:35]   ✗ [faq.md] sim=0.39→0.39 dist=0.612→0.612: # Maker Faire 2026 — Frequently Asked Questions |  | ## Can I buy things at the 
+[11:08:35]   ✗ [exhibitors-highlights.md] sim=0.39→0.39 dist=0.613→0.613: # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors |  | # Mak
+[11:08:35]   ✗ [exhibitors-highlights.md] sim=0.38→0.38 dist=0.617→0.617: # Maker Faire 2026 — Exhibitor Highlights |  | ## Featured Exhibitors | ### Bay 
+[11:08:35]   ✗ [zones-and-map.md] sim=0.38→0.38 dist=0.617→0.617: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[11:08:35]   ✗ [schedule.md] sim=0.38→0.38 dist=0.619→0.619: # Maker Faire 2026 — Schedule |  | ## Saturday, March 14 |  | - 10:00 AM — Gates
+[11:08:35]   ✗ [event-overview.md] sim=0.38→0.38 dist=0.622→0.622: # Maker Faire 2026 — Event Overview |  | Welcome to Maker Faire 2026! This is yo
+[11:08:35]   ✗ [zones-and-map.md] sim=0.36→0.36 dist=0.645→0.645: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[11:08:35]   ✗ [zones-and-map.md] sim=0.35→0.35 dist=0.651→0.651: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[11:08:35]   ✗ [zones-and-map.md] sim=0.34→0.34 dist=0.657→0.657: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[11:08:35]   ✗ [zones-and-map.md] sim=0.33→0.33 dist=0.665→0.665: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[11:08:35]   ✗ [zones-and-map.md] sim=0.33→0.33 dist=0.67→0.67: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[11:08:35]   ✗ [zones-and-map.md] sim=0.33→0.33 dist=0.672→0.672: # Maker Faire 2026 — Zones & Map Guide |  | The event center is divided into six
+[11:08:35]   rag: no relevant chunks found
+[11:08:35]   === SYSTEM PROMPT ===
+You are DEL-FI-001, a helpful AI assistant serving a community over low-bandwidth mesh radio. Friendly and concise Maker Faire guide. Keep your responses around 100-230 bytes. You help attendees find events, workshops, booths, food, and answers about the Faire. Your knowledge base has the schedule, zone map, exhibitor info, and FAQ. You are fastidious about accuracy. Keep answers short and practical. If you don't know something, say so rather than guessing. Use the provided context to answer the question. Combine information from multiple context sections if needed. Only say you don't know if the context is truly unrelated. Keep responses under 230 characters. Do not use markdown formatting. Write plain text only.
+[11:08:35]   === USER PROMPT ===
+Question: sup, dawg?
+[11:08:35]   === END PROMPT ===
+[11:08:46]   skipping cache — no RAG context (hallucination risk)
+[11:08:46]   ✓ response: 92 bytes → !sim00001
+[11:08:53] shutting down...

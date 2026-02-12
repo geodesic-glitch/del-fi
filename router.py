@@ -87,6 +87,34 @@ class Router:
         if cfg.get("persistent_cache", True):
             self._load_disk_cache()
 
+    # --- Classification (used by dispatcher) ---
+
+    def classify(self, text: str) -> str:
+        """Classify a message without processing it.
+
+        Returns: 'empty', 'command', 'gossip', or 'query'.
+        Used by the main-loop dispatcher to separate fast-path
+        messages (commands, gossip) from slow-path LLM queries.
+        """
+        text = text.strip()
+        if not text:
+            return "empty"
+        if text.startswith("!"):
+            return "command"
+        if text.startswith("DEL-FI:") and self.mesh:
+            return "gossip"
+        return "query"
+
+    def busy_message(self, position: int) -> str:
+        """Generate a brief busy notice for a queued sender.
+
+        Kept short — this eats radio airtime on LoRa.
+        """
+        name = self.cfg["node_name"]
+        if position <= 1:
+            return f"{name}: Working on another question, yours is next."
+        return f"{name}: {position} questions ahead of yours, hang tight."
+
     # --- Main entry point ---
 
     def route(self, sender_id: str, text: str) -> str | None:

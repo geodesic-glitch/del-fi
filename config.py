@@ -15,9 +15,11 @@ import yaml
 log = logging.getLogger("delfi.config")
 
 DEFAULTS = {
+    "model": "qwen3:4b",
     "personality": "Helpful and concise community assistant.",
     "knowledge_folder": "~/del-fi/knowledge",
     "max_response_bytes": 230,
+    "mesh_protocol": "meshtastic",
     "radio_connection": "serial",
     "radio_port": "/dev/ttyUSB0",
     "rate_limit_seconds": 30,
@@ -30,7 +32,18 @@ DEFAULTS = {
     "num_ctx": 2048,
     "num_predict": 128,
     "persistent_cache": True,
+    "busy_notice": True,
 }
+
+# Protocol-specific defaults merged when mesh_protocol is set
+MESHCORE_DEFAULTS = {
+    "port": "/dev/ttyUSB0",
+    "connection": "serial",
+    "baud_rate": 115200,
+}
+
+# Supported mesh protocols (used for validation)
+SUPPORTED_PROTOCOLS = ("meshtastic", "meshcore")
 
 MESH_DEFAULTS = {
     "gossip": {
@@ -77,12 +90,15 @@ def load_config(config_path: str | None = None) -> dict:
         _die(f"Invalid YAML in {path}:\n  {e}")
 
     # Required fields
-    for field in ("node_name", "model"):
+    for field in ("node_name",):
         if field not in raw or not str(raw[field]).strip():
             _die(f"Missing required config field: '{field}'\n  Add it to {path}")
 
-    # Merge defaults
+    # Merge defaults (model defaults to qwen3:4b if not specified)
     cfg = {**DEFAULTS, **raw}
+
+    # Normalize log_level to lowercase
+    cfg["log_level"] = str(cfg["log_level"]).lower()
 
     # Expand and resolve paths
     cfg["knowledge_folder"] = os.path.expanduser(cfg["knowledge_folder"])
@@ -92,6 +108,12 @@ def load_config(config_path: str | None = None) -> dict:
     cfg["_cache_dir"] = os.path.join(base_dir, "cache")
     cfg["_gossip_dir"] = os.path.join(base_dir, "gossip")
     cfg["_seen_senders_file"] = os.path.join(base_dir, "seen_senders.txt")
+
+    # Mesh protocol: normalize and merge protocol-specific defaults
+    cfg["mesh_protocol"] = cfg["mesh_protocol"].lower()
+    if cfg["mesh_protocol"] == "meshcore":
+        mc_raw = raw.get("meshcore", {})
+        cfg["meshcore"] = {**MESHCORE_DEFAULTS, **(mc_raw if isinstance(mc_raw, dict) else {})}
 
     # Mesh knowledge: merge or disable
     if "mesh_knowledge" in raw and raw["mesh_knowledge"]:
@@ -112,11 +134,29 @@ def load_config(config_path: str | None = None) -> dict:
 
 def _validate(cfg: dict) -> None:
     """Validate config values. Exit on errors."""
-    if cfg["radio_connection"] not in ("serial", "tcp", "ble"):
+    # Mesh protocol
+    if cfg["mesh_protocol"] not in SUPPORTED_PROTOCOLS:
         _die(
-            f"radio_connection must be 'serial', 'tcp', or 'ble' "
-            f"(got '{cfg['radio_connection']}')"
+            f"mesh_protocol must be one of: {', '.join(SUPPORTED_PROTOCOLS)} "
+            f"(got '{cfg['mesh_protocol']}')"
         )
+
+    # Meshtastic-specific validation
+    if cfg["mesh_protocol"] == "meshtastic":
+        if cfg["radio_connection"] not in ("serial", "tcp", "ble"):
+            _die(
+                f"radio_connection must be 'serial', 'tcp', or 'ble' "
+                f"(got '{cfg['radio_connection']}')"
+            )
+
+    # MeshCore-specific validation
+    if cfg["mesh_protocol"] == "meshcore":
+        mc = cfg.get("meshcore", {})
+        if mc.get("connection") not in ("serial", "tcp"):
+            _die(
+                f"meshcore.connection must be 'serial' or 'tcp' "
+                f"(got '{mc.get('connection')}')"
+            )
 
     if not isinstance(cfg["max_response_bytes"], int) or cfg["max_response_bytes"] < 50:
         _die("max_response_bytes must be an integer >= 50")

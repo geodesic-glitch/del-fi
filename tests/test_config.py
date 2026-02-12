@@ -25,7 +25,7 @@ class TestValidConfig:
         assert cfg["model"] == "qwen3:4b"
         # Check defaults applied
         assert cfg["max_response_bytes"] == 230
-        assert cfg["rate_limit_seconds"] == 60
+        assert cfg["rate_limit_seconds"] == 30
         assert cfg["radio_connection"] == "serial"
 
     def test_all_fields(self, tmp_path):
@@ -108,5 +108,51 @@ class TestInvalidConfig:
 
     def test_non_mapping_yaml(self, tmp_path):
         path = _write_config(tmp_path, "- a list\n- not a mapping\n")
+        with pytest.raises(SystemExit):
+            load_config(path)
+
+
+class TestMeshProtocol:
+    def test_default_protocol_is_meshtastic(self, tmp_path):
+        path = _write_config(tmp_path, 'node_name: "T"\nmodel: "m"\n')
+        cfg = load_config(path)
+        assert cfg["mesh_protocol"] == "meshtastic"
+
+    def test_meshcore_protocol(self, tmp_path):
+        content = 'node_name: "T"\nmodel: "m"\nmesh_protocol: meshcore\n'
+        path = _write_config(tmp_path, content)
+        cfg = load_config(path)
+        assert cfg["mesh_protocol"] == "meshcore"
+        # MeshCore defaults should be merged
+        assert "meshcore" in cfg
+        assert cfg["meshcore"]["connection"] == "serial"
+
+    def test_meshcore_custom_port(self, tmp_path):
+        content = """
+node_name: "T"
+model: "m"
+mesh_protocol: meshcore
+meshcore:
+  port: "192.168.1.50:5000"
+  connection: tcp
+"""
+        path = _write_config(tmp_path, content)
+        cfg = load_config(path)
+        assert cfg["meshcore"]["port"] == "192.168.1.50:5000"
+        assert cfg["meshcore"]["connection"] == "tcp"
+
+    def test_invalid_protocol(self, tmp_path):
+        path = _write_config(
+            tmp_path, 'node_name: "T"\nmodel: "m"\nmesh_protocol: zigbee\n'
+        )
+        with pytest.raises(SystemExit):
+            load_config(path)
+
+    def test_meshtastic_radio_validation_still_works(self, tmp_path):
+        """radio_connection validation only fires for meshtastic protocol."""
+        path = _write_config(
+            tmp_path,
+            'node_name: "T"\nmodel: "m"\nradio_connection: "wifi"\n',
+        )
         with pytest.raises(SystemExit):
             load_config(path)

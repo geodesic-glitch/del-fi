@@ -7,6 +7,7 @@ model: "qwen3:4b"
 
 # --- Optional (sensible defaults shown) ---
 
+# mesh_protocol: meshtastic       # meshtastic | meshcore
 # personality: "Helpful and concise community assistant."
 # knowledge_folder: ~/del-fi/knowledge
 # max_response_bytes: 230
@@ -18,10 +19,18 @@ model: "qwen3:4b"
 # num_ctx: 2048                  # context window size (lower = faster)
 # num_predict: 128               # max output tokens (lower = faster)
 # persistent_cache: true         # cache responses to disk across restarts
+# busy_notice: true              # ack queued senders with "hang tight" message
 # channels: []                   # empty = listen on all channels
 # log_level: info
 # ollama_host: "http://localhost:11434"
 # ollama_timeout: 120            # seconds
+
+# --- MeshCore-specific (only when mesh_protocol: meshcore) ---
+#
+# meshcore:
+#   port: "/dev/ttyUSB0"          # serial port or host:port for TCP
+#   connection: serial             # serial | tcp
+#   baud_rate: 115200
 
 # --- Mesh Knowledge (entirely optional — uncomment to enable) ---
 #

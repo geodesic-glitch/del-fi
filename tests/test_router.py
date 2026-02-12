@@ -3,6 +3,7 @@
 import sys
 import os
 import time
+import tempfile
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -97,7 +98,8 @@ class MockRAG:
 
 
 def _make_router():
-    """Create a Router with mock dependencies."""
+    """Create a Router with mock dependencies and isolated temp state."""
+    tmpdir = tempfile.mkdtemp(prefix="delfi-test-")
     cfg = {
         "node_name": "TEST-NODE",
         "model": "test-model:3b",
@@ -105,16 +107,17 @@ def _make_router():
         "rate_limit_seconds": 30,
         "response_cache_ttl": 300,
         "personality": "Helpful test assistant.",
-        "knowledge_folder": "/tmp/test-knowledge",
-        "_seen_senders_file": "/tmp/test-seen-senders.txt",
-        "_base_dir": "/tmp",
-        "_cache_dir": "/tmp/cache",
-        "_gossip_dir": "/tmp/gossip",
-        "_vectorstore_dir": "/tmp/vectorstore",
+        "knowledge_folder": os.path.join(tmpdir, "knowledge"),
+        "_seen_senders_file": os.path.join(tmpdir, "seen-senders.txt"),
+        "_base_dir": tmpdir,
+        "_cache_dir": os.path.join(tmpdir, "cache"),
+        "_gossip_dir": os.path.join(tmpdir, "gossip"),
+        "_vectorstore_dir": os.path.join(tmpdir, "vectorstore"),
         "mesh_knowledge": None,
         "embedding_model": "nomic-embed-text",
         "ollama_host": "http://localhost:11434",
         "ollama_timeout": 120,
+        "persistent_cache": False,
     }
     rag = MockRAG()
     return Router(cfg, rag, mesh_knowledge=None)
@@ -243,6 +246,68 @@ def test_whitespace_message():
     router = _make_router()
     response = router.route("!sender1", "   ")
     assert response is None
+
+
+# --- classify() ---
+
+
+def test_classify_empty():
+    router = _make_router()
+    assert router.classify("") == "empty"
+    assert router.classify("   ") == "empty"
+
+
+def test_classify_command():
+    router = _make_router()
+    assert router.classify("!help") == "command"
+    assert router.classify("!PING") == "command"
+    assert router.classify("!more 2") == "command"
+
+
+def test_classify_gossip():
+    """Gossip classification requires mesh_knowledge to be set."""
+    router = _make_router()
+    # No mesh_knowledge on this router → falls through to query
+    assert router.classify("DEL-FI: announcement") == "query"
+
+
+def test_classify_query():
+    router = _make_router()
+    assert router.classify("What time is the concert?") == "query"
+    assert router.classify("hello") == "query"
+
+
+# --- busy_message() ---
+
+
+def test_busy_message_next():
+    router = _make_router()
+    msg = router.busy_message(1)
+    assert "TEST-NODE" in msg
+    assert "next" in msg.lower()
+
+
+def test_busy_message_queued():
+    router = _make_router()
+    msg = router.busy_message(3)
+    assert "TEST-NODE" in msg
+    assert "3" in msg
+    assert "hang tight" in msg.lower()
+
+
+# --- Dispatcher integration ---
+
+
+def test_dispatcher_fast_vs_slow_classification():
+    """Commands are classified as fast, queries as slow."""
+    router = _make_router()
+    fast = ["!help", "!ping", "!status", "!topics", "!more", "!retry"]
+    for cmd in fast:
+        assert router.classify(cmd) == "command", f"{cmd} should be 'command'"
+
+    slow = ["What is solar power?", "hello", "tell me about first aid"]
+    for q in slow:
+        assert router.classify(q) == "query", f"{q!r} should be 'query'"
 
 
 # --- Run tests ---

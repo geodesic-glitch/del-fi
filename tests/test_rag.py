@@ -93,7 +93,7 @@ def test_rag_engine_init():
         print("  ⊘ skipping (chromadb not installed)")
         return
 
-    with tempfile.TemporaryDirectory() as tmpdir:
+    with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmpdir:
         cfg = {
             "node_name": "TEST",
             "model": "test:3b",
@@ -121,6 +121,7 @@ def test_rag_engine_init():
         assert engine.doc_count == 0
         # Topics should be empty
         assert engine.get_topics() == []
+        del engine  # release ChromaDB file handles before cleanup
 
 
 def test_rag_index_and_topics():
@@ -133,7 +134,7 @@ def test_rag_index_and_topics():
         print("  ⊘ skipping (chromadb not installed)")
         return
 
-    with tempfile.TemporaryDirectory() as tmpdir:
+    with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmpdir:
         knowledge_dir = os.path.join(tmpdir, "knowledge")
         os.makedirs(knowledge_dir)
 
@@ -171,6 +172,7 @@ def test_rag_index_and_topics():
         # That's the expected degradation.
         count = engine.index_folder(knowledge_dir)
         # Count may be 0 if Ollama is down (can't embed) — that's correct behavior
+        del engine  # release ChromaDB file handles before cleanup
 
 
 # --- Run tests ---

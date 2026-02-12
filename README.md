@@ -16,9 +16,11 @@
 
 # Del-Fi
 
-**A daemon that bridges Meshtastic LoRa mesh radio networks with locally-hosted LLMs and RAG knowledge bases.**
+**A daemon that bridges LoRa mesh radio networks with locally-hosted LLMs and RAG knowledge bases.**
 
 Drop documents into a folder, connect a $20 radio, and your community has an AI oracle that answers questions over mesh — no internet, no cloud, no accounts. Just radio waves and local knowledge.
+
+Supports **Meshtastic** and **MeshCore** mesh protocols through a pluggable adapter system — same oracle, your choice of radio stack.
 
 <!-- TODO: photo of real hardware here — Pi + LoRa radio, hand-labeled project box -->
 
@@ -27,9 +29,10 @@ Drop documents into a folder, connect a $20 radio, and your community has an AI 
 ## How It Works
 
 ```
-[LoRa Radio] <--serial/tcp/ble--> [Mesh Interface] <--> [Query Router] <--> [RAG Engine]
-                                                              |                  |
-                                                      [Response Formatter]  [Mesh Knowledge]
+[LoRa Radio] <--serial/tcp/ble--> [Mesh Adapter] <--> [Query Router] <--> [RAG Engine]
+                                        |                  |                  |
+                                   (meshtastic     [Response Formatter]  [Mesh Knowledge]
+                                    or meshcore)
 ```
 
 Someone on the mesh sends your node a DM. Del-Fi searches your local documents, feeds the relevant chunks to a local LLM, and sends back a concise answer — all within the 230-byte LoRa message limit. No internet required. Everything runs on your hardware.
@@ -48,12 +51,13 @@ Someone on the mesh sends your node a DM. Del-Fi searches your local documents, 
 
 **Radio:**
 - Any [Meshtastic-supported LoRa radio](https://meshtastic.org/docs/hardware/devices/) — Heltec V3 (~$20) works great
+- [MeshCore-flashed radios](https://github.com/ripplebiz/MeshCore) also supported
 - Antenna placement matters more than radio choice for range
 
 **Software:**
 - Python 3.10+
 - [Ollama](https://ollama.com/) (manages local LLM inference)
-- A Meshtastic radio flashed with current firmware
+- A Meshtastic or MeshCore radio flashed with current firmware
 
 ---
 
@@ -152,13 +156,15 @@ node_name: "FARM-ORACLE"
 model: "qwen2.5:3b"
 
 # Optional — defaults shown
+mesh_protocol: meshtastic    # meshtastic | meshcore
 personality: "Helpful and concise community assistant."
 knowledge_folder: ~/del-fi/knowledge
 max_response_bytes: 230
-radio_connection: serial     # serial | tcp | ble
+radio_connection: serial     # serial | tcp | ble (Meshtastic)
 radio_port: /dev/ttyUSB0     # or hostname:port for TCP
 rate_limit_seconds: 30
 response_cache_ttl: 300
+busy_notice: true            # tell queued users their question is in line
 embedding_model: "nomic-embed-text"
 channels: []                 # empty = listen on all channels
 log_level: info
@@ -166,7 +172,21 @@ ollama_host: "http://localhost:11434"
 ollama_timeout: 120
 ```
 
-Every field except `node_name` and `model` has a default. Bad config prints a human-readable error, not a traceback.
+Every field except `node_name` has a default (`model` defaults to `qwen3:4b`). Bad config prints a human-readable error, not a traceback.
+
+### MeshCore Configuration
+
+To use a MeshCore radio instead of Meshtastic:
+
+```yaml
+mesh_protocol: meshcore
+meshcore:
+  port: "/dev/ttyUSB0"        # serial port or host:port
+  connection: serial           # serial | tcp
+  baud_rate: 115200
+```
+
+> **Note:** The MeshCore adapter is currently a stub with full scaffolding. Implement the `connect()` and `send_dm()` methods in `mesh/meshcore_adapter.py` against the MeshCore Python library to bring it online.
 
 ### Mesh Knowledge (Optional)
 
@@ -304,17 +324,29 @@ No knowledge transferred. No trust required. Just a pointer.
 
 ## Architecture
 
-Seven Python files. Four dependencies. That's it.
+Seven Python files (plus the mesh adapter package). Four dependencies. That's it.
 
 ```
-delfi.py          Entry point, daemon lifecycle, startup banner
-config.py         YAML loading, validation, sensible defaults
-mesh.py           Meshtastic interface + simulator mode
-router.py         Command dispatch, RAG pipeline, response cache
-rag.py            ChromaDB indexing, Ollama embeddings + generation
-formatter.py      Markdown stripping, sentence truncation, chunking
-meshknowledge.py  Gossip, peer cache, referrals (stdlib only)
+delfi.py              Entry point, daemon lifecycle, startup banner
+config.py             YAML loading, validation, sensible defaults
+mesh/                 Pluggable mesh protocol adapters
+  __init__.py           Factory + adapter registry
+  base.py               Abstract MeshAdapter interface
+  meshtastic_adapter.py Meshtastic radios (serial/TCP/BLE)
+  meshcore_adapter.py   MeshCore radios (stub — ready to implement)
+  simulator.py          stdin/stdout for development
+router.py             Command dispatch, RAG pipeline, response cache
+rag.py                ChromaDB indexing, Ollama embeddings + generation
+formatter.py          Markdown stripping, sentence truncation, chunking
+meshknowledge.py      Gossip, peer cache, referrals (stdlib only)
 ```
+
+### Adding a New Mesh Protocol
+
+1. Create `mesh/<protocol>_adapter.py` with a class that inherits from `MeshAdapter`
+2. Implement `connect()`, `send_dm()`, and `close()`
+3. Register it in `mesh/__init__.py` → `ADAPTERS` dict
+4. Add protocol-specific config defaults in `config.py`
 
 ### Startup Sequence
 
@@ -324,8 +356,10 @@ meshknowledge.py  Gossip, peer cache, referrals (stdlib only)
 3. Indexing       Scan knowledge folder, index new files
 4. Ollama         Health check, retry loop if down
 5. Radio          Connect, or reconnect loop if unavailable
-6. Ready          Print banner, begin listening
+6. Ready          Print banner, spawn worker thread, begin listening
 ```
+
+The main loop is a **dispatcher**: commands and gossip are handled inline (sub-millisecond), while LLM queries are handed to a background worker thread. If the worker is already processing a query, new senders receive a brief "hang tight" ack so they know their question was received. This keeps the daemon responsive under load without blocking the radio.
 
 Principle: **always start, never block.** A missing radio or unavailable Ollama doesn't prevent launch. Components come online as they become available.
 
@@ -334,9 +368,12 @@ Principle: **always start, never block.** A missing radio or unavailable Ollama 
 ## Running Tests
 
 ```bash
-python tests/test_formatter.py    # 32 tests — markdown, truncation, chunking
-python tests/test_router.py       # 19 tests — commands, !more cursor, edge cases
-python tests/test_rag.py          # 6 tests  — chunking unit + chromadb integration
+python -m pytest tests/             # run all tests
+python -m pytest tests/test_mesh.py # 16 tests — adapter pattern, factory, simulator
+python -m pytest tests/test_formatter.py    # markdown, truncation, chunking
+python -m pytest tests/test_router.py       # commands, classify, busy notice, !more cursor
+python -m pytest tests/test_rag.py          # chunking unit + chromadb integration
+python -m pytest tests/test_stress.py       # concurrency, dispatcher, busy-notice integration
 ```
 
 ---

@@ -36,12 +36,18 @@ class _DelFiFormatter(logging.Formatter):
         return f"[{ts}] {record.getMessage()}"
 
 
-def setup_logging(level: str):
+def setup_logging(level: str, simulator: bool = False):
     numeric = getattr(logging, level.upper(), logging.INFO)
-    handler = logging.StreamHandler()
-    handler.setFormatter(_DelFiFormatter())
     root = logging.getLogger("delfi")
     root.setLevel(numeric)
+
+    if simulator:
+        # In simulator mode, log to file so chat output stays clean
+        handler = logging.FileHandler("delfi.log", mode="a", encoding="utf-8")
+    else:
+        handler = logging.StreamHandler()
+
+    handler.setFormatter(_DelFiFormatter())
     root.addHandler(handler)
 
 
@@ -53,16 +59,16 @@ def print_banner(cfg: dict, rag: RAGEngine, mesh_iface, mesh_knowledge):
     model = cfg["model"]
     docs = rag.doc_count
     status = "ready" if rag.available else "waiting for ollama"
+    protocol = getattr(mesh_iface, "protocol_name", cfg.get("mesh_protocol", "meshtastic"))
 
-    conn = cfg["radio_connection"]
-    port = cfg["radio_port"]
-
-    if isinstance(mesh_iface, type) or not hasattr(mesh_iface, "connected"):
+    if protocol == "Simulator":
         radio_str = "simulator"
     elif mesh_iface.connected:
-        radio_str = f"✓ {conn}:{port}"
+        conn = cfg.get("radio_connection", "")
+        port = cfg.get("radio_port", "")
+        radio_str = f"✓ {protocol} · {conn}:{port}"
     else:
-        radio_str = f"✗ {conn} (reconnecting)"
+        radio_str = f"✗ {protocol} (reconnecting)"
 
     lines = [
         f"  ·· DEL-FI ··  v{VERSION}",
@@ -112,7 +118,7 @@ def ollama_health_check(rag: RAGEngine, stop: threading.Event):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Del-Fi — Meshtastic mesh oracle daemon"
+        description="Del-Fi — mesh network oracle daemon"
     )
     parser.add_argument(
         "--config",
@@ -131,7 +137,7 @@ def main():
     # On failure: exit with human-readable error. This is the one place
     # where crashing is correct.
     cfg = load_config(args.config)
-    setup_logging(cfg["log_level"])
+    setup_logging(cfg["log_level"], simulator=args.simulator)
     log.info("config loaded")
 
     # Ensure runtime directories exist
@@ -204,8 +210,58 @@ def main():
     signal.signal(signal.SIGINT, shutdown)
     signal.signal(signal.SIGTERM, shutdown)
 
-    # === Main loop ===
-    # Process messages from the queue. Never crash.
+    # === Query worker ===
+    # LLM queries are slow (5-30s).  Rather than blocking the main loop,
+    # they run on a dedicated worker thread.  The dispatcher (main loop)
+    # handles fast commands immediately and queues LLM queries here.
+    # Expanding to a small pool (2-4 workers) later is straightforward —
+    # just spawn more threads.  Router state is protected by the GIL for
+    # a single writer; a real pool would add threading.Lock.
+    query_queue = queue.Queue()
+    worker_busy = threading.Event()
+    # Track senders with pending queries to avoid duplicate ack messages
+    pending_senders: set[str] = set()
+    pending_lock = threading.Lock()
+
+    def query_worker():
+        """Process LLM queries off the query queue."""
+        while not stop_event.is_set():
+            try:
+                sender_id, text = query_queue.get(timeout=1.0)
+            except queue.Empty:
+                continue
+
+            worker_busy.set()
+            try:
+                response = router.route(sender_id, text)
+                if response:
+                    mesh_iface.send_dm(sender_id, response)
+                    log.info(
+                        f"  \u2713 response: {byte_len(response)} bytes \u2192 {sender_id}"
+                    )
+            except Exception as e:
+                log.error(f"error processing query from {sender_id}: {e}")
+                try:
+                    mesh_iface.send_dm(
+                        sender_id,
+                        "I hit an error processing that. Try again.",
+                    )
+                except Exception:
+                    pass
+            finally:
+                with pending_lock:
+                    pending_senders.discard(sender_id)
+                worker_busy.clear()
+
+    threading.Thread(target=query_worker, daemon=True).start()
+
+    # === Main loop (dispatcher) ===
+    # Fast path: commands and gossip are handled inline (sub-millisecond).
+    # Slow path: freeform queries are handed to the worker thread.
+    # If the worker is already busy, a brief busy notice is sent so the
+    # sender knows their question was received.
+    busy_notice_on = cfg.get("busy_notice", True)
+
     while True:
         try:
             sender_id, text = msg_queue.get(timeout=1.0)
@@ -215,19 +271,41 @@ def main():
             continue
 
         try:
-            response = router.route(sender_id, text)
-            if response:
-                mesh_iface.send_dm(sender_id, response)
-                log.info(f"  ✓ response: {byte_len(response)} bytes → {sender_id}")
+            kind = router.classify(text)
+
+            if kind == "empty":
+                continue
+
+            # --- Fast path: commands & gossip (no LLM) ---
+            if kind in ("command", "gossip"):
+                response = router.route(sender_id, text)
+                if response:
+                    mesh_iface.send_dm(sender_id, response)
+                    log.info(
+                        f"  \u2713 response: {byte_len(response)} bytes \u2192 {sender_id}"
+                    )
+                continue
+
+            # --- Slow path: LLM query ---
+            with pending_lock:
+                already_pending = sender_id in pending_senders
+                pending_senders.add(sender_id)
+
+            if busy_notice_on and worker_busy.is_set() and not already_pending:
+                position = query_queue.qsize() + 1  # +1 for in-progress query
+                try:
+                    ack = router.busy_message(position)
+                    mesh_iface.send_dm(sender_id, ack)
+                    log.info(
+                        f"  \u23f3 busy notice \u2192 {sender_id} (position {position})"
+                    )
+                except Exception:
+                    pass
+
+            query_queue.put((sender_id, text))
+
         except Exception as e:
-            log.error(f"error processing message from {sender_id}: {e}")
-            # Never let one bad query kill the daemon
-            try:
-                mesh_iface.send_dm(
-                    sender_id, "I hit an error processing that. Try again."
-                )
-            except Exception:
-                pass
+            log.error(f"error dispatching message from {sender_id}: {e}")
 
 
 if __name__ == "__main__":

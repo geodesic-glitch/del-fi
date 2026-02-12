@@ -10,6 +10,7 @@ in a reduced state rather than crashing.
 import hashlib
 import logging
 import os
+import re
 import threading
 from pathlib import Path
 
@@ -25,6 +26,23 @@ DEFAULT_CHUNK_OVERLAP = 32 * CHARS_PER_TOKEN  # ~128 chars
 # Tighter threshold avoids pulling in loosely related chunks that confuse
 # the model. Better to fall back to raw LLM than inject bad context.
 DISTANCE_THRESHOLD = 0.5
+
+# Keyword boost: when a query keyword appears literally in a chunk,
+# reduce its distance by this amount. Makes entity lookups ("Where SparkFun?")
+# find the right chunk even when vector similarity alone fails.
+KEYWORD_BOOST = 0.15
+
+# Words too common to be useful for keyword matching
+_STOP_WORDS = frozenset({
+    "a", "an", "the", "is", "it", "in", "on", "at", "to", "for",
+    "of", "and", "or", "not", "be", "are", "was", "were", "do",
+    "does", "did", "has", "have", "had", "can", "could", "will",
+    "would", "should", "may", "might", "i", "me", "my", "you",
+    "your", "we", "our", "they", "them", "their", "what", "where",
+    "when", "how", "who", "which", "that", "this", "there",
+    "here", "with", "from", "about", "into", "if", "so", "than",
+    "but", "just", "any", "some", "all", "no", "yes",
+})
 
 
 class RAGEngine:
@@ -152,6 +170,11 @@ class RAGEngine:
         if not chunks:
             return False
 
+        # Log each chunk for diagnostics
+        for i, chunk in enumerate(chunks):
+            preview = chunk.replace('\n', ' | ')[:100]
+            log.debug(f"  chunk {filepath.name}#{i}: ({len(chunk)} chars) {preview}")
+
         try:
             embeddings = self._embed(chunks)
             ids = [f"{file_key}::chunk{i}" for i in range(len(chunks))]
@@ -193,9 +216,13 @@ class RAGEngine:
     ) -> list[str]:
         """Split text into chunks for embedding.
 
-        Uses section-aware splitting for markdown: splits on ## headers
-        so each chunk is a coherent section with its heading preserved.
-        Falls back to character splitting for plain text or very long sections.
+        Tries multiple strategies in order of preference:
+        1. Markdown heading splits (##, ###)
+        2. Blank-line paragraph splits
+        3. Character-based fallback
+
+        Each strategy preserves the document preamble (title + intro)
+        for context in every chunk.
         """
         text = text.strip()
         if not text:
@@ -204,76 +231,168 @@ class RAGEngine:
         if len(text) <= chunk_size:
             return [text]
 
-        # Try markdown section splitting first
-        if "\n## " in text or text.startswith("## "):
-            return self._chunk_by_sections(text, chunk_size, overlap)
+        preamble, body = self._extract_preamble(text)
 
-        # Plain text fallback: character splitting
+        # Strategy 1: Split on ### sub-headers (e.g. individual exhibitors)
+        if "\n### " in body:
+            chunks = self._split_on_heading(body, "### ", preamble, chunk_size)
+            if len(chunks) > 1:
+                return self._finalize_chunks(chunks, chunk_size)
+
+        # Strategy 2: Split on ## headers (e.g. FAQ questions, zones)
+        if "\n## " in body or body.startswith("## "):
+            chunks = self._split_on_heading(body, "## ", preamble, chunk_size)
+            if len(chunks) > 1:
+                return self._finalize_chunks(chunks, chunk_size)
+
+        # Strategy 3: Split on blank-line separated paragraphs/blocks
+        chunks = self._split_on_blank_lines(body, preamble, chunk_size)
+        if len(chunks) > 1:
+            return self._finalize_chunks(chunks, chunk_size)
+
+        # Strategy 4: Character-based fallback
         return self._chunk_by_chars(text, chunk_size, overlap)
 
-    def _chunk_by_sections(
-        self,
-        text: str,
-        chunk_size: int,
-        overlap: int,
-    ) -> list[str]:
-        """Split markdown on ## headers. Each section keeps its heading.
+    def _extract_preamble(self, text: str) -> tuple[str, str]:
+        """Extract document title and intro text before first heading.
 
-        The document title (# heading) and any preamble text are prepended
-        to the first chunk and optionally to others for context.
+        Returns (preamble, body) where body starts at the first
+        ## or ### heading. If no headings, preamble is empty.
         """
         lines = text.split("\n")
-
-        # Extract document title / preamble (everything before first ##)
         preamble_lines = []
         body_start = 0
+
         for i, line in enumerate(lines):
-            if line.startswith("## "):
+            if line.startswith("## ") or line.startswith("### "):
                 body_start = i
                 break
             preamble_lines.append(line)
         else:
-            # No ## headers found — shouldn't happen but fallback
-            return self._chunk_by_chars(text, chunk_size, overlap)
+            # No sub-headings found — everything is body
+            return ("", text)
 
         preamble = "\n".join(preamble_lines).strip()
+        body = "\n".join(lines[body_start:]).strip()
+        return (preamble, body)
 
-        # Split into sections on ## boundaries
+    def _split_on_heading(
+        self, body: str, marker: str, preamble: str, chunk_size: int
+    ) -> list[str]:
+        """Split text on a heading marker (## or ###).
+
+        Each section includes its heading. Parent ## heading is preserved
+        when splitting on ### within a ## section.
+        """
+        lines = body.split("\n")
         sections = []
         current_lines = []
-        for line in lines[body_start:]:
-            if line.startswith("## ") and current_lines:
+        parent_heading = ""  # track the ## parent when splitting on ###
+
+        for line in lines:
+            # Track parent ## heading when we're splitting on ###
+            if marker == "### " and line.startswith("## ") and not line.startswith("### "):
+                parent_heading = line
+                # If we have accumulated lines, flush them
+                if current_lines:
+                    sections.append("\n".join(current_lines).strip())
+                    current_lines = [line]
+                else:
+                    current_lines.append(line)
+                continue
+
+            if line.startswith(marker) and current_lines:
                 sections.append("\n".join(current_lines).strip())
-                current_lines = [line]
+                current_lines = []
+                # Prepend parent heading to ### sections
+                if marker == "### " and parent_heading:
+                    current_lines.append(parent_heading)
+                current_lines.append(line)
             else:
                 current_lines.append(line)
+
         if current_lines:
             sections.append("\n".join(current_lines).strip())
 
-        # Build chunks: prepend preamble (file title) for context,
-        # merge small adjacent sections, split oversized ones
+        # Prepend preamble to each section
         chunks = []
         for section in sections:
-            # Add preamble context so the model knows which document
-            chunk = f"{preamble}\n\n{section}" if preamble else section
-
-            if len(chunk) <= chunk_size:
-                chunks.append(chunk)
+            if preamble:
+                chunk = f"{preamble}\n\n{section}"
             else:
-                # Section too long — sub-split by characters
-                for sub in self._chunk_by_chars(chunk, chunk_size, overlap):
-                    chunks.append(sub)
+                chunk = section
+            chunks.append(chunk)
 
-        # Merge very small adjacent chunks (< 25% of chunk_size)
-        merged = []
+        return chunks
+
+    def _split_on_blank_lines(
+        self, body: str, preamble: str, chunk_size: int
+    ) -> list[str]:
+        """Split text on blank-line boundaries (paragraph breaks).
+
+        Groups consecutive non-empty lines into blocks.
+        """
+        blocks = []
+        current_lines = []
+
+        for line in body.split("\n"):
+            if line.strip() == "":
+                if current_lines:
+                    blocks.append("\n".join(current_lines).strip())
+                    current_lines = []
+            else:
+                current_lines.append(line)
+
+        if current_lines:
+            blocks.append("\n".join(current_lines).strip())
+
+        if len(blocks) <= 1:
+            return []  # didn't help, let caller try next strategy
+
+        # Prepend preamble to each block
+        chunks = []
+        for block in blocks:
+            if preamble:
+                chunk = f"{preamble}\n\n{block}"
+            else:
+                chunk = block
+            chunks.append(chunk)
+
+        return chunks
+
+    def _finalize_chunks(
+        self, chunks: list[str], chunk_size: int
+    ) -> list[str]:
+        """Merge small chunks and split oversized ones."""
+        # Split oversized chunks by characters
+        sized = []
         for chunk in chunks:
-            if merged and len(merged[-1]) + len(chunk) + 2 <= chunk_size:
-                if len(merged[-1]) < chunk_size // 4 or len(chunk) < chunk_size // 4:
-                    merged[-1] = merged[-1] + "\n\n" + chunk
-                    continue
-            merged.append(chunk)
+            if len(chunk) <= chunk_size:
+                sized.append(chunk)
+            else:
+                for sub in self._chunk_by_chars(chunk, chunk_size, DEFAULT_CHUNK_OVERLAP):
+                    sized.append(sub)
 
-        return merged if merged else chunks
+        # Merge very small adjacent chunks (< 20% of chunk_size)
+        min_size = chunk_size // 5
+        merged = []
+        for chunk in sized:
+            if (
+                merged
+                and len(merged[-1]) < min_size
+                and len(merged[-1]) + len(chunk) + 2 <= chunk_size
+            ):
+                merged[-1] = merged[-1] + "\n\n" + chunk
+            elif (
+                merged
+                and len(chunk) < min_size
+                and len(merged[-1]) + len(chunk) + 2 <= chunk_size
+            ):
+                merged[-1] = merged[-1] + "\n\n" + chunk
+            else:
+                merged.append(chunk)
+
+        return merged if merged else sized
 
     def _chunk_by_chars(
         self,
@@ -329,8 +448,19 @@ class RAGEngine:
 
     # --- Retrieval ---
 
+    @staticmethod
+    def _extract_keywords(text: str) -> list[str]:
+        """Extract meaningful keywords from a query for hybrid matching."""
+        words = re.findall(r'[a-zA-Z0-9]+', text.lower())
+        return [w for w in words if w not in _STOP_WORDS and len(w) >= 2]
+
     def query(self, text: str, top_k: int = 3) -> list[dict]:
         """Retrieve relevant document chunks for a query.
+
+        Uses hybrid search: vector similarity + keyword boosting.
+        Chunks containing literal query keywords get a distance reduction,
+        so entity lookups like "Where SparkFun?" find the right chunk
+        even when embeddings alone rank it poorly.
 
         Returns list of {text, source, file, similarity} dicts,
         sorted by relevance. Empty list if nothing matches or RAG is down.
@@ -340,25 +470,60 @@ class RAGEngine:
 
         try:
             query_embedding = self._embed([text])[0]
+            keywords = self._extract_keywords(text)
 
+            # Fetch ALL chunks so keyword matches aren't missed
+            fetch_k = min(max(top_k * 3, 10, self._doc_count), self._doc_count)
             results = self.collection.query(
                 query_embeddings=[query_embedding],
-                n_results=min(top_k, self._doc_count),
+                n_results=fetch_k,
                 include=["documents", "metadatas", "distances"],
             )
 
-            chunks = []
+            # Build scored candidates with keyword boost
+            candidates = []
             for doc, meta, dist in zip(
                 results["documents"][0],
                 results["metadatas"][0],
                 results["distances"][0],
             ):
-                if dist <= DISTANCE_THRESHOLD:
+                doc_lower = doc.lower()
+                matched_kw = [kw for kw in keywords if kw in doc_lower]
+                boost = KEYWORD_BOOST * len(matched_kw) if matched_kw else 0.0
+                adjusted = max(dist - boost, 0.0)  # lower = better
+                candidates.append({
+                    "doc": doc,
+                    "meta": meta,
+                    "raw_dist": dist,
+                    "adjusted_dist": adjusted,
+                    "kw_matches": matched_kw,
+                })
+
+            # Re-sort by adjusted distance (best first)
+            candidates.sort(key=lambda c: c["adjusted_dist"])
+
+            # Log ALL candidates with boost info
+            for c in candidates:
+                sim = round(1 - c["raw_dist"], 2)
+                adj_sim = round(1 - c["adjusted_dist"], 2)
+                preview = c["doc"].replace('\n', ' | ')[:80]
+                marker = "✓" if c["adjusted_dist"] <= DISTANCE_THRESHOLD else "✗"
+                kw_info = f" kw={c['kw_matches']}" if c["kw_matches"] else ""
+                log.debug(
+                    f"  {marker} [{c['meta'].get('file','?')}]"
+                    f" sim={sim}→{adj_sim} dist={round(c['raw_dist'],3)}→{round(c['adjusted_dist'],3)}"
+                    f"{kw_info}: {preview}"
+                )
+
+            # Select top_k that pass the threshold (using adjusted distance)
+            chunks = []
+            for c in candidates:
+                if c["adjusted_dist"] <= DISTANCE_THRESHOLD and len(chunks) < top_k:
                     chunks.append({
-                        "text": doc,
-                        "source": meta.get("source", "local"),
-                        "file": meta.get("file", "unknown"),
-                        "similarity": round(1 - dist, 2),
+                        "text": c["doc"],
+                        "source": c["meta"].get("source", "local"),
+                        "file": c["meta"].get("file", "unknown"),
+                        "similarity": round(1 - c["adjusted_dist"], 2),
                     })
 
             if chunks:
@@ -385,12 +550,30 @@ class RAGEngine:
         """Generate a response using Ollama /api/generate.
 
         Returns response text, or None if generation fails.
+
+        TODO: Auto-detect the model's native context window size via
+        ollama.show(model) and use it instead of the hardcoded num_ctx
+        config default (2048).  For example, gemma3:12b supports 128K
+        but we currently cap at whatever the user sets manually.
+        Steps:
+          1. On startup (_init_ollama), call self.ollama.show(model)
+             and read the context_length from model parameters.
+          2. Use that as the default, but let the config override it
+             downward (useful for memory-constrained hardware).
+          3. Adjust _build_prompt's context budget accordingly.
+        This also affects num_predict — larger windows allow longer
+        responses, but LoRa's 230-byte limit makes that less relevant.
         """
         if not self._ollama_available or not self.ollama:
             return None
 
         system = self._build_system_prompt()
         prompt = self._build_prompt(user_query, context_chunks, peer_context)
+
+        # Debug: log the full prompt so we can diagnose retrieval vs generation issues
+        log.debug(f"  === SYSTEM PROMPT ===\n{system}")
+        log.debug(f"  === USER PROMPT ===\n{prompt}")
+        log.debug(f"  === END PROMPT ===")
 
         try:
             result = self.ollama.generate(
