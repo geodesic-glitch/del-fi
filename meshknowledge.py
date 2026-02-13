@@ -16,6 +16,32 @@ log = logging.getLogger("delfi.meshknowledge")
 # Protocol version for gossip announcements
 PROTOCOL_VERSION = 1
 
+# TODO: Meshmouth — compressed oracle-to-oracle wire format
+#
+# Right now inter-node gossip and peer sync use human-readable strings
+# ("DEL-FI:1:ANNOUNCE:...", JSON Q&A pairs).  That's fine for debugging
+# but wastes precious LoRa bytes on syntax humans never see.
+#
+# Meshmouth is the long-term replacement: a compact, LLM-native encoding
+# for oracle-to-oracle traffic.  Both ends are language models, so the
+# wire format doesn't need to be human-readable — it needs to be
+# *model*-readable.  Think of it as a semantic pidgin the oracles agree on:
+#
+#   - Fixed token-budget preambles instead of verbose key=value headers
+#   - Lossy semantic compression (abbreviations, dropped articles,
+#     symbolic shorthand) that an LLM can faithfully reconstruct
+#   - Negotiated per-pair vocab: two nodes that peer frequently can
+#     build a shared codebook of topic shorthands and entity aliases
+#   - Protocol-level envelope stays deterministic (version, routing,
+#     TTL) but the *payload* is model-compressed text
+#
+# The goal: fit 3-5x more meaning into the same 230-byte LoRa frame
+# when oracles talk to each other, without losing fidelity when the
+# receiving oracle decompresses for a human questioner.
+#
+# Bump PROTOCOL_VERSION when Meshmouth ships; v1 nodes ignore v2
+# announcements gracefully (already handled in parse_announcement).
+
 
 class MeshKnowledge:
     """Manages the three-tier knowledge system for inter-oracle communication.

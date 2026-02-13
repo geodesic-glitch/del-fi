@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Del-Fi BBS</title>
+<meta name="description" content="Del-Fi — Community AI Oracle over LoRa Mesh Radio. No internet, no cloud, no accounts.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0c0c0c;
+    --fg: #cccccc;
+    --dim: #666666;
+    --cyan: #54e4e4;
+    --yellow: #e4e454;
+    --green: #54e454;
+    --magenta: #e454e4;
+    --red: #e45454;
+    --white: #ffffff;
+    --blue: #5454e4;
+    --border-color: #444444;
+    --font: 'IBM Plex Mono', 'Courier New', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font);
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--fg);
+    background: var(--bg);
+    padding: 16px;
+    max-width: 82ch;
+    margin: 0 auto;
+  }
+
+  /* CRT scanlines */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      transparent 0px,
+      transparent 2px,
+      rgba(0,0,0,0.08) 2px,
+      rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  ::selection {
+    background: var(--cyan);
+    color: var(--bg);
+  }
+
+  a { color: var(--cyan); text-decoration: none; }
+  a:hover { color: var(--bg); background: var(--cyan); }
+  a:focus-visible { outline: 1px solid var(--cyan); outline-offset: 1px; }
+
+  .cyan { color: var(--cyan); }
+  .yellow { color: var(--yellow); }
+  .green { color: var(--green); }
+  .magenta { color: var(--magenta); }
+  .red { color: var(--red); }
+  .white { color: var(--white); }
+  .blue { color: var(--blue); }
+  .dim { color: var(--dim); }
+
+  .blink {
+    animation: blink-anim 1.2s step-end infinite;
+  }
+  @keyframes blink-anim {
+    50% { opacity: 0; }
+  }
+
+  pre {
+    font-family: var(--font);
+    font-size: 14px;
+    line-height: 1.4;
+    white-space: pre;
+    overflow-x: auto;
+  }
+
+  .box pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-x: visible;
+  }
+
+  .box-fixed pre {
+    white-space: pre;
+    overflow-x: auto;
+  }
+
+  section { margin-bottom: 8px; }
+
+  .statusbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 16px;
+    font-size: 12px;
+    color: var(--dim);
+  }
+
+  .nav-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 0;
+    margin-bottom: 24px;
+    font-size: 13px;
+  }
+
+  .nav-key {
+    color: var(--bg);
+    background: var(--cyan);
+    padding: 0 4px;
+    font-weight: 600;
+  }
+
+  .nav-label {
+    color: var(--fg);
+    margin-right: 16px;
+  }
+
+  .box {
+    border: 1px solid var(--border-color);
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    position: relative;
+  }
+
+  .box-title {
+    position: absolute;
+    top: -9px;
+    left: 12px;
+    background: var(--bg);
+    padding: 0 6px;
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  .link-block {
+    display: block;
+    border: 1px solid var(--border-color);
+    padding: 10px 16px;
+    margin-bottom: 8px;
+    transition: border-color 0.15s;
+    color: var(--fg);
+  }
+
+  .link-block:hover {
+    border-color: var(--cyan);
+    background: transparent;
+    color: var(--fg);
+  }
+
+  .link-block:hover .link-title { color: var(--cyan); }
+
+  .link-title {
+    color: var(--white);
+    font-weight: 600;
+    transition: color 0.15s;
+  }
+
+  .link-desc { color: var(--dim); }
+
+  .cases {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .case-item {
+    border: 1px solid var(--border-color);
+    padding: 10px 14px;
+  }
+
+  .case-name { color: var(--yellow); font-weight: 600; }
+  .case-desc { color: var(--dim); font-size: 13px; }
+
+  .sep {
+    color: var(--border-color);
+    margin: 16px 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .footer-bar {
+    border-top: 1px solid var(--border-color);
+    padding-top: 12px;
+    margin-top: 24px;
+    color: var(--dim);
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  @media (max-width: 600px) {
+    body { font-size: 12px; padding: 10px; }
+    pre { font-size: 11px; }
+    .cases { grid-template-columns: 1fr; }
+    .statusbar, .footer-bar { flex-direction: column; gap: 2px; }
+    .nav-row { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Status bar -->
+<div class="statusbar">
+  <span>DEL-FI BBS v0.1</span>
+  <span id="clock"></span>
+</div>
+
+<!-- Banner -->
+<section>
+<pre>
+<span class="green">     ██████╗  ████████╗ ██╗              ████████╗ ██╗</span>
+<span class="green">     ██╔══██╗ ██╔═════╝ ██║              ██╔═════╝ ██║</span>
+<span class="green">     ██║  ██║ ██████╗   ██║     ═══════  ██████╗   ██║</span>
+<span class="green">     ██║  ██║ ██╔═══╝   ██║              ██╔═══╝   ██║</span>
+<span class="green">     ██████╔╝ ████████╗ ████████╗        ██║       ██║</span>
+<span class="green">     ╚═════╝  ╚═══════╝ ╚═══════╝        ╚═╝       ╚═╝</span>
+<span class="green">              ██████╗  ██████╗  ██████╗</span>
+<span class="green">              ██╔══██╗ ██╔══██╗ ██╔═══╝</span>
+<span class="green">              ██████╔╝ ██████╔╝ ██████╗</span>
+<span class="green">              ██╔══██╗ ██╔══██╗ ╚═══██║</span>
+<span class="green">              ██████╔╝ ██████╔╝ ██████║</span>
+<span class="green">              ╚═════╝  ╚═════╝  ╚═════╝</span>
+<span class="dim">     ·  ·  · ─── ·  · ── ·  ─── ·  · ── ·  ·  · ─── ·</span>
+<span class="yellow">          community AI oracle over LoRa mesh radio</span>
+<span class="dim">     ·  ─── ·  ·  · ── ·  ·  ─── ·  · ── ·  ·  · ── ·</span>
+</pre>
+</section>
+
+<!-- Nav -->
+<div class="nav-row">
+  <span><span class="nav-key">G</span><span class="nav-label"> GitHub</span></span>
+  <span><span class="nav-key">D</span><span class="nav-label"> Docs</span></span>
+  <span><span class="nav-key">C</span><span class="nav-label"> Discord</span></span>
+  <span><span class="nav-key">?</span><span class="nav-label"> About</span></span>
+</div>
+
+<div class="sep">────────────────────────────────────────────────────────────────────────────────</div>
+
+<!-- Pitch -->
+<section class="box">
+  <span class="box-title cyan">WHAT IS THIS</span>
+  <pre>
+Drop documents into a folder. Connect a <span class="white">$20 radio</span>. Your community now has an AI oracle that answers questions over <span class="white">LoRa mesh</span> -- no internet, no cloud, no accounts.
+
+Someone on the mesh sends your node a DM. Del-Fi searches your local docs, feeds the relevant chunks to a <span class="white">local LLM</span>, and sends back a concise answer -- all within the <span class="yellow">230-byte</span> LoRa message limit. Everything runs on your hardware.
+
+Supports <span class="white">Meshtastic</span> and <span class="white">MeshCore</span> radios through a pluggable adapter system -- same oracle, your choice of radio stack.
+
+<span class="dim">Seven Python files. Four dependencies. That's it.</span>
+</pre>
+</section>
+
+<!-- Demo conversation -->
+<section class="box">
+  <span class="box-title yellow">SAMPLE SESSION</span>
+  <pre>
+<span class="green">you&gt;</span>  saw a big snake on the ridge trail, brown with dark bands
+<span class="cyan">node&gt;</span> Sounds like a Northern water snake (Nerodia sipedon). Common near the creek crossings this time of year. Non-venomous, but defensive if cornered -- give it space and it'll move on. <span class="dim">[!more]</span>
+
+<span class="green">you&gt;</span>  !more
+<span class="cyan">node&gt;</span> The copperhead is the one to watch for here. Key difference: copperheads have hourglass-shaped bands that are wider on the sides, and a triangular head. Water snakes have irregular blotchy bands and a rounder head.
+
+<span class="green">you&gt;</span>  is the falls trail open or still washed out?
+<span class="cyan">node&gt;</span> Falls Trail is open as of last update. The footbridge at mile 1.4 was repaired May 3. The creek crossing at mile 2.1 is still knee-deep after rain -- wear boots or bring dry socks.
+
+<span class="green">you&gt;</span>  where can i find chanterelles around here?
+<span class="cyan">node&gt;</span> I don't have docs on that. FORAGER-NODE advertises: mushroom-id, seasonal-foraging, edible-plants. Try DMing them directly.
+
+<span class="green">you&gt;</span>  !peers
+<span class="cyan">node&gt;</span> Peered:
+         FORAGER-NODE (mushroom-id, edible-plants)
+       Nearby:
+         SUMMIT-STATION (weather-alerts, trail-closures)
+</pre>
+</section>
+
+<div class="sep">────────────────────────────────────────────────────────────────────────────────</div>
+
+<!-- Hardware -->
+<section class="box box-fixed">
+  <span class="box-title green">HARDWARE</span>
+  <pre>
+<span class="white">COMPUTE (pick one)</span>                         <span class="white">RADIO</span>
+
+  Raspberry Pi 5 8GB .... ~$80            Any Meshtastic or
+  Jetson Orin Nano ...... ~$249           MeshCore LoRa radio.
+  Mac Mini M4 ........... ~$499           Heltec V3 is ~$20.
+
+  <span class="dim">3B models are the sweet spot.              Antenna placement matters
+  5-10s per response on a Pi.</span>              <span class="dim">more than radio choice.</span>
+</pre>
+</section>
+
+<!-- Quick start -->
+<section class="box">
+  <span class="box-title magenta">QUICK START</span>
+  <pre>
+<span class="dim">  $</span> <span class="green">curl -fsSL https://ollama.com/install.sh | sh</span>
+<span class="dim">  $</span> <span class="green">ollama pull qwen2.5:3b</span>
+<span class="dim">  $</span> <span class="green">ollama pull nomic-embed-text</span>
+<span class="dim">  $</span> <span class="green">git clone https://github.com/geodesic-glitch/del-fi.git</span>
+<span class="dim">  $</span> <span class="green">cd del-fi && pip install -r requirements.txt</span>
+<span class="dim">  $</span> <span class="green">cp config.example.yaml ~/del-fi/config.yaml</span>
+<span class="dim">  $</span> <span class="green">python delfi.py</span>
+
+  That's 6 commands. Edit config.yaml to set node_name and model.
+  Everything else has sensible defaults.
+
+  <span class="dim">No radio? Test with:</span>  python delfi.py --simulator
+</pre>
+</section>
+
+<div class="sep">────────────────────────────────────────────────────────────────────────────────</div>
+
+<!-- Links -->
+<section>
+<pre class="yellow"> CONNECT</pre>
+<br>
+
+<a href="https://github.com/geodesic-glitch/del-fi" class="link-block" target="_blank" rel="noopener">
+  <span class="link-title">[G] Source Code</span>
+  <span class="link-desc"> -- github.com/geodesic-glitch/del-fi</span>
+</a>
+
+<a href="https://github.com/geodesic-glitch/del-fi#readme" class="link-block" target="_blank" rel="noopener">
+  <span class="link-title">[D] Documentation</span>
+  <span class="link-desc"> -- install, config, peering, architecture, troubleshooting</span>
+</a>
+
+<a href="https://discord.gg/del-fi" class="link-block" target="_blank" rel="noopener">
+  <span class="link-title">[C] Community Discord</span>
+  <span class="link-desc"> -- share deployments, get help, meet other operators</span>
+</a>
+</section>
+
+<div class="sep">────────────────────────────────────────────────────────────────────────────────</div>
+
+<!-- Use cases -->
+<section>
+<pre class="yellow"> USE CASES</pre>
+<br>
+<div class="cases">
+  <div class="case-item">
+    <div class="case-name">Trail Oracle</div>
+    <div class="case-desc">Solar node at a trailhead. Plant ID, trail conditions, emergency procedures.</div>
+  </div>
+  <div class="case-item">
+    <div class="case-name">Farm Oracle</div>
+    <div class="case-desc">Planting calendars, livestock medicine, equipment repair for the whole property.</div>
+  </div>
+  <div class="case-item">
+    <div class="case-name">Emergency Response</div>
+    <div class="case-desc">Triage protocols, shelter locations, phrase books. Works when towers don't.</div>
+  </div>
+  <div class="case-item">
+    <div class="case-name">The Dead Drop</div>
+    <div class="case-desc">Mysterious node appears on mesh. Cryptic name, oddly specific local knowledge.</div>
+  </div>
+  <div class="case-item">
+    <div class="case-name">Festival Concierge</div>
+    <div class="case-desc">Schedules, vendor maps, food guides. No cell service required.</div>
+  </div>
+  <div class="case-item">
+    <div class="case-name">Neighborhood Mesh</div>
+    <div class="case-desc">HOA rules, garbage day, business hours. "When's bulk trash pickup?"</div>
+  </div>
+</div>
+</section>
+
+<div class="sep">────────────────────────────────────────────────────────────────────────────────</div>
+
+<!-- Architecture -->
+<section class="box box-fixed">
+  <span class="box-title blue">ARCHITECTURE</span>
+  <pre>
+<span class="dim">[LoRa Radio]</span> &lt;--serial/tcp--&gt; <span class="dim">[Mesh Adapter]</span> &lt;--&gt; <span class="dim">[Router]</span> &lt;--&gt; <span class="dim">[RAG Engine]</span>
+                                     |               |               |
+                              <span class="dim">(meshtastic</span>    <span class="dim">[Formatter]</span>    <span class="dim">[Mesh Knowledge]</span>
+                               <span class="dim">or meshcore)</span>
+
+<span class="white">delfi.py</span> .............. entry point, daemon lifecycle, worker thread
+<span class="white">config.py</span> ............. YAML loading, validation, defaults
+<span class="white">mesh/</span> ................. pluggable mesh protocol adapters
+  <span class="dim">base.py</span> ............. abstract MeshAdapter interface
+  <span class="dim">meshtastic_adapter.py</span>  Meshtastic radios (serial/TCP/BLE)
+  <span class="dim">meshcore_adapter.py</span>    MeshCore radios (stub -- ready to implement)
+  <span class="dim">simulator.py</span> ........ stdin/stdout for development
+<span class="white">router.py</span> ............. command dispatch, query pipeline, cache
+<span class="white">rag.py</span> ................ ChromaDB indexing, Ollama embeddings
+<span class="white">formatter.py</span> .......... markdown stripping, sentence truncation
+<span class="white">meshknowledge.py</span> ...... gossip, peer cache, referrals
+</pre>
+</section>
+
+<!-- Footer -->
+<div class="footer-bar">
+  <span>GPL-3.0 -- matching the Meshtastic ecosystem</span>
+  <span>Built for communities that own their infrastructure<span class="blink">_</span></span>
+</div>
+
+<!-- Keyboard shortcuts + clock -->
+<script>
+document.addEventListener('keydown', function(e) {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  var key = e.key.toLowerCase();
+  if (key === 'g') window.open('https://github.com/geodesic-glitch/del-fi', '_blank');
+  if (key === 'd') window.open('https://github.com/geodesic-glitch/del-fi#readme', '_blank');
+  if (key === 'c') window.open('https://discord.gg/del-fi', '_blank');
+});
+
+function updateClock() {
+  var now = new Date();
+  var h = String(now.getHours()).padStart(2, '0');
+  var m = String(now.getMinutes()).padStart(2, '0');
+  var s = String(now.getSeconds()).padStart(2, '0');
+  document.getElementById('clock').textContent = h + ':' + m + ':' + s;
+}
+updateClock();
+setInterval(updateClock, 1000);
+</script>
+
+</body>
+</html>
