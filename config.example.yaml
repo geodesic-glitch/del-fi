@@ -34,7 +34,7 @@ model: "gemma3:4b-it-qat"
 # response_cache_ttl: 300
 # embedding_model: "nomic-embed-text"
 # num_ctx: 2048                  # context window size (lower = faster)
-# num_predict: 256               # max output tokens (lower = faster)
+# num_predict: 128               # max output tokens (lower = faster)
 # persistent_cache: true         # cache responses to disk across restarts
 # busy_notice: true              # ack queued senders with "hang tight" message
 # channels: []                   # empty = listen on all channels
@@ -53,7 +53,7 @@ model: "gemma3:4b-it-qat"
 # persistent_memory: false        # save memory to disk across restarts
 
 # --- Community Board (off by default) ---
-# A shared bulletin board.  Users post with !post <message> and
+# A shared message board.  Users post with !post <message> and
 # read with !board (recent) or !board <topic> (search).
 # !unpost removes all of a user's own posts.
 #

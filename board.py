@@ -1,4 +1,4 @@
-"""Community bulletin board for Del-Fi.
+"""Community message board for Del-Fi.
 
 Users post short messages via  !post <message>
 Users read the board via       !board          (recent posts)

@@ -1,4 +1,4 @@
-"""Tests for board.py — community bulletin board."""
+"""Tests for board.py — community message board."""
 
 import os
 import sys

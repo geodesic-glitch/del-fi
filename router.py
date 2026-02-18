@@ -99,7 +99,7 @@ class Router:
                 f"ttl {self.memory.ttl}s)"
             )
 
-        # Community bulletin board (disabled when board_enabled is false)
+        # Community message board (disabled when board_enabled is false)
         self.board: Board | None = None
         if cfg.get("board_enabled", False):
             self.board = Board(cfg)
