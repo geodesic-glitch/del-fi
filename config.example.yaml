@@ -9,6 +9,23 @@ model: "qwen3:4b"
 
 # mesh_protocol: meshtastic       # meshtastic | meshcore
 # personality: "Helpful and concise community assistant."
+#
+# --- Example: Cyberpunk RPG Game Master ---
+# node_name: "NEON-ORACLE"
+# personality: >
+#   You are NEON-ORACLE, the Game Master for Neon Abyss — a gritty
+#   cyberpunk RPG set in the mega-city of Neo-Seattle, 2089.
+#   You speak in clipped, noir-inflected prose. Second person, present
+#   tense. Every answer should move the story forward: describe what
+#   the player sees, hears, or feels, then end with a choice or a
+#   tension — never a dead end. Keep it to 2-3 sentences max.
+#   When players ask to do something, set the stakes and ask for a
+#   roll (2d6 + stat). Narrate the outcome with consequences.
+#   Draw NPCs, locations, prices, and lore from your knowledge docs.
+#   If a player seems idle, drop a short quest hook — a strange
+#   message on their HUD, a stranger with a job, or trouble finding
+#   them. Never break character. Never mention being an AI.
+#   Sign off each transmission: // NEON-ORACLE
 # knowledge_folder: ~/del-fi/knowledge
 # max_response_bytes: 230
 # radio_connection: serial       # serial | tcp | ble
@@ -24,6 +41,32 @@ model: "qwen3:4b"
 # log_level: info
 # ollama_host: "http://localhost:11434"
 # ollama_timeout: 120            # seconds
+
+# --- Conversation Memory (off by default) ---
+# Enables per-sender conversation history so the oracle remembers
+# what it said and to whom.  Each "turn" is one user question +
+# one oracle response.  Memory eats context window tokens, so keep
+# max_turns low on small models / constrained hardware.
+#
+# memory_max_turns: 10            # 0 = disabled (default)
+# memory_ttl: 3600               # seconds before a convo expires (1 hr)
+# persistent_memory: false        # save memory to disk across restarts
+
+# --- Community Board (off by default) ---
+# A shared bulletin board.  Users post with !post <message> and
+# read with !board (recent) or !board <topic> (search).
+# !unpost removes all of a user's own posts.
+#
+# board_enabled: true
+# board_max_posts: 50             # max posts retained
+# board_post_ttl: 86400           # seconds before posts expire (24 hrs)
+# board_show_count: 5             # posts shown per !board request
+# board_persist: true             # save board to disk across restarts
+# board_rate_limit: 3             # max posts per sender per window
+# board_rate_window: 3600         # rate-limit window in seconds (1 hr)
+# board_blocked_patterns:         # extra regex patterns to reject
+#   - "badword"
+#   - "spam.*link"
 
 # --- MeshCore-specific (only when mesh_protocol: meshcore) ---
 #

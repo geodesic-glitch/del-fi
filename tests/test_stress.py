@@ -76,7 +76,7 @@ def _mock_rag(available=True, generate_delay=0.0, generate_text="Test answer."):
     def fake_query(text):
         return [{"file": "test.md", "text": "Fake context."}]
 
-    def fake_generate(text, context_chunks=None, peer_context=None):
+    def fake_generate(text, context_chunks=None, peer_context=None, history="", board_context=""):
         if generate_delay > 0:
             time.sleep(generate_delay)
         return generate_text

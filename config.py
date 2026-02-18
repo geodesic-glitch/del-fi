@@ -33,6 +33,17 @@ DEFAULTS = {
     "num_predict": 128,
     "persistent_cache": True,
     "busy_notice": True,
+    "memory_max_turns": 0,
+    "memory_ttl": 3600,
+    "persistent_memory": False,
+    "board_enabled": False,
+    "board_max_posts": 50,
+    "board_post_ttl": 86400,
+    "board_show_count": 5,
+    "board_persist": True,
+    "board_rate_limit": 3,
+    "board_rate_window": 3600,
+    "board_blocked_patterns": [],
 }
 
 # Protocol-specific defaults merged when mesh_protocol is set

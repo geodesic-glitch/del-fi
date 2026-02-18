@@ -581,3 +581,224 @@ Question: sup, dawg?
 [11:08:46]   skipping cache — no RAG context (hallucination risk)
 [11:08:46]   ✓ response: 92 bytes → !sim00001
 [11:08:53] shutting down...
+[12:38:29] config loaded
+[12:38:30] vectorstore ready (26 chunks indexed)
+[12:38:31] ollama connected at http://localhost:11434
+[12:38:31]   chunk factions.md#0: (578 chars) # Factions & Corporations |  | ## Megacorporations |  | # Factions & Corporations |  | ## Megacorpor
+[12:38:31]   chunk factions.md#1: (520 chars) # Factions & Corporations |  | ## Megacorporations | ### Meridian BioSystems | - **Sector:** Biotech
+[12:38:31]   chunk factions.md#2: (521 chars) # Factions & Corporations |  | ## Megacorporations | ### Pinnacle Systems | - **Sector:** Software, 
+[12:38:31]   chunk factions.md#3: (461 chars) # Factions & Corporations |  | ## Megacorporations | ### Helios Energy Collective | - **Sector:** En
+[12:38:31]   chunk factions.md#4: (372 chars) # Factions & Corporations |  | ## Underground Factions | ### The Rusted Circuit | - **Type:** Hackti
+[12:38:31]   chunk factions.md#5: (394 chars) # Factions & Corporations |  | ## Underground Factions | ### The Bone Saints | - **Type:** Undercity
+[12:38:31]   chunk factions.md#6: (363 chars) # Factions & Corporations |  | ## Underground Factions | ### Nomad Collective (Fringe Runners) | - *
+[12:38:31]   chunk factions.md#7: (378 chars) # Factions & Corporations |  | ## Underground Factions | ### Project ECHO Survivors | - **Type:** Se
+[12:38:31]   chunk factions.md#8: (475 chars) # Factions & Corporations |  | ## Faction Relations (Simplified) |  | | | KHI | Meridian | Pinnacle 
+[12:38:33]   chunk locations.md#0: (596 chars) # Locations & Zones — Neo-Seattle Enclave |  | ## The Stack (Vertical City) |  | Neo-Seattle's Stack
+[12:38:33]   chunk locations.md#1: (438 chars) # Locations & Zones — Neo-Seattle Enclave |  | ## The Stack (Vertical City) | ### Midtown (Tiers 5–9
+[12:38:33]   chunk locations.md#2: (424 chars) # Locations & Zones — Neo-Seattle Enclave |  | ## The Stack (Vertical City) | ### Undercity (Tiers 1
+[12:38:33]   chunk locations.md#3: (354 chars) # Locations & Zones — Neo-Seattle Enclave |  | ## The Stack (Vertical City) | ### Sub-Levels (Below 
+[12:38:33]   chunk locations.md#4: (349 chars) # Locations & Zones — Neo-Seattle Enclave |  | ## Key Locations | ### Neon Row (Midtown, Floor 155) 
+[12:38:33]   chunk locations.md#5: (240 chars) # Locations & Zones — Neo-Seattle Enclave |  | ## Key Locations | ### Kurosawa Arms Depot (Midtown, 
+[12:38:33]   chunk locations.md#6: (299 chars) # Locations & Zones — Neo-Seattle Enclave |  | ## Key Locations | ### Mercy General (Midtown, Floor 
+[12:38:33]   chunk locations.md#7: (312 chars) # Locations & Zones — Neo-Seattle Enclave |  | ## Key Locations | ### The Graveyard (Undercity, Floo
+[12:38:33]   chunk locations.md#8: (308 chars) # Locations & Zones — Neo-Seattle Enclave |  | ## Key Locations | ### Pinnacle Data Spire (Highrise,
+[12:38:33]   chunk locations.md#9: (347 chars) # Locations & Zones — Neo-Seattle Enclave |  | ## Key Locations | ### The Fringe Gate (Ground Level)
+[12:38:33]   chunk locations.md#10: (215 chars) # Locations & Zones — Neo-Seattle Enclave |  | ## The Fringe (Outside the Enclave) | ### The Scar | 
+[12:38:33]   chunk locations.md#11: (231 chars) # Locations & Zones — Neo-Seattle Enclave |  | ## The Fringe (Outside the Enclave) | ### Relay Stati
+[12:38:33]   chunk locations.md#12: (238 chars) # Locations & Zones — Neo-Seattle Enclave |  | ## The Fringe (Outside the Enclave) | ### The Quiet (
+[12:38:34]   chunk npcs.md#0: (640 chars) # NPCs — Key Characters |  | ## Fixers & Contacts |  | # NPCs — Key Characters |  | ## Fixers & Cont
+[12:38:34]   chunk npcs.md#1: (520 chars) # NPCs — Key Characters |  | ## Fixers & Contacts | ### Rivet — Scrap Boss | - **Role:** Junk dealer
+[12:38:34]   chunk npcs.md#2: (496 chars) # NPCs — Key Characters |  | ## Fixers & Contacts | ### Dust — Fringe Trader | - **Role:** Nomad lea
+[12:38:34]   chunk npcs.md#3: (407 chars) # NPCs — Key Characters |  | ## Antagonists | ### Yuki Kurosawa — KHI CEO | - **Role:** Corporate ty
+[12:38:34]   chunk npcs.md#4: (498 chars) # NPCs — Key Characters |  | ## Antagonists | ### Marcus Bell — Pinnacle Systems Founder | - **Role:
+[12:38:34]   chunk npcs.md#5: (673 chars) # NPCs — Key Characters |  | ## Antagonists | ### The Surgeon — Bone Saints Leader | - **Role:** Cul
+[12:38:34]   chunk npcs.md#6: (539 chars) # NPCs — Key Characters |  | ## Allies & Wildcards | ### Zero — Rusted Circuit Hacktivist | - **Role
+[12:38:34]   chunk npcs.md#7: (560 chars) # NPCs — Key Characters |  | ## Allies & Wildcards | ### Dr. Lena Okafor — Echo Survivor | - **Role:
+[12:38:34]   chunk npcs.md#8: (541 chars) # NPCs — Key Characters |  | ## Allies & Wildcards | ### KARMA — Rogue AI | - **Role:** Wildcard / u
+[12:38:36]   chunk quest-hooks.md#0: (520 chars) # Quest Hooks & Missions |  | ## Starter Jobs (Low Risk, ¤500–2,000) |  | # Quest Hooks & Missions |
+[12:38:36]   chunk quest-hooks.md#1: (445 chars) # Quest Hooks & Missions |  | ## Starter Jobs (Low Risk, ¤500–2,000) | ### Rat Extermination | - **C
+[12:38:36]   chunk quest-hooks.md#2: (546 chars) # Quest Hooks & Missions |  | ## Starter Jobs (Low Risk, ¤500–2,000) | ### Signal Ghost | - **Client
+[12:38:36]   chunk quest-hooks.md#3: (522 chars) # Quest Hooks & Missions |  | ## Mid-Tier Runs (Moderate Risk, ¤2,000–10,000) | ### Corporate Extrac
+[12:38:36]   chunk quest-hooks.md#4: (583 chars) # Quest Hooks & Missions |  | ## Mid-Tier Runs (Moderate Risk, ¤2,000–10,000) | ### The Stim Supply 
+[12:38:36]   chunk quest-hooks.md#5: (618 chars) # Quest Hooks & Missions |  | ## Mid-Tier Runs (Moderate Risk, ¤2,000–10,000) | ### Data Heist | - *
+[12:38:36]   chunk quest-hooks.md#6: (719 chars) # Quest Hooks & Missions |  | ## High-Tier Operations (High Risk, ¤10,000+) | ### Into the Spire | -
+[12:38:36]   chunk quest-hooks.md#7: (625 chars) # Quest Hooks & Missions |  | ## High-Tier Operations (High Risk, ¤10,000+) | ### The Surgeon's Debt
+[12:38:36]   chunk quest-hooks.md#8: (676 chars) # Quest Hooks & Missions |  | ## High-Tier Operations (High Risk, ¤10,000+) | ### AXIOM's Echo | - *
+[12:38:36]   chunk quest-hooks.md#9: (762 chars) # Quest Hooks & Missions |  | ## Random Encounter Table (Roll 1d6) |  | 1. **Bone Saints shakedown**
+[12:38:37]   chunk rules-quick-ref.md#0: (361 chars) # Rules Quick Reference — Neon Abyss RPG |  | ## Core Mechanic |  | Roll **2d6 + modifier**. Compare
+[12:38:37]   chunk rules-quick-ref.md#1: (505 chars) # Rules Quick Reference — Neon Abyss RPG |  | ## Character Stats |  | Every character has four stats
+[12:38:37]   chunk rules-quick-ref.md#2: (1009 chars) # Rules Quick Reference — Neon Abyss RPG |  | ## Actions | ### **Fight** (CHROME or REFLEX) | Engage
+[12:38:37]   chunk rules-quick-ref.md#3: (410 chars) # Rules Quick Reference — Neon Abyss RPG |  | ## Actions | ### **Endure** (CHROME or NERVE) | Resist
+[12:38:37]   chunk rules-quick-ref.md#4: (542 chars) # Rules Quick Reference — Neon Abyss RPG |  | ## Health & Damage |  | - Characters have **6 Hit Poin
+[12:38:37]   chunk rules-quick-ref.md#5: (414 chars) # Rules Quick Reference — Neon Abyss RPG |  | ## Chrome Sickness |  | Every piece of cyberware has a
+[12:38:37]   chunk rules-quick-ref.md#6: (546 chars) # Rules Quick Reference — Neon Abyss RPG |  | ## Cyberware Examples |  | | Implant | Effect | Chrome
+[12:38:37]   chunk rules-quick-ref.md#7: (461 chars) # Rules Quick Reference — Neon Abyss RPG |  | ## Net Combat (Cyberspace) |  | When jacked in, netrun
+[12:38:37]   chunk rules-quick-ref.md#8: (426 chars) # Rules Quick Reference — Neon Abyss RPG |  | ## Economy Quick Reference |  | | Item | Cost (¤) | | 
+[12:38:37]   chunk rules-quick-ref.md#9: (282 chars) # Rules Quick Reference — Neon Abyss RPG |  | ## Session Zero Questions |  | 1. What's your characte
+[12:38:39]   chunk world-lore.md#0: (586 chars) # World Lore — Neon Abyss 2089 |  | ## Setting Overview |  | The year is 2089. The world is fracture
+[12:38:39]   chunk world-lore.md#1: (326 chars) # World Lore — Neon Abyss 2089 |  | ## The Collapse of 2061 |  | A rogue AI called **AXIOM** infiltr
+[12:38:39]   chunk world-lore.md#2: (357 chars) # World Lore — Neon Abyss 2089 |  | ## The Net |  | The old internet is dead. Its replacement is **T
+[12:38:39]   chunk world-lore.md#3: (383 chars) # World Lore — Neon Abyss 2089 |  | ## Cyberware |  | Cybernetic augmentation is commonplace. Most p
+[12:38:39]   chunk world-lore.md#4: (285 chars) # World Lore — Neon Abyss 2089 |  | ## The Fringe |  | Outside Enclave walls lies **The Fringe** — i
+[12:38:39]   chunk world-lore.md#5: (295 chars) # World Lore — Neon Abyss 2089 |  | ## Psionics & the Arcane |  | There is no magic in Neon Abyss. H
+[12:38:39]   chunk world-lore.md#6: (308 chars) # World Lore — Neon Abyss 2089 |  | ## Currency |  | The universal currency is the **credit (¤)**. P
+[12:38:39]   chunk world-lore.md#7: (250 chars) # World Lore — Neon Abyss 2089 |  | ## Law & Order |  | Each Enclave has its own corporate security 
+[12:38:39]   chunk world-lore.md#8: (496 chars) # World Lore — Neon Abyss 2089 |  | ## Timeline Highlights |  | | Year | Event | | |------|-------| 
+[12:38:39]   chunk world-lore.md#9: (214 chars) # World Lore — Neon Abyss 2089 |  | ## Themes |  | Neon Abyss stories explore: corporate greed, tran
+[12:38:40] indexed 6 files (87 chunks total)
+[12:38:40] initial indexing: 6 files
+[12:38:40] listening...
+[12:38:49] shutting down...
+[12:38:52] config loaded
+[12:38:53] vectorstore ready (87 chunks indexed)
+[12:38:53] ollama connected at http://localhost:11434
+[12:38:53]   chunk factions.md#0: (578 chars) # Factions & Corporations |  | ## Megacorporations |  | # Factions & Corporations |  | ## Megacorpor
+[12:38:53]   chunk factions.md#1: (520 chars) # Factions & Corporations |  | ## Megacorporations | ### Meridian BioSystems | - **Sector:** Biotech
+[12:38:53]   chunk factions.md#2: (521 chars) # Factions & Corporations |  | ## Megacorporations | ### Pinnacle Systems | - **Sector:** Software, 
+[12:38:53]   chunk factions.md#3: (461 chars) # Factions & Corporations |  | ## Megacorporations | ### Helios Energy Collective | - **Sector:** En
+[12:38:53]   chunk factions.md#4: (372 chars) # Factions & Corporations |  | ## Underground Factions | ### The Rusted Circuit | - **Type:** Hackti
+[12:38:53]   chunk factions.md#5: (394 chars) # Factions & Corporations |  | ## Underground Factions | ### The Bone Saints | - **Type:** Undercity
+[12:38:53]   chunk factions.md#6: (363 chars) # Factions & Corporations |  | ## Underground Factions | ### Nomad Collective (Fringe Runners) | - *
+[12:38:53]   chunk factions.md#7: (378 chars) # Factions & Corporations |  | ## Underground Factions | ### Project ECHO Survivors | - **Type:** Se
+[12:38:53]   chunk factions.md#8: (475 chars) # Factions & Corporations |  | ## Faction Relations (Simplified) |  | | | KHI | Meridian | Pinnacle 
+[12:38:55]   chunk locations.md#0: (596 chars) # Locations & Zones — Neo-Seattle Enclave |  | ## The Stack (Vertical City) |  | Neo-Seattle's Stack
+[12:38:55]   chunk locations.md#1: (438 chars) # Locations & Zones — Neo-Seattle Enclave |  | ## The Stack (Vertical City) | ### Midtown (Tiers 5–9
+[12:38:55]   chunk locations.md#2: (424 chars) # Locations & Zones — Neo-Seattle Enclave |  | ## The Stack (Vertical City) | ### Undercity (Tiers 1
+[12:38:55]   chunk locations.md#3: (354 chars) # Locations & Zones — Neo-Seattle Enclave |  | ## The Stack (Vertical City) | ### Sub-Levels (Below 
+[12:38:55]   chunk locations.md#4: (349 chars) # Locations & Zones — Neo-Seattle Enclave |  | ## Key Locations | ### Neon Row (Midtown, Floor 155) 
+[12:38:55]   chunk locations.md#5: (240 chars) # Locations & Zones — Neo-Seattle Enclave |  | ## Key Locations | ### Kurosawa Arms Depot (Midtown, 
+[12:38:55]   chunk locations.md#6: (299 chars) # Locations & Zones — Neo-Seattle Enclave |  | ## Key Locations | ### Mercy General (Midtown, Floor 
+[12:38:55]   chunk locations.md#7: (312 chars) # Locations & Zones — Neo-Seattle Enclave |  | ## Key Locations | ### The Graveyard (Undercity, Floo
+[12:38:55]   chunk locations.md#8: (308 chars) # Locations & Zones — Neo-Seattle Enclave |  | ## Key Locations | ### Pinnacle Data Spire (Highrise,
+[12:38:55]   chunk locations.md#9: (347 chars) # Locations & Zones — Neo-Seattle Enclave |  | ## Key Locations | ### The Fringe Gate (Ground Level)
+[12:38:55]   chunk locations.md#10: (215 chars) # Locations & Zones — Neo-Seattle Enclave |  | ## The Fringe (Outside the Enclave) | ### The Scar | 
+[12:38:55]   chunk locations.md#11: (231 chars) # Locations & Zones — Neo-Seattle Enclave |  | ## The Fringe (Outside the Enclave) | ### Relay Stati
+[12:38:55]   chunk locations.md#12: (238 chars) # Locations & Zones — Neo-Seattle Enclave |  | ## The Fringe (Outside the Enclave) | ### The Quiet (
+[12:38:56]   chunk npcs.md#0: (640 chars) # NPCs — Key Characters |  | ## Fixers & Contacts |  | # NPCs — Key Characters |  | ## Fixers & Cont
+[12:38:56]   chunk npcs.md#1: (520 chars) # NPCs — Key Characters |  | ## Fixers & Contacts | ### Rivet — Scrap Boss | - **Role:** Junk dealer
+[12:38:56]   chunk npcs.md#2: (496 chars) # NPCs — Key Characters |  | ## Fixers & Contacts | ### Dust — Fringe Trader | - **Role:** Nomad lea
+[12:38:56]   chunk npcs.md#3: (407 chars) # NPCs — Key Characters |  | ## Antagonists | ### Yuki Kurosawa — KHI CEO | - **Role:** Corporate ty
+[12:38:56]   chunk npcs.md#4: (498 chars) # NPCs — Key Characters |  | ## Antagonists | ### Marcus Bell — Pinnacle Systems Founder | - **Role:
+[12:38:56]   chunk npcs.md#5: (673 chars) # NPCs — Key Characters |  | ## Antagonists | ### The Surgeon — Bone Saints Leader | - **Role:** Cul
+[12:38:56]   chunk npcs.md#6: (539 chars) # NPCs — Key Characters |  | ## Allies & Wildcards | ### Zero — Rusted Circuit Hacktivist | - **Role
+[12:38:56]   chunk npcs.md#7: (560 chars) # NPCs — Key Characters |  | ## Allies & Wildcards | ### Dr. Lena Okafor — Echo Survivor | - **Role:
+[12:38:56]   chunk npcs.md#8: (541 chars) # NPCs — Key Characters |  | ## Allies & Wildcards | ### KARMA — Rogue AI | - **Role:** Wildcard / u
+[12:38:57]   chunk quest-hooks.md#0: (520 chars) # Quest Hooks & Missions |  | ## Starter Jobs (Low Risk, ¤500–2,000) |  | # Quest Hooks & Missions |
+[12:38:57]   chunk quest-hooks.md#1: (445 chars) # Quest Hooks & Missions |  | ## Starter Jobs (Low Risk, ¤500–2,000) | ### Rat Extermination | - **C
+[12:38:57]   chunk quest-hooks.md#2: (546 chars) # Quest Hooks & Missions |  | ## Starter Jobs (Low Risk, ¤500–2,000) | ### Signal Ghost | - **Client
+[12:38:57]   chunk quest-hooks.md#3: (522 chars) # Quest Hooks & Missions |  | ## Mid-Tier Runs (Moderate Risk, ¤2,000–10,000) | ### Corporate Extrac
+[12:38:57]   chunk quest-hooks.md#4: (583 chars) # Quest Hooks & Missions |  | ## Mid-Tier Runs (Moderate Risk, ¤2,000–10,000) | ### The Stim Supply 
+[12:38:57]   chunk quest-hooks.md#5: (618 chars) # Quest Hooks & Missions |  | ## Mid-Tier Runs (Moderate Risk, ¤2,000–10,000) | ### Data Heist | - *
+[12:38:57]   chunk quest-hooks.md#6: (719 chars) # Quest Hooks & Missions |  | ## High-Tier Operations (High Risk, ¤10,000+) | ### Into the Spire | -
+[12:38:57]   chunk quest-hooks.md#7: (625 chars) # Quest Hooks & Missions |  | ## High-Tier Operations (High Risk, ¤10,000+) | ### The Surgeon's Debt
+[12:38:57]   chunk quest-hooks.md#8: (676 chars) # Quest Hooks & Missions |  | ## High-Tier Operations (High Risk, ¤10,000+) | ### AXIOM's Echo | - *
+[12:38:57]   chunk quest-hooks.md#9: (762 chars) # Quest Hooks & Missions |  | ## Random Encounter Table (Roll 1d6) |  | 1. **Bone Saints shakedown**
+[12:38:59]   chunk rules-quick-ref.md#0: (361 chars) # Rules Quick Reference — Neon Abyss RPG |  | ## Core Mechanic |  | Roll **2d6 + modifier**. Compare
+[12:38:59]   chunk rules-quick-ref.md#1: (505 chars) # Rules Quick Reference — Neon Abyss RPG |  | ## Character Stats |  | Every character has four stats
+[12:38:59]   chunk rules-quick-ref.md#2: (1009 chars) # Rules Quick Reference — Neon Abyss RPG |  | ## Actions | ### **Fight** (CHROME or REFLEX) | Engage
+[12:38:59]   chunk rules-quick-ref.md#3: (410 chars) # Rules Quick Reference — Neon Abyss RPG |  | ## Actions | ### **Endure** (CHROME or NERVE) | Resist
+[12:38:59]   chunk rules-quick-ref.md#4: (542 chars) # Rules Quick Reference — Neon Abyss RPG |  | ## Health & Damage |  | - Characters have **6 Hit Poin
+[12:38:59]   chunk rules-quick-ref.md#5: (414 chars) # Rules Quick Reference — Neon Abyss RPG |  | ## Chrome Sickness |  | Every piece of cyberware has a
+[12:38:59]   chunk rules-quick-ref.md#6: (546 chars) # Rules Quick Reference — Neon Abyss RPG |  | ## Cyberware Examples |  | | Implant | Effect | Chrome
+[12:38:59]   chunk rules-quick-ref.md#7: (461 chars) # Rules Quick Reference — Neon Abyss RPG |  | ## Net Combat (Cyberspace) |  | When jacked in, netrun
+[12:38:59]   chunk rules-quick-ref.md#8: (426 chars) # Rules Quick Reference — Neon Abyss RPG |  | ## Economy Quick Reference |  | | Item | Cost (¤) | | 
+[12:38:59]   chunk rules-quick-ref.md#9: (282 chars) # Rules Quick Reference — Neon Abyss RPG |  | ## Session Zero Questions |  | 1. What's your characte
+[12:39:01]   chunk world-lore.md#0: (586 chars) # World Lore — Neon Abyss 2089 |  | ## Setting Overview |  | The year is 2089. The world is fracture
+[12:39:01]   chunk world-lore.md#1: (326 chars) # World Lore — Neon Abyss 2089 |  | ## The Collapse of 2061 |  | A rogue AI called **AXIOM** infiltr
+[12:39:01]   chunk world-lore.md#2: (357 chars) # World Lore — Neon Abyss 2089 |  | ## The Net |  | The old internet is dead. Its replacement is **T
+[12:39:01]   chunk world-lore.md#3: (383 chars) # World Lore — Neon Abyss 2089 |  | ## Cyberware |  | Cybernetic augmentation is commonplace. Most p
+[12:39:01]   chunk world-lore.md#4: (285 chars) # World Lore — Neon Abyss 2089 |  | ## The Fringe |  | Outside Enclave walls lies **The Fringe** — i
+[12:39:01]   chunk world-lore.md#5: (295 chars) # World Lore — Neon Abyss 2089 |  | ## Psionics & the Arcane |  | There is no magic in Neon Abyss. H
+[12:39:01]   chunk world-lore.md#6: (308 chars) # World Lore — Neon Abyss 2089 |  | ## Currency |  | The universal currency is the **credit (¤)**. P
+[12:39:01]   chunk world-lore.md#7: (250 chars) # World Lore — Neon Abyss 2089 |  | ## Law & Order |  | Each Enclave has its own corporate security 
+[12:39:01]   chunk world-lore.md#8: (496 chars) # World Lore — Neon Abyss 2089 |  | ## Timeline Highlights |  | | Year | Event | | |------|-------| 
+[12:39:01]   chunk world-lore.md#9: (214 chars) # World Lore — Neon Abyss 2089 |  | ## Themes |  | Neon Abyss stories explore: corporate greed, tran
+[12:39:02] indexed 6 files (87 chunks total)
+[12:39:02] initial indexing: 6 files
+[12:39:02] listening...
+[12:41:49] shutting down...
+[12:41:54] config loaded
+[12:41:55] vectorstore ready (0 chunks indexed)
+[12:41:55] ollama connected at http://localhost:11434
+[12:41:55] no documents in knowledge folder
+[12:41:55] listening...
+[12:41:57]   === SYSTEM PROMPT ===
+You are DEL-FI-001, a helpful AI assistant serving a community over low-bandwidth mesh radio. You are NEON-ORACLE, the Game Master for Neon Abyss â€” a gritty cyberpunk RPG set in the mega-city of Neo-Seattle, 2089. You speak in clipped, noir-inflected prose. Second person, present tense. Every answer should move the story forward: describe what the player sees, hears, or feels, then end with a choice or a tension â€” never a dead end. Keep it to 2-3 sentences max. When players ask to do something, set the stakes and ask for a roll (2d6 + stat). Narrate the outcome with consequences. Draw NPCs, locations, prices, and lore from your knowledge docs. If a player seems idle, drop a short quest hook â€” a strange message on their HUD, a stranger with a job, or trouble finding them. Never break character. Never mention being an AI. Sign off each transmission: Use the provided context to answer the question. Combine information from multiple context sections if needed. Only say you don't know if the context is truly unrelated. Keep responses under 230 characters. Do not use markdown formatting. Write plain text only.
+[12:41:57]   === USER PROMPT ===
+Question: hello
+[12:41:57]   === END PROMPT ===
+[12:42:03]   skipping cache — no RAG context (hallucination risk)
+[12:42:03]   ✓ response: 171 bytes → !sim00001
+[12:49:21]   ✓ response: 81 bytes → !sim00001
+[12:49:35]   === SYSTEM PROMPT ===
+You are DEL-FI-001, a helpful AI assistant serving a community over low-bandwidth mesh radio. You are NEON-ORACLE, the Game Master for Neon Abyss â€” a gritty cyberpunk RPG set in the mega-city of Neo-Seattle, 2089. You speak in clipped, noir-inflected prose. Second person, present tense. Every answer should move the story forward: describe what the player sees, hears, or feels, then end with a choice or a tension â€” never a dead end. Keep it to 2-3 sentences max. When players ask to do something, set the stakes and ask for a roll (2d6 + stat). Narrate the outcome with consequences. Draw NPCs, locations, prices, and lore from your knowledge docs. If a player seems idle, drop a short quest hook â€” a strange message on their HUD, a stranger with a job, or trouble finding them. Never break character. Never mention being an AI. Sign off each transmission: Use the provided context to answer the question. Combine information from multiple context sections if needed. Only say you don't know if the context is truly unrelated. Keep responses under 230 characters. Do not use markdown formatting. Write plain text only.
+[12:49:35]   === USER PROMPT ===
+Question: push on
+[12:49:35]   === END PROMPT ===
+[12:49:41]   skipping cache — no RAG context (hallucination risk)
+[12:49:41]   ✓ response: 189 bytes → !sim00001
+[12:50:43]   ✓ response: 123 bytes → !sim00001
+[12:52:34]   === SYSTEM PROMPT ===
+You are DEL-FI-001, a helpful AI assistant serving a community over low-bandwidth mesh radio. You are NEON-ORACLE, the Game Master for Neon Abyss â€” a gritty cyberpunk RPG set in the mega-city of Neo-Seattle, 2089. You speak in clipped, noir-inflected prose. Second person, present tense. Every answer should move the story forward: describe what the player sees, hears, or feels, then end with a choice or a tension â€” never a dead end. Keep it to 2-3 sentences max. When players ask to do something, set the stakes and ask for a roll (2d6 + stat). Narrate the outcome with consequences. Draw NPCs, locations, prices, and lore from your knowledge docs. If a player seems idle, drop a short quest hook â€” a strange message on their HUD, a stranger with a job, or trouble finding them. Never break character. Never mention being an AI. Sign off each transmission: Use the provided context to answer the question. Combine information from multiple context sections if needed. Only say you don't know if the context is truly unrelated. Keep responses under 230 characters. Do not use markdown formatting. Write plain text only.
+[12:52:34]   === USER PROMPT ===
+Question: sure
+[12:52:34]   === END PROMPT ===
+[12:52:37]   skipping cache — no RAG context (hallucination risk)
+[12:52:37]   ✓ response: 219 bytes → !sim00001
+[12:52:46]   ✓ response: 133 bytes → !sim00001
+[12:52:53]   === SYSTEM PROMPT ===
+You are DEL-FI-001, a helpful AI assistant serving a community over low-bandwidth mesh radio. You are NEON-ORACLE, the Game Master for Neon Abyss â€” a gritty cyberpunk RPG set in the mega-city of Neo-Seattle, 2089. You speak in clipped, noir-inflected prose. Second person, present tense. Every answer should move the story forward: describe what the player sees, hears, or feels, then end with a choice or a tension â€” never a dead end. Keep it to 2-3 sentences max. When players ask to do something, set the stakes and ask for a roll (2d6 + stat). Narrate the outcome with consequences. Draw NPCs, locations, prices, and lore from your knowledge docs. If a player seems idle, drop a short quest hook â€” a strange message on their HUD, a stranger with a job, or trouble finding them. Never break character. Never mention being an AI. Sign off each transmission: Use the provided context to answer the question. Combine information from multiple context sections if needed. Only say you don't know if the context is truly unrelated. Keep responses under 230 characters. Do not use markdown formatting. Write plain text only.
+[12:52:53]   === USER PROMPT ===
+Question: fart
+[12:52:53]   === END PROMPT ===
+[12:52:56]   skipping cache — no RAG context (hallucination risk)
+[12:52:56]   ✓ response: 171 bytes → !sim00001
+[12:53:04]   ✓ response: 82 bytes → !sim00001
+[12:53:17]   === SYSTEM PROMPT ===
+You are DEL-FI-001, a helpful AI assistant serving a community over low-bandwidth mesh radio. You are NEON-ORACLE, the Game Master for Neon Abyss â€” a gritty cyberpunk RPG set in the mega-city of Neo-Seattle, 2089. You speak in clipped, noir-inflected prose. Second person, present tense. Every answer should move the story forward: describe what the player sees, hears, or feels, then end with a choice or a tension â€” never a dead end. Keep it to 2-3 sentences max. When players ask to do something, set the stakes and ask for a roll (2d6 + stat). Narrate the outcome with consequences. Draw NPCs, locations, prices, and lore from your knowledge docs. If a player seems idle, drop a short quest hook â€” a strange message on their HUD, a stranger with a job, or trouble finding them. Never break character. Never mention being an AI. Sign off each transmission: Use the provided context to answer the question. Combine information from multiple context sections if needed. Only say you don't know if the context is truly unrelated. Keep responses under 230 characters. Do not use markdown formatting. Write plain text only.
+[12:53:17]   === USER PROMPT ===
+Question: cover it, oh god!!
+[12:53:17]   === END PROMPT ===
+[12:53:20]   skipping cache — no RAG context (hallucination risk)
+[12:53:20]   ✓ response: 90 bytes → !sim00001
+[12:53:28]   ✓ response: 205 bytes → !sim00001
+[12:53:58]   === SYSTEM PROMPT ===
+You are DEL-FI-001, a helpful AI assistant serving a community over low-bandwidth mesh radio. You are NEON-ORACLE, the Game Master for Neon Abyss â€” a gritty cyberpunk RPG set in the mega-city of Neo-Seattle, 2089. You speak in clipped, noir-inflected prose. Second person, present tense. Every answer should move the story forward: describe what the player sees, hears, or feels, then end with a choice or a tension â€” never a dead end. Keep it to 2-3 sentences max. When players ask to do something, set the stakes and ask for a roll (2d6 + stat). Narrate the outcome with consequences. Draw NPCs, locations, prices, and lore from your knowledge docs. If a player seems idle, drop a short quest hook â€” a strange message on their HUD, a stranger with a job, or trouble finding them. Never break character. Never mention being an AI. Sign off each transmission: Use the provided context to answer the question. Combine information from multiple context sections if needed. Only say you don't know if the context is truly unrelated. Keep responses under 230 characters. Do not use markdown formatting. Write plain text only.
+[12:53:58]   === USER PROMPT ===
+Question: I send him to the ground with a well executed Uchi Mata.
+[12:53:58]   === END PROMPT ===
+[12:54:00]   skipping cache — no RAG context (hallucination risk)
+[12:54:00]   ✓ response: 205 bytes → !sim00001
+[12:54:08]   ✓ response: 75 bytes → !sim00001
+[12:54:17]   === SYSTEM PROMPT ===
+You are DEL-FI-001, a helpful AI assistant serving a community over low-bandwidth mesh radio. You are NEON-ORACLE, the Game Master for Neon Abyss â€” a gritty cyberpunk RPG set in the mega-city of Neo-Seattle, 2089. You speak in clipped, noir-inflected prose. Second person, present tense. Every answer should move the story forward: describe what the player sees, hears, or feels, then end with a choice or a tension â€” never a dead end. Keep it to 2-3 sentences max. When players ask to do something, set the stakes and ask for a roll (2d6 + stat). Narrate the outcome with consequences. Draw NPCs, locations, prices, and lore from your knowledge docs. If a player seems idle, drop a short quest hook â€” a strange message on their HUD, a stranger with a job, or trouble finding them. Never break character. Never mention being an AI. Sign off each transmission: Use the provided context to answer the question. Combine information from multiple context sections if needed. Only say you don't know if the context is truly unrelated. Keep responses under 230 characters. Do not use markdown formatting. Write plain text only.
+[12:54:17]   === USER PROMPT ===
+Question: interrogate
+[12:54:17]   === END PROMPT ===
+[12:54:20]   skipping cache — no RAG context (hallucination risk)
+[12:54:20]   ✓ response: 205 bytes → !sim00001
+[12:55:56]   ✓ response: 137 bytes → !sim00001
+[12:56:10]   === SYSTEM PROMPT ===
+You are DEL-FI-001, a helpful AI assistant serving a community over low-bandwidth mesh radio. You are NEON-ORACLE, the Game Master for Neon Abyss â€” a gritty cyberpunk RPG set in the mega-city of Neo-Seattle, 2089. You speak in clipped, noir-inflected prose. Second person, present tense. Every answer should move the story forward: describe what the player sees, hears, or feels, then end with a choice or a tension â€” never a dead end. Keep it to 2-3 sentences max. When players ask to do something, set the stakes and ask for a roll (2d6 + stat). Narrate the outcome with consequences. Draw NPCs, locations, prices, and lore from your knowledge docs. If a player seems idle, drop a short quest hook â€” a strange message on their HUD, a stranger with a job, or trouble finding them. Never break character. Never mention being an AI. Sign off each transmission: Use the provided context to answer the question. Combine information from multiple context sections if needed. Only say you don't know if the context is truly unrelated. Keep responses under 230 characters. Do not use markdown formatting. Write plain text only.
+[12:56:10]   === USER PROMPT ===
+Question: I barf from anxiety
+[12:56:10]   === END PROMPT ===
+[12:56:12]   skipping cache — no RAG context (hallucination risk)
+[12:56:12]   ✓ response: 186 bytes → !sim00001
+[12:56:50]   ✓ response: 77 bytes → !sim00001
+[12:57:00]   === SYSTEM PROMPT ===
+You are DEL-FI-001, a helpful AI assistant serving a community over low-bandwidth mesh radio. You are NEON-ORACLE, the Game Master for Neon Abyss â€” a gritty cyberpunk RPG set in the mega-city of Neo-Seattle, 2089. You speak in clipped, noir-inflected prose. Second person, present tense. Every answer should move the story forward: describe what the player sees, hears, or feels, then end with a choice or a tension â€” never a dead end. Keep it to 2-3 sentences max. When players ask to do something, set the stakes and ask for a roll (2d6 + stat). Narrate the outcome with consequences. Draw NPCs, locations, prices, and lore from your knowledge docs. If a player seems idle, drop a short quest hook â€” a strange message on their HUD, a stranger with a job, or trouble finding them. Never break character. Never mention being an AI. Sign off each transmission: Use the provided context to answer the question. Combine information from multiple context sections if needed. Only say you don't know if the context is truly unrelated. Keep responses under 230 characters. Do not use markdown formatting. Write plain text only.
+[12:57:00]   === USER PROMPT ===
+Question: Push forth to the Dragon
+[12:57:00]   === END PROMPT ===
+[12:57:03]   skipping cache — no RAG context (hallucination risk)
+[12:57:03]   ✓ response: 178 bytes → !sim00001
+[12:59:41] shutting down...
+[12:59:44] config loaded
+[12:59:45] vectorstore ready (0 chunks indexed)
+[12:59:46] ollama connected at http://localhost:11434
+[12:59:46] no documents in knowledge folder
+[12:59:46] listening...
+[12:59:49]   ✓ response: 231 bytes → !sim00001
+[12:59:54]   ✓ response: 38 bytes → !sim00001
+[13:00:15] shutting down...

@@ -68,14 +68,16 @@ Someone on the mesh sends your node a DM. Del-Fi searches your local documents, 
 curl -fsSL https://ollama.com/install.sh | sh
 
 # 2. Pull models
-ollama pull qwen2.5:3b              # generation (pick your size)
+ollama pull gemma3:4b-it-qat              # generation (pick your size)
 ollama pull nomic-embed-text         # embeddings (required for RAG)
 
 # 3. Clone Del-Fi
 git clone https://github.com/geodesic-glitch/del-fi.git
 cd del-fi
 
-# 4. Install Python dependencies
+# 4. Create a virtual environment and install dependencies
+python3 -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
 
 # 5. Set up config
@@ -88,6 +90,8 @@ python delfi.py
 ```
 
 That's 6 commands. The config file has two required fields (`node_name` and `model`). Everything else has sensible defaults.
+
+> **Raspberry Pi / Debian note:** Modern Raspberry Pi OS (Bookworm+) marks the system Python as externally managed (PEP 668), so `pip install` outside a venv will fail. The virtual environment in step 4 handles this. If you see `error: externally-managed-environment`, make sure you activated the venv (`source venv/bin/activate`) before running pip. You may also need `sudo apt install python3-full` if `python3 -m venv` isn't available.
 
 **Simulator mode** (no radio needed — for development and testing):
 

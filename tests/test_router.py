@@ -93,7 +93,7 @@ class MockRAG:
     def query(self, text, top_k=3):
         return []
 
-    def generate(self, text, context_chunks=None, peer_context=None):
+    def generate(self, text, context_chunks=None, peer_context=None, history="", board_context=""):
         return "Mock LLM response about your question."
 
 

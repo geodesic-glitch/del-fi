@@ -10,7 +10,9 @@ import logging
 import os
 import time
 
+from board import Board
 from formatter import byte_len, format_response
+from memory import ConversationMemory
 from rag import RAGEngine
 
 log = logging.getLogger("delfi.router")
@@ -87,6 +89,26 @@ class Router:
         if cfg.get("persistent_cache", True):
             self._load_disk_cache()
 
+        # Per-sender conversation memory (disabled when memory_max_turns == 0)
+        self.memory: ConversationMemory | None = None
+        if cfg.get("memory_max_turns", 0) > 0:
+            self.memory = ConversationMemory(cfg)
+            log.info(
+                f"conversation memory enabled "
+                f"(max {self.memory.max_turns} turns, "
+                f"ttl {self.memory.ttl}s)"
+            )
+
+        # Community bulletin board (disabled when board_enabled is false)
+        self.board: Board | None = None
+        if cfg.get("board_enabled", False):
+            self.board = Board(cfg)
+            log.info(
+                f"board enabled "
+                f"(max {self.board.max_posts} posts, "
+                f"ttl {self.board.post_ttl}s)"
+            )
+
     # --- Classification (used by dispatcher) ---
 
     def classify(self, text: str) -> str:
@@ -156,6 +178,10 @@ class Router:
             "!peers": self._cmd_peers,
             "!more": self._cmd_more,
             "!retry": self._cmd_retry,
+            "!forget": self._cmd_forget,
+            "!board": self._cmd_board,
+            "!post": self._cmd_post,
+            "!unpost": self._cmd_unpost,
         }
 
         handler = handlers.get(cmd)
@@ -172,7 +198,7 @@ class Router:
             f"{name} · community AI oracle\n"
             f"Ask questions in plain text. I search local "
             f"docs and answer concisely. DM only.\n"
-            f"Commands: !help !topics !status !more !retry !ping !peers\n"
+            f"Commands: !help !topics !status !board !post !more !retry !forget !ping !peers\n"
             f"Powered by {model} · {docs} docs indexed"
         )
 
@@ -242,12 +268,47 @@ class Router:
         # Re-run through the full query pipeline
         return self._handle_query(sender_id, last)
 
+    def _cmd_forget(self, sender_id: str, arg: str) -> str:
+        """Clear conversation memory for this sender."""
+        if not self.memory:
+            return "Conversation memory is not enabled on this node."
+        self.memory.clear(sender_id)
+        return "Memory cleared. I won't remember our previous conversation."
+
+    def _cmd_board(self, sender_id: str, arg: str) -> str:
+        """Read the community board, optionally filtered by a search query."""
+        if not self.board:
+            return "The board is not enabled on this node."
+        return self.board.read(arg)
+
+    def _cmd_post(self, sender_id: str, arg: str) -> str:
+        """Post a message to the community board."""
+        if not self.board:
+            return "The board is not enabled on this node."
+        return self.board.post(sender_id, arg)
+
+    def _cmd_unpost(self, sender_id: str, arg: str) -> str:
+        """Remove all of your posts from the board."""
+        if not self.board:
+            return "The board is not enabled on this node."
+        return self.board.clear(sender_id)
+
     # --- Query handling ---
 
     def _handle_query(self, sender_id: str, text: str) -> str:
         """Process a freeform query through the RAG pipeline."""
         self._query_count += 1
         self._last_query[sender_id] = text  # track for !retry
+
+        # Gather conversation history for this sender
+        history = ""
+        if self.memory:
+            history = self.memory.format_for_prompt(sender_id)
+
+        # Gather relevant board context (if board is enabled)
+        board_context = ""
+        if self.board and self.board.post_count > 0:
+            board_context = self.board.format_for_context(query=text)
 
         # Handle simple greetings
         if self._is_greeting(text) and sender_id not in self._seen_senders:
@@ -278,7 +339,10 @@ class Router:
         if chunks:
             # Good local match — generate from operator knowledge
             had_context = True
-            response = self.rag.generate(text, context_chunks=chunks)
+            response = self.rag.generate(
+                text, context_chunks=chunks, history=history,
+                board_context=board_context,
+            )
         else:
             # No local match — check peer cache (Tier 2)
             peer_result = None
@@ -290,7 +354,10 @@ class Router:
                 log.info(f"  peer: found match from {peer_result['peer_name']}")
                 provenance = peer_result["peer_name"]
                 peer_ctx = f"[{peer_result['peer_name']}]: {peer_result['response']}"
-                response = self.rag.generate(text, peer_context=peer_ctx)
+                response = self.rag.generate(
+                    text, peer_context=peer_ctx, history=history,
+                    board_context=board_context,
+                )
             else:
                 # Check gossip for referral (Tier 3)
                 if self.mesh:
@@ -299,7 +366,10 @@ class Router:
                         return self._finalize(sender_id, referral)
 
                 # Fall back to raw LLM (no context)
-                response = self.rag.generate(text)
+                response = self.rag.generate(
+                    text, history=history,
+                    board_context=board_context,
+                )
 
         if not response:
             return "I'm having trouble thinking right now. Try again in a minute."
@@ -311,6 +381,10 @@ class Router:
             self._cache_response(text, response)
         else:
             log.info("  skipping cache — no RAG context (hallucination risk)")
+
+        # Record the exchange in conversation memory
+        if self.memory and response:
+            self.memory.add_turn(sender_id, text, response)
 
         return self._finalize(sender_id, response, provenance=provenance)
 

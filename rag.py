@@ -546,6 +546,8 @@ class RAGEngine:
         user_query: str,
         context_chunks: list[dict] | None = None,
         peer_context: str | None = None,
+        history: str = "",
+        board_context: str = "",
     ) -> str | None:
         """Generate a response using Ollama /api/generate.
 
@@ -568,7 +570,10 @@ class RAGEngine:
             return None
 
         system = self._build_system_prompt()
-        prompt = self._build_prompt(user_query, context_chunks, peer_context)
+        prompt = self._build_prompt(
+            user_query, context_chunks, peer_context, history,
+            board_context,
+        )
 
         # Debug: log the full prompt so we can diagnose retrieval vs generation issues
         log.debug(f"  === SYSTEM PROMPT ===\n{system}")
@@ -618,6 +623,8 @@ class RAGEngine:
         query: str,
         chunks: list[dict] | None,
         peer_context: str | None,
+        history: str = "",
+        board_context: str = "",
     ) -> str:
         """Build the user prompt with retrieved context.
 
@@ -655,6 +662,39 @@ class RAGEngine:
                 parts.append(peer_header)
                 parts.append(peer_context)
                 parts.append("")
+
+        if history:
+            # Inject conversation history so the model has continuity.
+            # Budget-check: only include if it fits within the context window.
+            if context_chars + len(history) <= max_context_chars:
+                parts.append(history)
+                parts.append("")
+                context_chars += len(history)
+            else:
+                # Trim history to fit (drop oldest lines first)
+                remaining = max_context_chars - context_chars
+                if remaining > 100:
+                    lines = history.split("\n")
+                    trimmed = []
+                    budget = remaining
+                    # Keep lines from the end (most recent) first
+                    for line in reversed(lines):
+                        if budget - len(line) - 1 > 0:
+                            trimmed.insert(0, line)
+                            budget -= len(line) + 1
+                        else:
+                            break
+                    if trimmed:
+                        parts.append("\n".join(trimmed))
+                        parts.append("")
+
+        if board_context:
+            # Board posts are user-generated content — the sandboxing
+            # header is already included by Board.format_for_context().
+            if context_chars + len(board_context) <= max_context_chars:
+                parts.append(board_context)
+                parts.append("")
+                context_chars += len(board_context)
 
         parts.append(f"Question: {query}")
         return "\n".join(parts)
