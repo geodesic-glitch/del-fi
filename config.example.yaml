@@ -3,7 +3,7 @@
 
 # --- Required ---
 node_name: "DEL-FI-001"
-model: "qwen3:4b"
+model: "gemma3:4b-it-qat"
 
 # --- Optional (sensible defaults shown) ---
 
@@ -34,7 +34,7 @@ model: "qwen3:4b"
 # response_cache_ttl: 300
 # embedding_model: "nomic-embed-text"
 # num_ctx: 2048                  # context window size (lower = faster)
-# num_predict: 128               # max output tokens (lower = faster)
+# num_predict: 256               # max output tokens (lower = faster)
 # persistent_cache: true         # cache responses to disk across restarts
 # busy_notice: true              # ack queued senders with "hang tight" message
 # channels: []                   # empty = listen on all channels

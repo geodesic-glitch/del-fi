@@ -113,6 +113,12 @@ def load_config(config_path: str | None = None) -> dict:
 
     # Expand and resolve paths
     cfg["knowledge_folder"] = os.path.expanduser(cfg["knowledge_folder"])
+    # Resolve relative paths against the config file's directory
+    if not os.path.isabs(cfg["knowledge_folder"]):
+        config_dir = str(Path(config_path).resolve().parent)
+        cfg["knowledge_folder"] = os.path.join(
+            config_dir, cfg["knowledge_folder"]
+        )
     base_dir = os.path.dirname(cfg["knowledge_folder"])
     cfg["_base_dir"] = base_dir
     cfg["_vectorstore_dir"] = os.path.join(base_dir, "vectorstore")

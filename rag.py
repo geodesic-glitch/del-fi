@@ -587,7 +587,7 @@ class RAGEngine:
                 system=system,
                 options={
                     "num_ctx": self.cfg.get("num_ctx", 2048),
-                    "num_predict": self.cfg.get("num_predict", 128),
+                    "num_predict": self.cfg.get("num_predict", 256),
                 },
             )
 
@@ -606,7 +606,6 @@ class RAGEngine:
         """Build the system prompt for Ollama."""
         name = self.cfg["node_name"]
         personality = self.cfg["personality"]
-        max_chars = self.cfg["max_response_bytes"]
 
         return (
             f"You are {name}, a helpful AI assistant serving a community over "
@@ -614,7 +613,7 @@ class RAGEngine:
             f"Use the provided context to answer the question. "
             f"Combine information from multiple context sections if needed. "
             f"Only say you don't know if the context is truly unrelated. "
-            f"Keep responses under {max_chars} characters. "
+            f"Reply in 2-3 short sentences. Always finish your last sentence. "
             f"Do not use markdown formatting. Write plain text only."
         )
 
@@ -632,7 +631,7 @@ class RAGEngine:
         room for both the system prompt and its own response.
         """
         num_ctx = self.cfg.get("num_ctx", 2048)
-        num_predict = self.cfg.get("num_predict", 128)
+        num_predict = self.cfg.get("num_predict", 256)
         # Reserve tokens for system prompt (~150), question (~50), and generation
         max_context_chars = (num_ctx - num_predict - 200) * CHARS_PER_TOKEN
 

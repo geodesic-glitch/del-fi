@@ -134,8 +134,8 @@ def test_cmd_help():
     router = _make_router()
     response = router.route("!sender1", "!help")
     assert "TEST-NODE" in response
-    assert "!help" in response
     assert "!topics" in response
+    assert "!more" in response
 
 
 def test_cmd_status():
@@ -211,7 +211,7 @@ def test_cmd_case_insensitive():
     assert "pong" in r1.lower()
 
     r2 = router.route("!sender1", "!Help")
-    assert "!help" in r2
+    assert "!topics" in r2
 
 
 # --- Greeting detection ---
@@ -293,6 +293,48 @@ def test_busy_message_queued():
     assert "TEST-NODE" in msg
     assert "3" in msg
     assert "hang tight" in msg.lower()
+
+
+# --- Byte-limit enforcement ---
+
+
+def test_enforce_limit_truncates_oversized_command():
+    """Command responses exceeding max_response_bytes are truncated."""
+    router = _make_router()
+    # Manually test _enforce_limit with a string over 230 bytes
+    long_text = "A" * 250
+    result = router._enforce_limit(long_text)
+    from formatter import byte_len
+    assert byte_len(result) <= 230
+
+
+def test_enforce_limit_passes_short_text():
+    router = _make_router()
+    short = "Hello world."
+    assert router._enforce_limit(short) == short
+
+
+def test_enforce_limit_none():
+    router = _make_router()
+    assert router._enforce_limit(None) is None
+
+
+def test_all_commands_fit_byte_limit():
+    """Every built-in command response fits within max_response_bytes."""
+    router = _make_router()
+    from formatter import byte_len
+    max_bytes = router.cfg["max_response_bytes"]
+
+    commands = [
+        "!help", "!status", "!topics", "!ping", "!peers",
+        "!more", "!retry", "!foobar",
+    ]
+    for cmd in commands:
+        response = router.route("!testlimit", cmd)
+        assert byte_len(response) <= max_bytes, (
+            f"{cmd} response is {byte_len(response)}B, "
+            f"exceeds {max_bytes}B limit: {response!r}"
+        )
 
 
 # --- Dispatcher integration ---

@@ -802,3 +802,86 @@ Question: Push forth to the Dragon
 [12:59:49]   ✓ response: 231 bytes → !sim00001
 [12:59:54]   ✓ response: 38 bytes → !sim00001
 [13:00:15] shutting down...
+[13:03:48] config loaded
+[13:03:49] vectorstore ready (0 chunks indexed)
+[13:03:49] ollama connected at http://localhost:11434
+[13:03:49] no documents in knowledge folder
+[13:03:49] conversation memory enabled (max 10 turns, ttl 3600s)
+[13:03:49] board enabled (max 50 posts, ttl 86400s)
+[13:03:49] listening...
+[13:03:52] generation failed: model 'gemma3:1b-it-qat' not found (status code: 404)
+[13:03:52]   ✓ response: 61 bytes → !sim00001
+[13:03:57]   ✓ response: 85 bytes → !sim00001
+[13:04:31] generation failed: model 'gemma3:1b-it-qat' not found (status code: 404)
+[13:04:31]   ✓ response: 61 bytes → !sim00001
+[13:04:33] shutting down...
+[13:04:36] config loaded
+[13:04:37] vectorstore ready (0 chunks indexed)
+[13:04:37] ollama connected at http://localhost:11434
+[13:04:37] no documents in knowledge folder
+[13:04:37] conversation memory enabled (max 10 turns, ttl 3600s)
+[13:04:37] board enabled (max 50 posts, ttl 86400s)
+[13:04:37] listening...
+[13:04:41] generation failed: model 'gemma3:1b-it-qat' not found (status code: 404)
+[13:04:41]   ✓ response: 61 bytes → !sim00001
+[13:06:01] config loaded
+[13:06:02] vectorstore ready (87 chunks indexed)
+[13:06:02] ollama connected at http://localhost:11434
+[13:06:11] indexed 6 files (148 chunks total)
+[13:06:11] initial indexing: 6 files
+[13:06:11] conversation memory enabled (max 10 turns, ttl 3600s)
+[13:06:11] board enabled (max 50 posts, ttl 86400s)
+[13:06:11] listening...
+[13:06:17] shutting down...
+[13:06:42] config loaded
+[13:06:43] vectorstore ready (148 chunks indexed)
+[13:06:43] ollama connected at http://localhost:11434
+[13:06:52] indexed 6 files (148 chunks total)
+[13:06:52] initial indexing: 6 files
+[13:06:52] conversation memory enabled (max 10 turns, ttl 3600s)
+[13:06:52] board enabled (max 50 posts, ttl 86400s)
+[13:06:52] listening...
+[13:07:18] config loaded
+[13:07:19] vectorstore ready (148 chunks indexed)
+[13:07:19] ollama connected at http://localhost:11434
+[13:08:18] config loaded
+[13:08:18] vectorstore ready (148 chunks indexed)
+[13:08:19] ollama connected at http://localhost:11434
+[13:08:27] indexed 6 files (148 chunks total)
+[13:08:27] initial indexing: 6 files
+[13:08:27] conversation memory enabled (max 10 turns, ttl 3600s)
+[13:08:27] board enabled (max 50 posts, ttl 86400s)
+[13:08:27] listening...
+[13:08:33]   rag: 3 chunks from [npcs.md, exhibitors-highlights.md] (similarity: 0.52, 0.52, 0.52)
+[13:08:41]   ✓ response: 177 bytes → !sim00001
+[13:08:47]   ✓ response: 124 bytes → !sim00001
+[13:08:58]   rag: 3 chunks from [faq.md, event-overview.md, quest-hooks.md] (similarity: 0.7, 0.69, 0.58)
+[13:09:04]   ✓ response: 201 bytes → !sim00001
+[13:09:11]   ✓ response: 167 bytes → !sim00001
+[13:10:09]   rag: 3 chunks from [world-lore.md, rules-quick-ref.md] (similarity: 1.0, 1.0, 1.0)
+[13:10:15]   ✓ response: 135 bytes → !sim00001
+[13:10:21]   ✓ response: 134 bytes → !sim00001
+[13:10:30]   rag: 3 chunks from [event-overview.md, rules-quick-ref.md] (similarity: 0.61, 0.51, 0.51)
+[13:10:36]   ✓ response: 165 bytes → !sim00001
+[13:10:43]   ✓ response: 97 bytes → !sim00001
+[13:10:48]   rag: no relevant chunks found
+[13:10:54]   skipping cache — no RAG context (hallucination risk)
+[13:10:54]   ✓ response: 216 bytes → !sim00001
+[13:11:01]   ✓ response: 185 bytes → !sim00001
+[13:11:19]   rag: 3 chunks from [quest-hooks.md] (similarity: 0.68, 0.68, 0.67)
+[13:11:28]   ✓ response: 177 bytes → !sim00001
+[13:11:38] shutting down...
+[13:43:03] config loaded
+[13:43:04] vectorstore ready (148 chunks indexed)
+[13:43:05] ollama connected at http://localhost:11434
+[13:43:13] indexed 6 files (148 chunks total)
+[13:43:13] initial indexing: 6 files
+[13:43:13] conversation memory enabled (max 10 turns, ttl 3600s)
+[13:43:13] board enabled (max 50 posts, ttl 86400s)
+[13:43:13] listening...
+[13:43:20]   rag: 3 chunks from [world-lore.md, quest-hooks.md] (similarity: 0.56, 0.56, 0.56)
+[13:43:29]   ✓ response: 192 bytes → !sim00001
+[13:43:56]   ✓ response: 97 bytes → !sim00001
+[13:44:07]   rag: 3 chunks from [quest-hooks.md, factions.md] (similarity: 0.68, 0.68, 0.61)
+[13:44:13]   ✓ response: 208 bytes → !sim00001
+[13:52:10] shutting down...

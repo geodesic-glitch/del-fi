@@ -11,7 +11,7 @@ import os
 import time
 
 from board import Board
-from formatter import byte_len, format_response
+from formatter import byte_len, format_response, truncate_at_sentence
 from memory import ConversationMemory
 from rag import RAGEngine
 
@@ -152,15 +152,29 @@ class Router:
 
         # Command dispatch (! prefix)
         if text.startswith("!"):
-            return self._handle_command(sender_id, text)
+            response = self._handle_command(sender_id, text)
+            return self._enforce_limit(response)
 
         # Check for gossip announcements from other Del-Fi nodes
         if text.startswith("DEL-FI:") and self.mesh:
             self.mesh.handle_announcement(sender_id, text)
             return None  # gossip is silent, no response
 
-        # Freeform query
+        # Freeform query — _handle_query already has its own enforcement
         return self._handle_query(sender_id, text)
+
+    def _enforce_limit(self, text: str | None) -> str | None:
+        """Truncate any outgoing message that exceeds the LoRa byte limit.
+
+        Safety net for command responses and any other paths that don't
+        go through format_response.  Truncates at sentence boundary.
+        """
+        if text is None:
+            return None
+        max_bytes = self.cfg["max_response_bytes"]
+        if byte_len(text) <= max_bytes:
+            return text
+        return truncate_at_sentence(text, max_bytes)
 
     # --- Command handlers ---
 
@@ -192,14 +206,12 @@ class Router:
 
     def _cmd_help(self, sender_id: str, arg: str) -> str:
         name = self.cfg["node_name"]
-        model = self.cfg["model"]
         docs = self.rag.doc_count
         return (
-            f"{name} · community AI oracle\n"
-            f"Ask questions in plain text. I search local "
-            f"docs and answer concisely. DM only.\n"
-            f"Commands: !help !topics !status !board !post !more !retry !forget !ping !peers\n"
-            f"Powered by {model} · {docs} docs indexed"
+            f"{name} · AI oracle · {docs} docs\n"
+            f"Ask anything in plain text.\n"
+            f"!topics !status !board !post\n"
+            f"!more !retry !forget !ping !peers"
         )
 
     def _cmd_status(self, sender_id: str, arg: str) -> str:

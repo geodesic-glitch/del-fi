@@ -19,7 +19,11 @@ _HORIZONTAL_RULE = re.compile(r"^[-*_]{3,}\s*$", re.MULTILINE)
 _CODE_BLOCK = re.compile(r"```[\s\S]*?```")
 _MULTI_SPACE = re.compile(r"[ \t]+")
 _MULTI_NEWLINE = re.compile(r"\n{2,}")
+# Sentence-ending punctuation.  For narrative/RPG text we also treat
+# em-dashes (—), ellipses (… and ...), semicolons, and colons as
+# acceptable break points so truncation doesn't land mid-clause.
 _SENTENCE_END = re.compile(r"[.!?](?:\s|$)")
+_CLAUSE_END = re.compile(r"[.!?;:\u2014\u2026](?:\s|$)|\.\.\. ")
 
 MORE_TAG = " [!more]"
 MORE_TAG_BYTES = len(MORE_TAG.encode("utf-8"))
@@ -60,7 +64,9 @@ def clean_text(text: str) -> str:
 def truncate_at_sentence(text: str, max_bytes: int) -> str:
     """Truncate text at the last sentence boundary within max_bytes.
 
-    Falls back to word boundary, then hard cut.
+    Falls back to clause boundary, then word boundary, then hard cut.
+    The clause fallback prevents mid-sentence cuts in narrative text
+    that uses em-dashes, semicolons, or ellipses.
     """
     if byte_len(text) <= max_bytes:
         return text
@@ -75,6 +81,13 @@ def truncate_at_sentence(text: str, max_bytes: int) -> str:
 
     if best > 0:
         return truncated[:best].strip()
+
+    # Fall back to clause boundary (semicolon, em-dash, ellipsis, colon)
+    best_clause = -1
+    for m in _CLAUSE_END.finditer(truncated):
+        best_clause = m.start() + 1
+    if best_clause > 0:
+        return truncated[:best_clause].strip()
 
     # Fall back to word boundary
     last_space = truncated.rfind(" ")

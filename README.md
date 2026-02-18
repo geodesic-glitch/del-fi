@@ -93,6 +93,8 @@ That's 6 commands. The config file has two required fields (`node_name` and `mod
 
 > **Raspberry Pi / Debian note:** Modern Raspberry Pi OS (Bookworm+) marks the system Python as externally managed (PEP 668), so `pip install` outside a venv will fail. The virtual environment in step 4 handles this. If you see `error: externally-managed-environment`, make sure you activated the venv (`source venv/bin/activate`) before running pip. You may also need `sudo apt install python3-full` if `python3 -m venv` isn't available.
 
+> **Important:** You must activate the venv **every time** you open a new shell before running Del-Fi. If you see `No module named 'ollama'` (or any other import error), you forgot to `source venv/bin/activate`. The `ollama` CLI is a separate system binary — it will work without the venv, but the Python package won't. For a headless Pi you can add the activate line to your `.bashrc` or use a systemd service (see [Running as a Service](#running-as-a-service) below).
+
 **Simulator mode** (no radio needed — for development and testing):
 
 ```bash
@@ -366,6 +368,58 @@ meshknowledge.py      Gossip, peer cache, referrals (stdlib only)
 The main loop is a **dispatcher**: commands and gossip are handled inline (sub-millisecond), while LLM queries are handed to a background worker thread. If the worker is already processing a query, new senders receive a brief "hang tight" ack so they know their question was received. This keeps the daemon responsive under load without blocking the radio.
 
 Principle: **always start, never block.** A missing radio or unavailable Ollama doesn't prevent launch. Components come online as they become available.
+
+---
+
+## Running as a Service
+
+On a headless Pi, run Del-Fi via systemd so it starts on boot and always uses the correct venv — no SSH session required.
+
+Create `/etc/systemd/system/delfi.service`:
+
+```ini
+[Unit]
+Description=Del-Fi mesh oracle
+After=network.target ollama.service
+Wants=ollama.service
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/del-fi
+ExecStart=/home/pi/del-fi/venv/bin/python delfi.py
+Restart=on-failure
+RestartSec=10
+
+# Keep thermals in check
+CPUQuota=80%
+MemoryMax=75%
+
+[Install]
+WantedBy=multi-user.target
+```
+
+> **Key detail:** `ExecStart` points directly at the venv's Python binary (`venv/bin/python`), so you don't need to activate the venv — systemd handles it.
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable delfi          # start on boot
+sudo systemctl start delfi           # start now
+journalctl -u delfi -f               # tail logs
+```
+
+Adjust `User`, `WorkingDirectory`, and paths if your clone is somewhere other than `/home/pi/del-fi`.
+
+### Pi Thermal Tips
+
+If your Pi is running hot during inference:
+
+- **Use a smaller model** — `gemma3:1b` or `qwen2.5:1.5b` instead of 4B+
+- **Raise `rate_limit_seconds`** to 30–60 to give the CPU thermal recovery time between queries
+- **Set `num_ctx: 1024`** and **`num_predict: 64`** to reduce per-request compute
+- **Lower `memory_max_turns`** to 3–5 to keep prompts smaller
+- **Add a heatsink + fan** — the official Pi 5 active cooler makes a big difference
+- The `CPUQuota=80%` in the service file above prevents Del-Fi from fully saturating the CPU
 
 ---
 
