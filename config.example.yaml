@@ -3,7 +3,7 @@
 
 # --- Required ---
 node_name: "DEL-FI-001"
-model: "gemma3:4b-it-qat"
+model: "gemma3:4b-it-qat"   # Raspberry Pi: use llama3.2:1b — most larger models are too slow or unreliable on Pi hardware
 
 # --- Optional (sensible defaults shown) ---
 
@@ -33,6 +33,10 @@ model: "gemma3:4b-it-qat"
 # rate_limit_seconds: 30
 # response_cache_ttl: 300
 # embedding_model: "nomic-embed-text"
+# similarity_threshold: 0.35     # cosine distance cutoff (0.0–1.0); lower = stricter match
+#                                 # default 0.35 requires ~0.65 similarity — rejects loose topic matches
+#                                 # raise toward 0.5 if too many queries return "I don't know"
+#                                 # lower toward 0.2 if only near-exact matches should count
 # num_ctx: 2048                  # context window size (lower = faster)
 # num_predict: 128               # max output tokens (lower = faster)
 # persistent_cache: true         # cache responses to disk across restarts

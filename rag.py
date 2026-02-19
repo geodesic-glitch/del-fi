@@ -22,10 +22,11 @@ DEFAULT_CHUNK_SIZE = 256 * CHARS_PER_TOKEN   # ~1024 chars
 DEFAULT_CHUNK_OVERLAP = 32 * CHARS_PER_TOKEN  # ~128 chars
 
 # ChromaDB returns cosine distance (0 = identical, 2 = opposite).
-# Similarity = 1 - distance. Threshold of 0.55 similarity = 0.45 distance.
-# Tighter threshold avoids pulling in loosely related chunks that confuse
-# the model. Better to fall back to raw LLM than inject bad context.
-DISTANCE_THRESHOLD = 0.5
+# Similarity = 1 - distance. Default threshold of 0.65 similarity = 0.35 distance.
+# This rejects loosely related topics (e.g. anteater query returning antelope chunks).
+# Keyword boost can rescue exact entity matches that sit just above this line.
+# Overridden by config key 'similarity_threshold' (as a distance value, 0.0–1.0).
+DISTANCE_THRESHOLD = 0.35
 
 # Keyword boost: when a query keyword appears literally in a chunk,
 # reduce its distance by this amount. Makes entity lookups ("Where SparkFun?")
@@ -468,6 +469,10 @@ class RAGEngine:
         if not self._rag_available or not self.collection or self._doc_count == 0:
             return []
 
+        # Allow per-deployment tuning; stored as a distance (1 - similarity).
+        # Lower value = stricter match required.
+        threshold = self.cfg.get("similarity_threshold", DISTANCE_THRESHOLD)
+
         try:
             query_embedding = self._embed([text])[0]
             keywords = self._extract_keywords(text)
@@ -507,7 +512,7 @@ class RAGEngine:
                 sim = round(1 - c["raw_dist"], 2)
                 adj_sim = round(1 - c["adjusted_dist"], 2)
                 preview = c["doc"].replace('\n', ' | ')[:80]
-                marker = "✓" if c["adjusted_dist"] <= DISTANCE_THRESHOLD else "✗"
+                marker = "✓" if c["adjusted_dist"] <= threshold else "✗"
                 kw_info = f" kw={c['kw_matches']}" if c["kw_matches"] else ""
                 log.debug(
                     f"  {marker} [{c['meta'].get('file','?')}]"
@@ -518,7 +523,7 @@ class RAGEngine:
             # Select top_k that pass the threshold (using adjusted distance)
             chunks = []
             for c in candidates:
-                if c["adjusted_dist"] <= DISTANCE_THRESHOLD and len(chunks) < top_k:
+                if c["adjusted_dist"] <= threshold and len(chunks) < top_k:
                     chunks.append({
                         "text": c["doc"],
                         "source": c["meta"].get("source", "local"),
@@ -610,9 +615,9 @@ class RAGEngine:
         return (
             f"You are {name}, a helpful AI assistant serving a community over "
             f"low-bandwidth mesh radio. {personality} "
-            f"Use the provided context to answer the question. "
-            f"Combine information from multiple context sections if needed. "
-            f"Only say you don't know if the context is truly unrelated. "
+            f"Answer ONLY using the provided context. "
+            f"Do not speculate, infer, or add any information not explicitly present in the context. "
+            f"If the context does not contain the answer, say so plainly — do not guess. "
             f"Reply in 2-3 short sentences. Always finish your last sentence. "
             f"Do not use markdown formatting. Write plain text only."
         )
@@ -649,6 +654,8 @@ class RAGEngine:
                     break
                 parts.append(entry)
                 context_chars += len(entry)
+            parts.append("")
+            parts.append("Answer using ONLY the context above. Do not add information not found there.")
             parts.append("")
 
         if peer_context:

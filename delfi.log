@@ -915,3 +915,92 @@ Question: Push forth to the Dragon
 [19:34:27]   rag: 3 chunks from [trail-camera-log.md] (similarity: 0.91, 0.91, 0.88)
 [19:34:34]   ✓ response: 228 bytes → !sim00001
 [19:44:13] shutting down...
+[19:48:28] config loaded
+[19:48:29] vectorstore ready (87 chunks indexed)
+[19:48:30] ollama connected at http://localhost:11434
+[19:48:44] indexed 6 files (87 chunks total)
+[19:48:44] initial indexing: 6 files
+[19:48:44] conversation memory enabled (max 10 turns, ttl 3600s)
+[19:48:44] board enabled (max 50 posts, ttl 86400s)
+[19:48:44] listening...
+[19:48:50]   rag: 3 chunks from [wildlife-guide.md, weather-station.md, trail-camera-log.md] (similarity: 0.71, 0.67, 0.65)
+[19:49:00]   ✓ response: 2 msg(s), 253B → !sim00001
+[19:49:15]   rag: 3 chunks from [seasonal-notes.md] (similarity: 0.72, 0.72, 0.69)
+[19:49:21]   ✓ response: 2 msg(s), 267B → !sim00001
+[19:49:49] shutting down...
+[19:58:10] config loaded
+[19:58:11] vectorstore ready (87 chunks indexed)
+[19:58:11] ollama connected at http://localhost:11434
+[19:58:25] indexed 6 files (87 chunks total)
+[19:58:25] initial indexing: 6 files
+[19:58:25] conversation memory enabled (max 10 turns, ttl 3600s)
+[19:58:25] board enabled (max 50 posts, ttl 86400s)
+[19:58:25] listening...
+[19:58:55]   rag: 3 chunks from [trail-camera-log.md, seasonal-notes.md] (similarity: 0.59, 0.59, 0.58)
+[19:59:00]   ✓ response: 3 msg(s), 449B → !sim00001
+[19:59:09]   rag: 3 chunks from [seasonal-notes.md, flora-guide.md] (similarity: 0.68, 0.68, 0.68)
+[19:59:12]   ✓ response: 3 msg(s), 334B → !sim00001
+[20:00:23]   rag: 3 chunks from [flora-guide.md, trail-camera-log.md, seasonal-notes.md] (similarity: 1.0, 0.95, 0.89)
+[20:00:27]   ✓ response: 3 msg(s), 433B → !sim00001
+[20:00:33]   ✓ response: 1 msg(s), 197B → !sim00001
+[20:00:42]   rag: 3 chunks from [area-overview.md, wildlife-guide.md] (similarity: 0.62, 0.62, 0.61)
+[20:00:45]   ✓ response: 2 msg(s), 355B → !sim00001
+[20:01:14]   rag: 3 chunks from [trail-camera-log.md, seasonal-notes.md] (similarity: 0.67, 0.66, 0.66)
+[20:01:18]   ✓ response: 3 msg(s), 382B → !sim00001
+[20:02:03]   rag: 3 chunks from [seasonal-notes.md, flora-guide.md] (similarity: 0.86, 0.78, 0.77)
+[20:02:08]   ✓ response: 3 msg(s), 375B → !sim00001
+[20:02:39]   rag: 3 chunks from [wildlife-guide.md, seasonal-notes.md, trail-camera-log.md] (similarity: 1.0, 0.9, 0.89)
+[20:02:45]   ✓ response: 3 msg(s), 625B → !sim00001
+[20:03:09]   rag: 3 chunks from [trail-camera-log.md, wildlife-guide.md] (similarity: 0.64, 0.62, 0.6)
+[20:03:14]   ✓ response: 2 msg(s), 331B → !sim00001
+[20:03:27] shutting down...
+[20:05:01] config loaded
+[20:05:02] vectorstore ready (87 chunks indexed)
+[20:05:02] ollama connected at http://localhost:11434
+[20:05:16] indexed 6 files (87 chunks total)
+[20:05:16] initial indexing: 6 files
+[20:05:16] loaded 6 cached responses from disk
+[20:05:16] conversation memory enabled (max 10 turns, ttl 3600s)
+[20:05:16] board enabled (max 50 posts, ttl 86400s)
+[20:05:16] listening...
+[20:05:22]   rag: 3 chunks from [wildlife-guide.md] (similarity: 0.58, 0.58, 0.58)
+[20:05:26]   ✓ response: 2 msg(s), 248B → !sim00001
+[20:05:58]   rag: 3 chunks from [trail-camera-log.md, wildlife-guide.md] (similarity: 0.66, 0.55, 0.54)
+[20:06:02]   ✓ response: 3 msg(s), 420B → !sim00001
+[20:08:06] shutting down...
+[20:08:39] config loaded
+[20:08:40] vectorstore ready (87 chunks indexed)
+[20:08:40] ollama connected at http://localhost:11434
+[20:08:54] indexed 6 files (87 chunks total)
+[20:08:54] initial indexing: 6 files
+[20:08:54] loaded 2 cached responses from disk
+[20:08:54] conversation memory enabled (max 10 turns, ttl 3600s)
+[20:08:54] board enabled (max 50 posts, ttl 86400s)
+[20:08:54] listening...
+[20:09:02]   rag: 3 chunks from [wildlife-guide.md] (similarity: 0.61, 0.6, 0.6)
+[20:09:03]   ✓ response: 1 msg(s), 14B → !sim00001
+[20:09:11]   rag: 3 chunks from [wildlife-guide.md, seasonal-notes.md, trail-camera-log.md] (similarity: 0.54, 0.5, 0.5)
+[20:09:13]   ✓ response: 2 msg(s), 284B → !sim00001
+[20:10:48] shutting down...
+[06:26:15] config loaded
+[06:26:22] vectorstore ready (87 chunks indexed)
+[06:26:24] ollama connected at http://localhost:11434
+[06:26:38] indexed 6 files (87 chunks total)
+[06:26:38] initial indexing: 6 files
+[06:26:38] conversation memory enabled (max 10 turns, ttl 3600s)
+[06:26:38] board enabled (max 50 posts, ttl 86400s)
+[06:26:38] listening...
+[06:26:44]   rag: 3 chunks from [wildlife-guide.md] (similarity: 0.72, 0.72, 0.7)
+[06:26:49]   ✓ response: 2 msg(s), 238B → !sim00001
+[06:27:24]   rag: no relevant chunks found
+[06:27:24]   no context found — declining to answer
+[06:27:24]   ✓ response: 1 msg(s), 97B → !sim00001
+[06:27:38]   rag: 3 chunks from [wildlife-guide.md, trail-camera-log.md] (similarity: 0.91, 0.85, 0.77)
+[06:27:40]   ✓ response: 1 msg(s), 84B → !sim00001
+[06:27:52]   rag: no relevant chunks found
+[06:27:52]   no context found — declining to answer
+[06:27:52]   ✓ response: 1 msg(s), 97B → !sim00001
+[06:28:12]   rag: 3 chunks from [wildlife-guide.md] (similarity: 0.97, 0.92, 0.91)
+[06:28:14]   ✓ response: 1 msg(s), 212B → !sim00001
+[06:29:04]   rag: 3 chunks from [wildlife-guide.md, trail-camera-log.md] (similarity: 0.78, 0.73, 0.72)
+[06:29:06]   ✓ response: 1 msg(s), 12B → !sim00001

@@ -424,11 +424,16 @@ class Router:
                     if referral:
                         return self._finalize(sender_id, referral)
 
-                # Fall back to raw LLM (no context)
-                response = self.rag.generate(
-                    text, history=history,
-                    board_context=board_context,
+                # No local docs, no peer cache — refuse rather than hallucinate.
+                # Raw LLM answers with no grounding are unreliable; better to
+                # tell the user explicitly than to fabricate an answer.
+                log.info("  no context found — declining to answer")
+                name = self.cfg["node_name"]
+                response = (
+                    f"{name}: I don't have anything in my knowledge base about that. "
+                    f"Try !topics to see what I know."
                 )
+                return self._finalize(sender_id, response)
 
         if not response:
             return "I'm having trouble thinking right now. Try again in a minute."

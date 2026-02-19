@@ -45,7 +45,7 @@ Someone on the mesh sends your node a DM. Del-Fi searches your local documents, 
 
 | Hardware | Speed | Power | Cost | Best For |
 |---|---|---|---|---|
-| Raspberry Pi 5 8GB | ~5 tok/s (3B) | ~10W | ~$80 | Budget field nodes |
+| Raspberry Pi 5 8GB | ~5 tok/s (3B) | ~10W | ~$80 | Budget field nodes — use `llama3.2:1b` |
 | Jetson Orin Nano Super | ~30 tok/s (3B) | ~15W | ~$249 | Solar field nodes |
 | Mac Mini M4 | ~18 tok/s (7B) | ~30W | ~$499 | Powered stations |
 
@@ -70,6 +70,10 @@ curl -fsSL https://ollama.com/install.sh | sh
 # 2. Pull models
 ollama pull gemma3:4b-it-qat              # generation (pick your size)
 ollama pull nomic-embed-text         # embeddings (required for RAG)
+
+# Raspberry Pi recommendation: llama3.2:1b runs well on Pi hardware.
+# Most larger or quantized models are too slow or produce poor output on Pi.
+# ollama pull llama3.2:1b
 
 # 3. Clone Del-Fi
 git clone https://github.com/geodesic-glitch/del-fi.git
