@@ -11,7 +11,7 @@ import os
 import time
 
 from board import Board
-from formatter import byte_len, format_response, truncate_at_sentence
+from formatter import byte_len, format_response, truncate_at_sentence, MORE_TAG
 from memory import ConversationMemory
 from rag import RAGEngine
 
@@ -19,6 +19,9 @@ log = logging.getLogger("delfi.router")
 
 # !more buffers expire after 10 minutes
 MORE_BUFFER_TTL = 600
+
+# How many chunks to auto-send before prompting !more (overridden by config)
+AUTO_SEND_CHUNKS = 3
 
 # Short messages that are greetings, not questions
 GREETINGS = {"hi", "hello", "hey", "yo", "sup", "howdy", "hola", "greetings"}
@@ -143,6 +146,8 @@ class Router:
         """Route a message and return the response to send.
 
         Returns None if no response should be sent.
+        Returns only the first chunk for multi-chunk responses — use
+        route_multi() to get all auto-send chunks at once.
         """
         text = text.strip()
         if not text:
@@ -162,6 +167,48 @@ class Router:
 
         # Freeform query — _handle_query already has its own enforcement
         return self._handle_query(sender_id, text)
+
+    def route_multi(self, sender_id: str, text: str) -> list[str] | None:
+        """Route a message, auto-sending up to ``auto_send_chunks`` consecutive
+        messages before prompting for !more.
+
+        Commands and single-chunk responses return a 1-element list.
+        Long responses return their first N chunks directly so the user
+        reads the full answer without needing to type !more, and only
+        see a [!more] prompt when a further chunk exists beyond the
+        auto-send window.
+        """
+        first = self.route(sender_id, text)
+        if first is None:
+            return None
+
+        n_auto = self.cfg.get("auto_send_chunks", AUTO_SEND_CHUNKS)
+        buf = self._more_buffers.get(sender_id)
+
+        if buf is None or buf.expired or n_auto <= 1:
+            # Single chunk, or auto-send disabled — return as-is
+            return [first]
+
+        # Multi-chunk response.  route() → format_response() already appended
+        # [!more] to the first chunk so the protocol is consistent for callers
+        # that use route() directly.  Strip it here — we control the tag.
+        base_first = first[: -len(MORE_TAG)] if first.endswith(MORE_TAG) else first
+        auto_msgs = [base_first]
+
+        while len(auto_msgs) < n_auto:
+            chunk = buf.next_chunk()
+            if chunk is None:
+                break  # exhausted before reaching the window limit
+
+            # next_chunk() appends [!more] when further chunks remain.
+            # Strip it from every position except the final auto-send slot
+            # so intermediate messages read cleanly.
+            is_last_slot = len(auto_msgs) == n_auto - 1
+            if not is_last_slot and chunk.endswith(MORE_TAG):
+                chunk = chunk[: -len(MORE_TAG)].rstrip()
+            auto_msgs.append(chunk)
+
+        return auto_msgs
 
     def _enforce_limit(self, text: str | None) -> str | None:
         """Truncate any outgoing message that exceeds the LoRa byte limit.

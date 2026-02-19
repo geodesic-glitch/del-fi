@@ -125,15 +125,35 @@ The file names become your topic list. A file named `wilderness-first-aid.md` sh
 From any Meshtastic app, DM the Del-Fi node:
 
 ```
-You:   What plants are edible in April?
-Node:  Several common edibles are available in
-       April: dandelion greens, wild garlic,
-       chickweed, and violet leaves. All are best
-       harvested young. [!more]
+You:   What animals have been spotted this week?
+Node:  CAM-1 logged elk herd (8 cows, 2 calves)
+       Feb 14. Coyote pair at 06:12 Feb 15.
+       Mountain lion — single adult, heading west.
+Node:  CAM-2 (Creek Crossing): mule deer Feb 12,
+       ermine Feb 16 at dawn. Fox near willows
+       Feb 17 18:44.
+Node:  CAM-3 (Spruce Hollow): gray wolf-like canid
+       Feb 17 23:11 — pending ID confirmation.
+       Total: 9 species, 21 events this week.
+```
+
+Responses up to 3 messages are delivered automatically. If the answer is longer than that, the last message ends with `[!more]`:
+
+```
+You:   Tell me about mountain lions in detail
+Node:  Mountain lion (Puma concolor) — apex predator
+       at Ridgeline Station. Mostly nocturnal;
+       active dawn and dusk. // RIDGELINE
+Node:  Prey: elk calves, mule deer, snowshoe hare.
+       Territory 80-200 sq mi. Tracks: 3" round,
+       no claw marks (retractable).
+Node:  Feb 15 sighting: adult, ~120 lbs, heading
+       west along the ridge. Typical of winter
+       range expansion. [!more]
 You:   !more
-Node:  Dandelion is identifiable by its toothed
-       leaves and yellow flower. Avoid lookalikes
-       like cat's ear which has branching stems.
+Node:  Avoid corner situations on trail. Make noise.
+       Do not run. If approached: stand tall, make
+       eye contact, back away slowly. // RIDGELINE
 ```
 
 ### Commands
@@ -143,8 +163,13 @@ Node:  Dandelion is identifiable by its toothed
 | `!help` | Usage instructions and available commands |
 | `!topics` | List loaded knowledge base topics |
 | `!status` | Node health, model info, uptime, doc count |
-| `!more` | Next chunk of a long response |
+| `!board` | Read the community message board (recent posts) |
+| `!board <term>` | Search the board for posts matching `<term>` |
+| `!post <text>` | Post a message to the community board |
+| `!more` | Next chunk of a long response (only needed beyond 3 auto-sent messages) |
 | `!more 2` | Re-request chunk 2 (if a chunk was lost) |
+| `!retry` | Re-run your last query, bypassing the cache |
+| `!forget` | Clear your conversation history on this node |
 | `!ping` | Liveness check |
 | `!peers` | Show peered and nearby Del-Fi nodes |
 
@@ -171,6 +196,7 @@ radio_port: /dev/ttyUSB0     # or hostname:port for TCP
 rate_limit_seconds: 30
 response_cache_ttl: 300
 busy_notice: true            # tell queued users their question is in line
+auto_send_chunks: 3          # auto-send first N chunks; prompt !more beyond that
 embedding_model: "nomic-embed-text"
 channels: []                 # empty = listen on all channels
 log_level: info
@@ -302,9 +328,9 @@ No knowledge transferred. No trust required. Just a pointer.
 - Large knowledge bases (50+ docs) may slow initial indexing
 
 **Messages getting cut off**
-- LoRa limit is 230 bytes. Responses are auto-truncated at sentence boundaries.
-- Send `!more` to get the next chunk
-- If a chunk was lost, `!more 2` re-requests that specific chunk
+- LoRa limit is 230 bytes. Long responses are split into chunks and auto-sent up to 3 messages in a row.
+- If a 4th+ chunk exists, the last auto-sent message ends with `[!more]` — send `!more` to continue.
+- If a chunk was lost, `!more 2` re-requests that specific chunk.
 
 ---
 
@@ -330,7 +356,7 @@ No knowledge transferred. No trust required. Just a pointer.
 
 ## Architecture
 
-Seven Python files (plus the mesh adapter package). Four dependencies. That's it.
+Eight Python files (plus the mesh adapter package). Four dependencies. That's it.
 
 ```
 delfi.py              Entry point, daemon lifecycle, startup banner
@@ -344,6 +370,8 @@ mesh/                 Pluggable mesh protocol adapters
 router.py             Command dispatch, RAG pipeline, response cache
 rag.py                ChromaDB indexing, Ollama embeddings + generation
 formatter.py          Markdown stripping, sentence truncation, chunking
+memory.py             Per-sender conversation history, TTL, persistence
+board.py              Community message board, rate limiting, content filter
 meshknowledge.py      Gossip, peer cache, referrals (stdlib only)
 ```
 
@@ -426,12 +454,14 @@ If your Pi is running hot during inference:
 ## Running Tests
 
 ```bash
-python -m pytest tests/             # run all tests
-python -m pytest tests/test_mesh.py # 16 tests — adapter pattern, factory, simulator
-python -m pytest tests/test_formatter.py    # markdown, truncation, chunking
-python -m pytest tests/test_router.py       # commands, classify, busy notice, !more cursor
-python -m pytest tests/test_rag.py          # chunking unit + chromadb integration
-python -m pytest tests/test_stress.py       # concurrency, dispatcher, busy-notice integration
+python -m pytest tests/                      # run all tests
+python -m pytest tests/test_mesh.py          # adapter pattern, factory, simulator
+python -m pytest tests/test_formatter.py     # markdown, truncation, chunking
+python -m pytest tests/test_router.py        # commands, classify, busy notice, !more cursor
+python -m pytest tests/test_rag.py           # chunking unit + chromadb integration
+python -m pytest tests/test_stress.py        # concurrency, dispatcher, busy-notice integration
+python -m pytest tests/test_memory.py        # conversation history, TTL, persistence
+python -m pytest tests/test_board.py         # message board, rate limiting, content filter
 ```
 
 ---

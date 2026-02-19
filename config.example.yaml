@@ -37,6 +37,7 @@ model: "gemma3:4b-it-qat"
 # num_predict: 128               # max output tokens (lower = faster)
 # persistent_cache: true         # cache responses to disk across restarts
 # busy_notice: true              # ack queued senders with "hang tight" message
+# auto_send_chunks: 3            # auto-send first N chunks before prompting !more (0/1 = always prompt)
 # channels: []                   # empty = listen on all channels
 # log_level: info
 # ollama_host: "http://localhost:11434"

@@ -337,6 +337,120 @@ def test_all_commands_fit_byte_limit():
         )
 
 
+# --- route_multi() ---
+
+
+def _make_router_with_long_answer(text: str, max_bytes: int = 100):
+    """Router that returns a long LLM answer, with a tighter byte limit."""
+    tmpdir = tempfile.mkdtemp(prefix="delfi-test-")
+
+    class _LongRAG(MockRAG):
+        def generate(self, *a, **kw):
+            return text
+
+    cfg = {
+        "node_name": "TEST-NODE",
+        "model": "test-model:3b",
+        "max_response_bytes": max_bytes,
+        "rate_limit_seconds": 30,
+        "response_cache_ttl": 300,
+        "personality": "Helpful test assistant.",
+        "knowledge_folder": os.path.join(tmpdir, "knowledge"),
+        "_seen_senders_file": os.path.join(tmpdir, "seen-senders.txt"),
+        "_base_dir": tmpdir,
+        "_cache_dir": os.path.join(tmpdir, "cache"),
+        "_gossip_dir": os.path.join(tmpdir, "gossip"),
+        "_vectorstore_dir": os.path.join(tmpdir, "vectorstore"),
+        "mesh_knowledge": None,
+        "embedding_model": "nomic-embed-text",
+        "ollama_host": "http://localhost:11434",
+        "ollama_timeout": 120,
+        "persistent_cache": False,
+    }
+    return Router(cfg, _LongRAG(), mesh_knowledge=None)
+
+
+def test_route_multi_single_chunk_returns_list():
+    """Short response returns a 1-element list."""
+    router = _make_router()
+    result = router.route_multi("!sender1", "!ping")
+    assert isinstance(result, list)
+    assert len(result) == 1
+    assert "pong" in result[0].lower()
+
+
+def test_route_multi_none_on_empty():
+    router = _make_router()
+    result = router.route_multi("!sender1", "")
+    assert result is None
+
+
+def test_route_multi_auto_sends_two_chunks():
+    """2-chunk response → both sent automatically, no [!more] on either."""
+    # Two sentences that each fit in 80B but together exceed 80B
+    answer = ("A " * 35 + ". ") + ("B " * 35 + ".")
+    router = _make_router_with_long_answer(answer, max_bytes=80)
+    result = router.route_multi("!testuser", "tell me something")
+    assert isinstance(result, list)
+    assert len(result) == 2, f"expected 2, got {len(result)}: {result}"
+    # No [!more] on last chunk — everything was auto-sent
+    assert "[!more]" not in result[-1]
+
+
+def test_route_multi_auto_sends_three_chunks():
+    """3-chunk response → all auto-sent, no [!more] on any."""
+    # Three separable parts that each barely fit in 80B
+    part = "Word " * 14 + ". "
+    answer = part + part + part
+    router = _make_router_with_long_answer(answer, max_bytes=80)
+    result = router.route_multi("!testuser", "tell me something")
+    assert isinstance(result, list)
+    assert len(result) >= 2  # at minimum got multiple chunks
+    assert "[!more]" not in result[-1]  # no prompt if all delivered
+
+
+def test_route_multi_prompts_more_beyond_window():
+    """4+ chunk response → last auto-sent chunk ends with [!more]."""
+    # Four separable sentences
+    sentence = "This is a sentence about the topic at hand. "
+    answer = sentence * 8  # long enough to produce 4+ chunks at 80B
+    router = _make_router_with_long_answer(answer, max_bytes=80)
+    result = router.route_multi("!testuser", "tell me everything")
+    assert isinstance(result, list)
+    assert len(result) == 3  # auto_send_chunks default = 3
+    assert result[-1].endswith("[!more]"), (
+        f"expected [!more] on last auto-sent chunk: {result[-1]!r}"
+    )
+    # Intermediate chunks should NOT have [!more]
+    assert "[!more]" not in result[0]
+    assert "[!more]" not in result[1]
+
+
+def test_route_multi_more_buffer_cursor_advanced():
+    """After route_multi(), !more returns chunk 4, not chunk 2."""
+    sentence = "This is a sentence about the topic at hand. "
+    answer = sentence * 8
+    router = _make_router_with_long_answer(answer, max_bytes=80)
+    router.route_multi("!testuser", "tell me everything")
+
+    # Buffer cursor should be at chunk 2 (0-indexed) after 3 auto-sends
+    more = router.route("!testuser", "!more")
+    assert more is not None
+    assert "No pending" not in more  # a real chunk came back
+
+
+def test_route_multi_config_override():
+    """auto_send_chunks=1 in config behaves like the old single-send."""
+    sentence = "This is a sentence about the topic at hand. "
+    answer = sentence * 8
+    router = _make_router_with_long_answer(answer, max_bytes=80)
+    router.cfg["auto_send_chunks"] = 1
+    result = router.route_multi("!testuser", "tell me everything")
+    assert isinstance(result, list)
+    assert len(result) == 1
+    assert result[0].endswith("[!more]")
+
+
 # --- Dispatcher integration ---
 
 

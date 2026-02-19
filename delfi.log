@@ -885,3 +885,33 @@ Question: Push forth to the Dragon
 [13:44:07]   rag: 3 chunks from [quest-hooks.md, factions.md] (similarity: 0.68, 0.68, 0.61)
 [13:44:13]   ✓ response: 208 bytes → !sim00001
 [13:52:10] shutting down...
+[19:32:14] config loaded
+[19:32:15] vectorstore ready (148 chunks indexed)
+[19:32:15] ollama connected at http://localhost:11434
+[19:32:30] indexed 6 files (235 chunks total)
+[19:32:30] initial indexing: 6 files
+[19:32:30] conversation memory enabled (max 10 turns, ttl 3600s)
+[19:32:30] board enabled (max 50 posts, ttl 86400s)
+[19:32:30] listening...
+[19:32:40]   rag: 3 chunks from [npcs.md, exhibitors-highlights.md] (similarity: 0.52, 0.52, 0.52)
+[19:32:42]   ✓ response: 101 bytes → !sim00001
+[19:32:49]   ✓ response: 76 bytes → !sim00001
+[19:32:59]   rag: 3 chunks from [trail-camera-log.md, wildlife-guide.md] (similarity: 0.72, 0.68, 0.67)
+[19:33:05]   ✓ response: 147 bytes → !sim00001
+[19:33:09] shutting down...
+[19:33:21] config loaded
+[19:33:22] vectorstore ready (0 chunks indexed)
+[19:33:23] ollama connected at http://localhost:11434
+[19:33:36] indexed 6 files (87 chunks total)
+[19:33:36] initial indexing: 6 files
+[19:33:36] loaded 2 cached responses from disk
+[19:33:36] conversation memory enabled (max 10 turns, ttl 3600s)
+[19:33:36] board enabled (max 50 posts, ttl 86400s)
+[19:33:36] listening...
+[19:33:42]   ✓ response: 101 bytes → !sim00001
+[19:33:57]   rag: 3 chunks from [trail-camera-log.md, wildlife-guide.md] (similarity: 0.88, 0.84, 0.81)
+[19:34:02]   ✓ response: 131 bytes → !sim00001
+[19:34:12]   ✓ response: 162 bytes → !sim00001
+[19:34:27]   rag: 3 chunks from [trail-camera-log.md] (similarity: 0.91, 0.91, 0.88)
+[19:34:34]   ✓ response: 228 bytes → !sim00001
+[19:44:13] shutting down...

@@ -22,6 +22,10 @@ from router import Router
 
 VERSION = "0.1"
 
+# Pause between auto-sent consecutive chunks (seconds).
+# Prevents flooding the channel when a response spans multiple messages.
+_AUTO_SEND_DELAY = 0.5
+
 log = logging.getLogger("delfi")
 
 
@@ -233,11 +237,16 @@ def main():
 
             worker_busy.set()
             try:
-                response = router.route(sender_id, text)
-                if response:
-                    mesh_iface.send_dm(sender_id, response)
+                messages = router.route_multi(sender_id, text)
+                if messages:
+                    for i, msg in enumerate(messages):
+                        if i > 0:
+                            time.sleep(_AUTO_SEND_DELAY)
+                        mesh_iface.send_dm(sender_id, msg)
+                    total_bytes = sum(byte_len(m) for m in messages)
                     log.info(
-                        f"  \u2713 response: {byte_len(response)} bytes \u2192 {sender_id}"
+                        f"  \u2713 response: {len(messages)} msg(s), "
+                        f"{total_bytes}B \u2192 {sender_id}"
                     )
             except Exception as e:
                 log.error(f"error processing query from {sender_id}: {e}")
@@ -278,11 +287,16 @@ def main():
 
             # --- Fast path: commands & gossip (no LLM) ---
             if kind in ("command", "gossip"):
-                response = router.route(sender_id, text)
-                if response:
-                    mesh_iface.send_dm(sender_id, response)
+                messages = router.route_multi(sender_id, text)
+                if messages:
+                    for i, msg in enumerate(messages):
+                        if i > 0:
+                            time.sleep(_AUTO_SEND_DELAY)
+                        mesh_iface.send_dm(sender_id, msg)
+                    total_bytes = sum(byte_len(m) for m in messages)
                     log.info(
-                        f"  \u2713 response: {byte_len(response)} bytes \u2192 {sender_id}"
+                        f"  \u2713 response: {len(messages)} msg(s), "
+                        f"{total_bytes}B \u2192 {sender_id}"
                     )
                 continue
 
