@@ -261,6 +261,8 @@ Drop documents into a folder. Connect a <span class="white">$20 radio</span>. Yo
 
 Someone on the mesh sends your node a DM. Del-Fi searches your local docs, feeds the relevant chunks to a <span class="white">local LLM</span>, and sends back a concise answer -- all within the <span class="yellow">230-byte</span> LoRa message limit. Everything runs on your hardware.
 
+Connect <span class="white">sensors, trail cameras, or CV pipelines</span> to the FactStore layer and Del-Fi answers measurement queries -- temperature, detections, current readings -- directly from structured data, bypassing the LLM entirely. No hallucination on facts.
+
 Supports <span class="white">Meshtastic</span> and <span class="white">MeshCore</span> radios through a pluggable adapter system -- same oracle, your choice of radio stack.
 
 <span class="dim">Seven Python files. Four dependencies. That's it.</span>
@@ -271,23 +273,33 @@ Supports <span class="white">Meshtastic</span> and <span class="white">MeshCore<
 <section class="box">
   <span class="box-title yellow">SAMPLE SESSION</span>
   <pre>
-<span class="green">you&gt;</span>  saw a big snake on the ridge trail, brown with dark bands
-<span class="cyan">node&gt;</span> Sounds like a Northern water snake (Nerodia sipedon). Common near the creek crossings this time of year. Non-venomous, but defensive if cornered -- give it space and it'll move on. <span class="dim">[!more]</span>
+<span class="dim">── RIDGELINE STATION · node: RIDGELINE ──────────────────────────────</span>
+
+<span class="green">you&gt;</span>  what's the temp right now?
+<span class="cyan">node&gt;</span> Temperature F: 14.0 °F (weather-station, 4 min ago)
+
+<span class="green">you&gt;</span>  anything on the cameras last night?
+<span class="cyan">node&gt;</span> Cam2 Last Detection: adult female mountain lion (CAM-2, 9 hr ago) | Cam1 Last Detection: 7 elk, 4 cows + 3 bulls (CAM-1, 3 hr ago)
+
+<span class="green">you&gt;</span>  is that the same lion thats been coming around?
+<span class="cyan">node&gt;</span> Almost certainly. An adult female has been photographed at CAM-2 three times in the last 60 days -- her territory likely covers the Ridgeline Creek drainage. Solitary and secretive; repeat visits to the same crossing are typical. <span class="dim">(wildlife-guide.md) [!more]</span>
 
 <span class="green">you&gt;</span>  !more
-<span class="cyan">node&gt;</span> The copperhead is the one to watch for here. Key difference: copperheads have hourglass-shaped bands that are wider on the sides, and a triangular head. Water snakes have irregular blotchy bands and a rounder head.
+<span class="cyan">node&gt;</span> If you encounter her: maintain eye contact, don't run, make yourself large. Lions cache large kills and return over several days -- if you find a carcass covered in debris, leave the area. <span class="dim">(wildlife-guide.md)</span>
 
-<span class="green">you&gt;</span>  is the falls trail open or still washed out?
-<span class="cyan">node&gt;</span> Falls Trail is open as of last update. The footbridge at mile 1.4 was repaired May 3. The creek crossing at mile 2.1 is still knee-deep after rain -- wear boots or bring dry socks.
+<span class="green">you&gt;</span>  those big tracks at cam2 -- wolf or coyote?
+<span class="cyan">node&gt;</span> The Feb 17 large canid at CAM-2 is logged as unconfirmed -- deep snow prevented direct print measurement. Wolf front prints are 4-5 in vs coyote's 2.5 in; stride is longer with a more direct register. <span class="dim">(trail-camera-log.md) [!more]</span>
 
-<span class="green">you&gt;</span>  where can i find chanterelles around here?
-<span class="cyan">node&gt;</span> I don't have docs on that. FORAGER-NODE advertises: mushroom-id, seasonal-foraging, edible-plants. Try DMing them directly.
+<span class="green">you&gt;</span>  !more
+<span class="cyan">node&gt;</span> CPW released 10 wolves in Dec 2023 in North Park (~40 mi SE); movements have reached Routt National Forest. Report suspected sightings to CPW at 1-800-332-4155. <span class="dim">(wildlife-guide.md)</span>
 
-<span class="green">you&gt;</span>  !peers
-<span class="cyan">node&gt;</span> Peered:
-         FORAGER-NODE (mushroom-id, edible-plants)
-       Nearby:
-         SUMMIT-STATION (weather-alerts, trail-closures)
+<span class="green">you&gt;</span>  !data
+<span class="cyan">node&gt;</span> barometer_inhg: 24.72 inHg (4 min ago)
+       cam1_last_detection: 7 elk (3 hr ago)
+       cam2_last_detection: adult female mountain lion (9 hr ago)
+       snow_depth_in: 38 in (12 hr ago)
+       temperature_f: 14.0 °F (4 min ago)
+       wind_mph: 8 mph (4 min ago)
 </pre>
 </section>
 
@@ -393,10 +405,13 @@ Supports <span class="white">Meshtastic</span> and <span class="white">MeshCore<
 <span class="dim">[LoRa Radio]</span> &lt;--serial/tcp--&gt; <span class="dim">[Mesh Adapter]</span> &lt;--&gt; <span class="dim">[Router]</span> &lt;--&gt; <span class="dim">[RAG Engine]</span>
                                      |               |               |
                               <span class="dim">(meshtastic</span>    <span class="dim">[Formatter]</span>    <span class="dim">[Mesh Knowledge]</span>
-                               <span class="dim">or meshcore)</span>
+                               <span class="dim">or meshcore)</span>   <span class="dim">[FactStore]</span>
 
 <span class="white">delfi.py</span> .............. entry point, daemon lifecycle, worker thread
 <span class="white">config.py</span> ............. YAML loading, validation, defaults
+<span class="white">facts.py</span> .............. FactStore: sensor / CV data, Tier 0 routing
+  <span class="dim">cache/sensor_feed.json</span>  external scripts write readings here
+  <span class="dim">structured facts bypass the LLM entirely -- no hallucination on values</span>
 <span class="white">mesh/</span> ................. pluggable mesh protocol adapters
   <span class="dim">base.py</span> ............. abstract MeshAdapter interface
   <span class="dim">meshtastic_adapter.py</span>  Meshtastic radios (serial/TCP/BLE)
