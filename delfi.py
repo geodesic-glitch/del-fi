@@ -14,6 +14,7 @@ import threading
 import time
 
 from config import load_config
+from facts import FactStore
 from formatter import byte_len
 from mesh import create_interface
 from meshknowledge import MeshKnowledge
@@ -152,6 +153,11 @@ def main():
     # On failure: RAG disabled, falls back to raw LLM.
     rag = RAGEngine(cfg)
 
+    # === Step 2b: FactStore (sensor / CV data) ===
+    # Loads any persisted facts from cache/facts.json on startup.
+    # The background watcher is started in Step 8 after the stop_event exists.
+    fact_store = FactStore(cfg)
+
     # === Step 3: Knowledge indexing ===
     # On failure: log and skip individual files, continue.
     try:
@@ -174,7 +180,7 @@ def main():
         mesh_knowledge = MeshKnowledge(cfg)
 
     # === Step 6: Router ===
-    router = Router(cfg, rag, mesh_knowledge)
+    router = Router(cfg, rag, mesh_knowledge, fact_store=fact_store)
 
     # === Step 7: Radio / Simulator ===
     msg_queue = queue.Queue()
@@ -201,6 +207,9 @@ def main():
     threading.Thread(
         target=ollama_health_check, args=(rag, stop_event), daemon=True
     ).start()
+
+    # FactStore watcher: polls cache/sensor_feed.json for changes
+    fact_store.watch(stop_event)
 
     # Signal handling
     def shutdown(sig, frame):

@@ -1004,3 +1004,17 @@ Question: Push forth to the Dragon
 [06:28:14]   ✓ response: 1 msg(s), 212B → !sim00001
 [06:29:04]   rag: 3 chunks from [wildlife-guide.md, trail-camera-log.md] (similarity: 0.78, 0.73, 0.72)
 [06:29:06]   ✓ response: 1 msg(s), 12B → !sim00001
+[08:31:43] shutting down...
+[08:37:09] config loaded
+[08:37:10] vectorstore ready (87 chunks indexed)
+[08:37:10] ollama connected at http://localhost:11434
+[08:37:25] indexed 6 files (87 chunks total)
+[08:37:25] initial indexing: 6 files
+[08:37:25] conversation memory enabled (max 10 turns, ttl 3600s)
+[08:37:25] board enabled (max 50 posts, ttl 86400s)
+[08:37:25] listening...
+[08:38:14]   rag: 3 chunks from [flora-guide.md] (similarity: 1.0, 1.0, 1.0)
+[08:38:18]   ✓ response: 2 msg(s), 320B → !sim00001
+[08:39:37]   rag: 3 chunks from [flora-guide.md] (similarity: 1.0, 1.0, 1.0)
+[08:39:40]   ✓ response: 2 msg(s), 277B → !sim00001
+[09:09:52] shutting down...

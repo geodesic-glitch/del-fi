@@ -8,9 +8,11 @@ response buffering for the !more chunking system.
 import json
 import logging
 import os
+import re
 import time
 
 from board import Board
+from facts import FactStore
 from formatter import byte_len, format_response, truncate_at_sentence, MORE_TAG
 from memory import ConversationMemory
 from rag import RAGEngine
@@ -77,10 +79,17 @@ class Router:
     Simple if/elif dispatch. No state machines, no NLP.
     """
 
-    def __init__(self, cfg: dict, rag_engine: RAGEngine, mesh_knowledge=None):
+    def __init__(
+        self,
+        cfg: dict,
+        rag_engine: RAGEngine,
+        mesh_knowledge=None,
+        fact_store: FactStore | None = None,
+    ):
         self.cfg = cfg
         self.rag = rag_engine
         self.mesh = mesh_knowledge
+        self.facts: FactStore | None = fact_store
         self._more_buffers: dict[str, MoreBuffer] = {}
         self._response_cache: dict[str, tuple[str, float]] = {}
         self._seen_senders: set[str] = set()
@@ -243,6 +252,7 @@ class Router:
             "!board": self._cmd_board,
             "!post": self._cmd_post,
             "!unpost": self._cmd_unpost,
+            "!data": self._cmd_data,
         }
 
         handler = handlers.get(cmd)
@@ -258,7 +268,7 @@ class Router:
             f"{name} · AI oracle · {docs} docs\n"
             f"Ask anything in plain text.\n"
             f"!topics !status !board !post\n"
-            f"!more !retry !forget !ping !peers"
+            f"!more !retry !forget !ping !peers !data"
         )
 
     def _cmd_status(self, sender_id: str, arg: str) -> str:
@@ -352,6 +362,65 @@ class Router:
             return "The board is not enabled on this node."
         return self.board.clear(sender_id)
 
+    def _cmd_data(self, sender_id: str, arg: str) -> str:
+        """Show a snapshot of all current sensor facts from the FactStore."""
+        if not self.facts or not self.facts.has_facts():
+            return (
+                "No sensor data loaded. Write readings to "
+                "cache/sensor_feed.json (see sensor_feed.example.json)."
+            )
+        return self.facts.format_snapshot()
+
+    # --- Tier 0: FactStore ---
+
+    def _tier0_facts(self, query: str) -> str | None:
+        """Answer sensor / measurement queries directly from FactStore.
+
+        No LLM call is made. Returns a formatted string if one or more matching
+        facts are found, or None to fall through to RAG.
+
+        Matching logic:
+          1. Quick bail if none of the configured fact_query_keywords appear in
+             the lowercased query (avoids scanning the fact store unnecessarily).
+          2. Tokenise both the query and each fact key; return facts whose key
+             tokens overlap with the query tokens.
+        """
+        if not self.facts or not self.facts.has_facts():
+            return None
+
+        keywords: list[str] = self.cfg.get("fact_query_keywords", [])
+        q_lower = query.lower()
+
+        # Fast bail: no known sensor keyword in query
+        if not any(kw in q_lower for kw in keywords):
+            return None
+
+        # Tokenise the query for key-matching
+        q_words = set(re.sub(r"[^\w]", " ", q_lower).split())
+
+        all_facts = self.facts.get_all()
+        matched_keys = []
+        for key in all_facts:
+            # Replace underscores AND non-word chars so "temperature_f" splits to
+            # {"temperature", "f"}, which then intersects with query token "temperature"
+            key_tokens = set(re.sub(r"[^\w]", " ", key.lower()).replace("_", " ").split())
+            if q_words & key_tokens:
+                matched_keys.append(key)
+
+        if not matched_keys:
+            return None  # keyword hit but no specific fact key — fall to RAG
+
+        lines = [
+            self.facts.format_value(k)
+            for k in sorted(matched_keys)
+            if self.facts.format_value(k)
+        ]
+        if not lines:
+            return None
+
+        name = self.cfg["node_name"]
+        return name + ": " + " | ".join(lines)
+
     # --- Query handling ---
 
     def _handle_query(self, sender_id: str, text: str) -> str:
@@ -378,6 +447,15 @@ class Router:
                 f"Hi from {name}. I answer questions using local docs.\n"
                 f"Try asking something, or send !help · !topics"
             )
+
+        # --- Tier 0: FactStore (sensor / measurement queries, no LLM) ---
+        # Runs BEFORE the response cache so fresh sensor readings are never
+        # served from a stale cached reply. Results are not cached for the same
+        # reason — freshness is the whole point of Tier 0.
+        fact_response = self._tier0_facts(text)
+        if fact_response is not None:
+            log.info("  tier0: fact match — returning direct sensor value")
+            return self._finalize(sender_id, fact_response)
 
         # Check response cache (exact match)
         cached = self._check_cache(text)

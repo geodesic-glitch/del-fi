@@ -12,6 +12,8 @@ import logging
 import os
 import re
 import threading
+import time
+from datetime import datetime
 from pathlib import Path
 
 log = logging.getLogger("delfi.rag")
@@ -528,6 +530,8 @@ class RAGEngine:
                         "text": c["doc"],
                         "source": c["meta"].get("source", "local"),
                         "file": c["meta"].get("file", "unknown"),
+                        # Full path on disk — used by _chunk_label() for mtime staleness
+                        "filepath": c["meta"].get("filepath", ""),
                         "similarity": round(1 - c["adjusted_dist"], 2),
                     })
 
@@ -618,6 +622,9 @@ class RAGEngine:
             f"Answer ONLY using the provided context. "
             f"Do not speculate, infer, or add any information not explicitly present in the context. "
             f"If the context does not contain the answer, say so plainly — do not guess. "
+            f"If a context source header shows a data age (e.g. '~26 hr ago'), include that "
+            f"staleness caveat naturally in your answer so the user knows the data may be outdated. "
+            f"End your reply with the source filename in parentheses, e.g. (wildlife-guide.md). "
             f"Reply in 2-3 short sentences. Always finish your last sentence. "
             f"Do not use markdown formatting. Write plain text only."
         )
@@ -646,7 +653,8 @@ class RAGEngine:
         if chunks:
             parts.append("Context from local documents:")
             for c in chunks:
-                entry = f"[{c['file']}] {c['text']}"
+                label = self._chunk_label(c["file"], c.get("filepath", ""))
+                entry = f"[{label}] {c['text']}"
                 if context_chars + len(entry) > max_context_chars:
                     remaining = max_context_chars - context_chars
                     if remaining > 100:  # only include if meaningful
@@ -704,6 +712,36 @@ class RAGEngine:
 
         parts.append(f"Question: {query}")
         return "\n".join(parts)
+
+    def _chunk_label(self, filename: str, filepath: str) -> str:
+        """Return an annotated label for a context chunk header.
+
+        For time-sensitive files (weather-station.md, trail-camera-log.md),
+        appends an mtime-derived age so the LLM can include a staleness
+        caveat when the data is old. Falls back to the bare filename on any
+        error so retrieval is never blocked.
+        """
+        sensitive = self.cfg.get("time_sensitive_files", [])
+        if filename not in sensitive:
+            return filename
+        try:
+            path = filepath if filepath else ""
+            if not path or not os.path.exists(path):
+                return filename
+            mtime = os.path.getmtime(path)
+            age_seconds = time.time() - mtime
+            ts = datetime.fromtimestamp(mtime).strftime("%b %d %H:%M")
+            if age_seconds < 60:
+                age_str = f"{int(age_seconds)} sec"
+            elif age_seconds < 3600:
+                age_str = f"{int(age_seconds // 60)} min"
+            elif age_seconds < 86400:
+                age_str = f"{int(age_seconds // 3600)} hr"
+            else:
+                age_str = f"{int(age_seconds // 86400)} day(s)"
+            return f"{filename} — last updated {ts}, ~{age_str} ago"
+        except Exception:
+            return filename
 
     # --- Properties ---
 

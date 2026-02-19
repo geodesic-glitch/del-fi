@@ -44,6 +44,27 @@ DEFAULTS = {
     "board_rate_limit": 3,
     "board_rate_window": 3600,
     "board_blocked_patterns": [],
+
+    # --- FactStore: structured sensor / CV data ---
+    # Path to the sensor feed JSON file. External scripts write readings here;
+    # del-fi polls it every fact_watch_interval_seconds for changes.
+    # Empty string = derive automatically from _cache_dir/sensor_feed.json.
+    "fact_feed_file": "",
+    # How often to poll the sensor feed file for changes (seconds).
+    "fact_watch_interval_seconds": 30,
+    # Knowledge files whose content is time-sensitive (weather readings,
+    # camera logs). A staleness annotation is injected into the LLM context
+    # block for these files so the model can caveat its answers appropriately.
+    "time_sensitive_files": ["weather-station.md", "trail-camera-log.md"],
+    # Keywords that trigger Tier 0 fact lookup. If the user query contains any
+    # of these words, del-fi first checks the FactStore for a direct answer
+    # before falling through to RAG. Case-insensitive substring match.
+    "fact_query_keywords": [
+        "temperature", "temp", "humidity", "wind", "pressure",
+        "barometer", "snow", "conditions", "current", "right now", "latest",
+        "camera", "detected", "detection", "spotted", "sighted",
+        "last seen", "cam-1", "cam-2", "cam-3", "cam1", "cam2", "cam3",
+    ],
 }
 
 # Protocol-specific defaults merged when mesh_protocol is set
