@@ -18,7 +18,7 @@
 
 **A daemon that bridges LoRa mesh radio networks with locally-hosted LLMs and RAG knowledge bases.**
 
-Drop documents into a folder, connect a $20 radio, and your community has an AI oracle that answers questions over mesh — no internet, no cloud, no accounts. Just radio waves and local knowledge.
+Drop documents into a folder, connect a $30 radio, and your community has an AI oracle that answers questions over mesh — no internet, no cloud, no accounts. Just radio waves and local knowledge.
 
 Supports **Meshtastic** and **MeshCore** mesh protocols through a pluggable adapter system — same oracle, your choice of radio stack.
 
@@ -112,6 +112,8 @@ This reads from stdin and writes to stdout. You can test the full pipeline witho
 ## Add Knowledge
 
 Drop `.txt` or `.md` files into `~/del-fi/knowledge/`:
+
+For example: 
 
 ```bash
 cp field-guide-to-edible-plants.txt ~/del-fi/knowledge/

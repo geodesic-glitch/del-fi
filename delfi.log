@@ -1018,3 +1018,143 @@ Question: Push forth to the Dragon
 [08:39:37]   rag: 3 chunks from [flora-guide.md] (similarity: 1.0, 1.0, 1.0)
 [08:39:40]   ✓ response: 2 msg(s), 277B → !sim00001
 [09:09:52] shutting down...
+[10:59:37] config loaded
+[10:59:37] vectorstore ready (87 chunks indexed)
+[10:59:38] ollama connected at http://localhost:11434
+[10:59:52] indexed 6 files (87 chunks total)
+[10:59:52] initial indexing: 6 files
+[10:59:52] conversation memory enabled (max 10 turns, ttl 3600s)
+[10:59:52] board enabled (max 50 posts, ttl 86400s)
+[10:59:52] listening...
+[10:59:52] facts: watching C:\Users\muoni\Documents\GitHub\del-fi\.\cache\sensor_feed.json every 30s
+[11:00:01]   rag: no relevant chunks found
+[11:00:01]   no context found — declining to answer
+[11:00:01]   ✓ response: 1 msg(s), 97B → !sim00001
+[11:00:08]   rag: no relevant chunks found
+[11:00:08]   no context found — declining to answer
+[11:00:08]   ✓ response: 1 msg(s), 97B → !sim00001
+[11:00:12]   rag: no relevant chunks found
+[11:00:12]   no context found — declining to answer
+[11:00:12]   ✓ response: 1 msg(s), 97B → !sim00001
+[11:00:17]   rag: 3 chunks from [wildlife-guide.md, seasonal-notes.md, flora-guide.md] (similarity: 0.81, 0.72, 0.72)
+[11:00:22]   ✓ response: 3 msg(s), 368B → !sim00001
+[11:00:33]   rag: 3 chunks from [seasonal-notes.md, wildlife-guide.md, area-overview.md] (similarity: 0.86, 0.75, 0.69)
+[11:00:36]   ✓ response: 3 msg(s), 371B → !sim00001
+[11:00:52] shutting down...
+[11:01:16] config loaded
+[11:01:16] vectorstore ready (87 chunks indexed)
+[11:01:17] ollama connected at http://localhost:11434
+[11:01:30] indexed 6 files (87 chunks total)
+[11:01:30] initial indexing: 6 files
+[11:01:30] loaded 2 cached responses from disk
+[11:01:30] conversation memory enabled (max 10 turns, ttl 3600s)
+[11:01:30] board enabled (max 50 posts, ttl 86400s)
+[11:01:30] listening...
+[11:01:30] facts: watching C:\Users\muoni\Documents\GitHub\del-fi\.\cache\sensor_feed.json every 30s
+[11:01:35] shutting down...
+[11:01:37] config loaded
+[11:01:38] vectorstore ready (87 chunks indexed)
+[11:01:38] ollama connected at http://localhost:11434
+[11:01:52] indexed 6 files (87 chunks total)
+[11:01:52] initial indexing: 6 files
+[11:01:52] loaded 2 cached responses from disk
+[11:01:52] conversation memory enabled (max 10 turns, ttl 3600s)
+[11:01:52] board enabled (max 50 posts, ttl 86400s)
+[11:01:52] listening...
+[11:01:52] facts: watching C:\Users\muoni\Documents\GitHub\del-fi\.\cache\sensor_feed.json every 30s
+[11:01:54]   ✓ response: 1 msg(s), 130B → !sim00001
+[11:02:00]   ✓ response: 1 msg(s), 95B → !sim00001
+[11:02:14]   ✓ response: 1 msg(s), 101B → !sim00001
+[11:02:28]   rag: 3 chunks from [seasonal-notes.md, flora-guide.md] (similarity: 0.86, 0.76, 0.75)
+[11:02:39] ollama returned empty response
+[11:02:39]   ✓ response: 1 msg(s), 61B → !sim00001
+[11:03:03]   rag: 3 chunks from [flora-guide.md] (similarity: 0.77, 0.74, 0.74)
+[11:03:10] ollama returned empty response
+[11:03:10]   ✓ response: 1 msg(s), 61B → !sim00001
+[11:03:19]   rag: 3 chunks from [wildlife-guide.md, flora-guide.md, area-overview.md] (similarity: 0.82, 0.75, 0.75)
+[11:03:26] ollama returned empty response
+[11:03:26]   ✓ response: 1 msg(s), 61B → !sim00001
+[11:03:47] shutting down...
+[11:03:54] config loaded
+[11:04:02] vectorstore ready (87 chunks indexed)
+[11:04:03] ollama connected at http://localhost:11434
+[11:04:17] indexed 6 files (87 chunks total)
+[11:04:17] initial indexing: 6 files
+[11:04:17] loaded 2 cached responses from disk
+[11:04:17] conversation memory enabled (max 10 turns, ttl 3600s)
+[11:04:17] board enabled (max 50 posts, ttl 86400s)
+[11:04:17] listening...
+[11:04:17] facts: watching C:\Users\muoni\Documents\GitHub\del-fi\.\cache\sensor_feed.json every 30s
+[11:04:35]   rag: 3 chunks from [wildlife-guide.md, weather-station.md] (similarity: 0.9, 0.71, 0.7)
+[11:04:42] ollama returned empty response
+[11:04:42]   ✓ response: 1 msg(s), 61B → !sim00001
+[11:04:50] shutting down...
+[11:05:09] config loaded
+[11:05:10] vectorstore ready (87 chunks indexed)
+[11:05:11] ollama connected at http://localhost:11434
+[11:05:24] indexed 6 files (87 chunks total)
+[11:05:24] initial indexing: 6 files
+[11:05:24] loaded 1 cached responses from disk
+[11:05:24] conversation memory enabled (max 10 turns, ttl 3600s)
+[11:05:24] board enabled (max 50 posts, ttl 86400s)
+[11:05:24] listening...
+[11:05:24] facts: watching C:\Users\muoni\Documents\GitHub\del-fi\.\cache\sensor_feed.json every 30s
+[11:05:31]   rag: 3 chunks from [wildlife-guide.md, seasonal-notes.md, flora-guide.md] (similarity: 0.82, 0.74, 0.73)
+[11:05:38]   ✓ response: 1 msg(s), 125B → !sim00001
+[11:05:44]   rag: no relevant chunks found
+[11:05:44]   no context found — declining to answer
+[11:05:44]   ✓ response: 1 msg(s), 97B → !sim00001
+[11:05:49] shutting down...
+[11:06:07] config loaded
+[11:06:08] vectorstore ready (87 chunks indexed)
+[11:06:09] ollama connected at http://localhost:11434
+[11:06:22] indexed 6 files (87 chunks total)
+[11:06:22] initial indexing: 6 files
+[11:06:22] loaded 1 cached responses from disk
+[11:06:22] conversation memory enabled (max 10 turns, ttl 3600s)
+[11:06:22] board enabled (max 50 posts, ttl 86400s)
+[11:06:22] listening...
+[11:06:22] facts: watching C:\Users\muoni\Documents\GitHub\del-fi\.\cache\sensor_feed.json every 30s
+[11:06:26]   rag: no relevant chunks found
+[11:06:26]   no context found — declining to answer
+[11:06:26]   ✓ response: 1 msg(s), 97B → !sim00001
+[11:06:33]   rag: 3 chunks from [wildlife-guide.md, seasonal-notes.md, flora-guide.md] (similarity: 0.8, 0.73, 0.71)
+[11:06:42]   ✓ response: 1 msg(s), 224B → !sim00001
+[11:07:01]   rag: 3 chunks from [seasonal-notes.md] (similarity: 0.78, 0.77, 0.77)
+[11:07:06]   ✓ response: 1 msg(s), 175B → !sim00001
+[11:07:40]   rag: 1 chunks from [trail-camera-log.md] (similarity: 0.76)
+[11:07:45]   ✓ response: 1 msg(s), 196B → !sim00001
+[11:07:53]   rag: 3 chunks from [seasonal-notes.md] (similarity: 0.69, 0.68, 0.65)
+[11:08:00]   ✓ response: 1 msg(s), 121B → !sim00001
+[11:08:03] shutting down...
+[11:14:40] config loaded
+[11:14:41] vectorstore ready (87 chunks indexed)
+[11:14:41] ollama connected at http://localhost:11434
+[11:14:55] indexed 6 files (87 chunks total)
+[11:14:55] initial indexing: 6 files
+[11:14:55] conversation memory enabled (max 10 turns, ttl 3600s)
+[11:14:55] board enabled (max 50 posts, ttl 86400s)
+[11:14:55] listening...
+[11:14:55] facts: watching C:\Users\muoni\Documents\GitHub\del-fi\.\cache\sensor_feed.json every 30s
+[11:15:19]   rag: 3 chunks from [wildlife-guide.md, flora-guide.md] (similarity: 0.73, 0.71, 0.68)
+[11:15:49]   ✓ response: 2 msg(s), 274B → !sim00001
+[11:16:08]   rag: 3 chunks from [seasonal-notes.md, wildlife-guide.md] (similarity: 0.85, 0.74, 0.71)
+[11:16:38]   ✓ response: 2 msg(s), 288B → !sim00001
+[11:16:58] shutting down...
+[13:02:32] config loaded
+[13:02:33] vectorstore ready (87 chunks indexed)
+[13:02:34] ollama connected at http://localhost:11434
+[13:02:48] indexed 6 files (87 chunks total)
+[13:02:48] initial indexing: 6 files
+[13:02:48] conversation memory enabled (max 10 turns, ttl 3600s)
+[13:02:48] board enabled (max 50 posts, ttl 86400s)
+[13:02:48] listening...
+[13:02:48] facts: watching C:\Users\muoni\Documents\GitHub\del-fi\.\cache\sensor_feed.json every 30s
+[13:03:09]   rag: 3 chunks from [seasonal-notes.md, wildlife-guide.md] (similarity: 0.81, 0.8, 0.74)
+[13:03:38]   ✓ response: 2 msg(s), 284B → !sim00001
+[13:03:55]   ✓ response: 1 msg(s), 95B → !sim00001
+[13:03:58]   ✓ response: 1 msg(s), 130B → !sim00001
+[13:04:01]   ✓ response: 1 msg(s), 85B → !sim00001
+[13:04:22]   rag: 3 chunks from [flora-guide.md, seasonal-notes.md] (similarity: 0.88, 0.77, 0.75)
+[13:04:53]   ✓ response: 2 msg(s), 342B → !sim00001
+[13:06:54] shutting down...
