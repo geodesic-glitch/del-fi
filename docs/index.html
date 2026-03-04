@@ -209,6 +209,18 @@
     gap: 8px;
   }
 
+  .banner {
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .banner pre {
+    display: inline-block;
+    text-align: left;
+    font-size: clamp(8px, 1.8vw, 14px);
+    white-space: pre;
+  }
+
   @media (max-width: 600px) {
     body { font-size: 14px; padding: 10px; }
     pre { font-size: 13px; }
@@ -227,23 +239,23 @@
 </div>
 
 <!-- Banner -->
-<section>
+<section class="banner">
 <pre>
-<span class="green">     ██████╗  ████████╗ ██╗              ████████╗ ██╗</span>
-<span class="green">     ██╔══██╗ ██╔═════╝ ██║              ██╔═════╝ ██║</span>
-<span class="green">     ██║  ██║ ██████╗   ██║     ═══════  ██████╗   ██║</span>
-<span class="green">     ██║  ██║ ██╔═══╝   ██║              ██╔═══╝   ██║</span>
-<span class="green">     ██████╔╝ ████████╗ ████████╗        ██║       ██║</span>
-<span class="green">     ╚═════╝  ╚═══════╝ ╚═══════╝        ╚═╝       ╚═╝</span>
-<span class="green">              ██╗   ██╗ ████████╗ ██████████╗</span>
-<span class="green">              ███╗  ██║ ██╔═════╝ ╚═══██╔═══╝</span>
-<span class="green">              ██╔██╗██║ ██████╗       ██║</span>
-<span class="green">              ██║╚████║ ██╔═══╝       ██║</span>
-<span class="green">              ██║ ╚███║ ████████╗     ██║</span>
-<span class="green">              ╚═╝  ╚══╝ ╚═══════╝     ╚═╝</span>
-<span class="dim">     ·  ·  · ─── ·  · ── ·  ─── ·  · ── ·  ·  · ─── ·</span>
-<span class="yellow">          local AI oracle over LoRa mesh radio</span>
-<span class="dim">     ·  ─── ·  ·  · ── ·  ·  ─── ·  · ── ·  ·  · ── ·</span>
+<span class="green"> ██████╗  ████████╗ ██╗              ████████╗ ██╗</span>
+<span class="green"> ██╔══██╗ ██╔═════╝ ██║              ██╔═════╝ ██║</span>
+<span class="green"> ██║  ██║ ██████╗   ██║     ═══════  ██████╗   ██║</span>
+<span class="green"> ██║  ██║ ██╔═══╝   ██║              ██╔═══╝   ██║</span>
+<span class="green"> ██████╔╝ ████████╗ ████████╗        ██║       ██║</span>
+<span class="green"> ╚═════╝  ╚═══════╝ ╚═══════╝        ╚═╝       ╚═╝</span>
+<span class="green">          ██╗   ██╗ ████████╗ ██████████╗</span>
+<span class="green">          ███╗  ██║ ██╔═════╝ ╚═══██╔═══╝</span>
+<span class="green">          ██╔██╗██║ ██████╗       ██║</span>
+<span class="green">          ██║╚████║ ██╔═══╝       ██║</span>
+<span class="green">          ██║ ╚███║ ████████╗     ██║</span>
+<span class="green">          ╚═╝  ╚══╝ ╚═══════╝     ╚═╝</span>
+<span class="dim"> ·  ·  · ─── ·  · ── ·  ─── ·  · ── ·  ·  · ─── ·</span>
+<span class="yellow">      local AI oracle over LoRa mesh radio</span>
+<span class="dim"> ·  ─── ·  ·  · ── ·  ·  ─── ·  · ── ·  ·  · ── ·</span>
 </pre>
 </section>
 
@@ -260,17 +272,11 @@
 <section class="box">
   <span class="box-title cyan">WHAT IS THIS</span>
   <pre>
-Del-Fi is a <span class="white">community oracle</span> on mesh networks like Meshtastic and MeshCore, built for neighborhoods, families, and teams. Drop documents into a folder, connect a <span class="white">$30 radio</span>, and everyone on your mesh can ask questions and get answers -- no internet, no cloud, no accounts, no subscriptions.
+Drop documents into a folder. Connect a <span class="white">$30 radio</span>. Your neighborhood now has an AI oracle -- no internet, no cloud, no accounts.
 
-A Del-Fi node can sit on <span class="white">both 900 MHz and 2.4 GHz meshes simultaneously</span>, bridging radios to extend coverage and knit your community network together. They can run on hardware of various scales, so you can deploy anything from a limited oracle on an Arduino Uno Q to a more powerful aide on a workstation. More nodes means more reach -- every oracle added makes the whole mesh more useful for everyone on it.
+Del-Fi nodes sit on <span class="white">900 MHz and 2.4 GHz meshes simultaneously</span>, bridging coverage across your community. Every node added makes the whole net more useful. When someone sends a DM, Del-Fi finds the relevant docs, asks a <span class="white">local LLM</span>, and replies within the <span class="yellow">230-byte</span> LoRa limit -- everything on your hardware.
 
-When a neighbor sends a DM, Del-Fi searches your local docs, feeds the relevant chunks to a <span class="white">local LLM</span>, and sends back a concise answer -- all within the <span class="yellow">230-byte</span> LoRa message limit. Everything stays on your hardware.
-
-Load it with HOA rules, local business hours, emergency contacts, block meeting notes, and school schedules. Any household with a radio can query it. No app, no account, no cell service required.
-
-Connect <span class="white">sensors or CV pipelines</span> to the FactStore layer and Del-Fi answers measurement queries -- air quality, package detection, gate status -- directly from structured data, bypassing the LLM entirely. No hallucination on facts.
-
-Oracles act to distribute messages on the net while only responding privately to direct messages. Oracles ought to be good mesh citizens.  
+Plug in sensors or cameras and the <span class="white">FactStore</span> answers measurement queries directly -- no LLM, no hallucination on facts.
 
 <span class="dim">Seven Python files. Four dependencies. That's it.</span>
 </pre>
