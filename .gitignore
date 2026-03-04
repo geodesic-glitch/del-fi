@@ -4,6 +4,7 @@ cache/
 gossip/
 seen_senders.txt
 
+*.log
 # User config (contains local paths, not portable)
 config.yaml
 
