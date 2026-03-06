@@ -97,6 +97,7 @@ class Router:
         self._start_time = time.time()
         self._query_count = 0
         self._cache_file = os.path.join(cfg["_cache_dir"], "response_cache.json")
+        self._cache_dirty = False
         self._load_seen_senders()
         if cfg.get("persistent_cache", True):
             self._load_disk_cache()
@@ -578,6 +579,7 @@ class Router:
         """Cache a response for future identical queries."""
         key = query.lower().strip()
         self._response_cache[key] = (response, time.time())
+        self._cache_dirty = True
 
         # Periodic eviction to prevent unbounded growth
         if len(self._response_cache) > 100:
@@ -589,8 +591,12 @@ class Router:
                 if now - t < ttl
             }
 
-        if self.cfg.get("persistent_cache", True):
+    def flush_cache(self):
+        """Write cache to disk if dirty. Called by a periodic background thread
+        rather than on every update to reduce SD card write wear on Pi."""
+        if self._cache_dirty and self.cfg.get("persistent_cache", True):
             self._save_disk_cache()
+            self._cache_dirty = False
 
     # --- Persistent disk cache ---
 

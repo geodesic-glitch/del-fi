@@ -76,6 +76,9 @@ class MeshKnowledge:
         db_path = os.path.join(cache_path, "mesh-answers.db")
         try:
             self._peer_db = sqlite3.connect(db_path, check_same_thread=False)
+            # WAL mode: lower write latency, safer on power loss (SD cards)
+            self._peer_db.execute("PRAGMA journal_mode=WAL")
+            self._peer_db.execute("PRAGMA synchronous=NORMAL")
             self._peer_db.execute("""
                 CREATE TABLE IF NOT EXISTS peer_cache (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,

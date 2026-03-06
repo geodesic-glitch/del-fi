@@ -23,6 +23,9 @@ CHARS_PER_TOKEN = 4
 DEFAULT_CHUNK_SIZE = 256 * CHARS_PER_TOKEN   # ~1024 chars
 DEFAULT_CHUNK_OVERLAP = 32 * CHARS_PER_TOKEN  # ~128 chars
 
+# Max chunks per Ollama embed call. Keeps memory bounded on Pi/small systems.
+EMBED_BATCH_SIZE = 8
+
 # ChromaDB returns cosine distance (0 = identical, 2 = opposite).
 # Similarity = 1 - distance. Default threshold of 0.65 similarity = 0.35 distance.
 # This rejects loosely related topics (e.g. anteater query returning antelope chunks).
@@ -33,7 +36,10 @@ DISTANCE_THRESHOLD = 0.35
 # Keyword boost: when a query keyword appears literally in a chunk,
 # reduce its distance by this amount. Makes entity lookups ("Where SparkFun?")
 # find the right chunk even when vector similarity alone fails.
+# Boost is weighted by keyword length (longer = rarer = more informative).
 KEYWORD_BOOST = 0.15
+KEYWORD_BOOST_MIN_LEN = 3   # ignore very short keywords for boosting
+KEYWORD_BOOST_MAX_LEN = 12  # cap scaling so one long word doesn't dominate
 
 # Words too common to be useful for keyword matching
 _STOP_WORDS = frozenset({
@@ -253,7 +259,12 @@ class RAGEngine:
         if len(chunks) > 1:
             return self._finalize_chunks(chunks, chunk_size)
 
-        # Strategy 4: Character-based fallback
+        # Strategy 4: Sentence-level split (dense .txt files with no structure)
+        chunks = self._split_on_sentences(body, preamble, chunk_size)
+        if len(chunks) > 1:
+            return self._finalize_chunks(chunks, chunk_size)
+
+        # Strategy 5: Character-based fallback
         return self._chunk_by_chars(text, chunk_size, overlap)
 
     def _extract_preamble(self, text: str) -> tuple[str, str]:
@@ -363,6 +374,47 @@ class RAGEngine:
 
         return chunks
 
+    def _split_on_sentences(
+        self, body: str, preamble: str, chunk_size: int
+    ) -> list[str]:
+        """Split dense text into sentence-grouped chunks.
+
+        Accumulates sentences until adding the next would exceed chunk_size,
+        then flushes. This produces much better retrieval units than character
+        slices for flat .txt files (sensor logs, field notes, etc.).
+        """
+        # Simple sentence tokeniser: split on '. ', '! ', '? ' boundaries.
+        sentence_re = re.compile(r'(?<=[.!?])\s+')
+        sentences = sentence_re.split(body.strip())
+        if len(sentences) <= 1:
+            return []  # no sentence boundaries found
+
+        chunks = []
+        current: list[str] = []
+        current_len = 0
+
+        for sentence in sentences:
+            s = sentence.strip()
+            if not s:
+                continue
+            # +1 for the space between sentences
+            if current and current_len + len(s) + 1 > chunk_size:
+                block = " ".join(current)
+                chunk = f"{preamble}\n\n{block}" if preamble else block
+                chunks.append(chunk)
+                current = [s]
+                current_len = len(s)
+            else:
+                current.append(s)
+                current_len += len(s) + 1
+
+        if current:
+            block = " ".join(current)
+            chunk = f"{preamble}\n\n{block}" if preamble else block
+            chunks.append(chunk)
+
+        return chunks
+
     def _finalize_chunks(
         self, chunks: list[str], chunk_size: int
     ) -> list[str]:
@@ -415,19 +467,29 @@ class RAGEngine:
         return chunks
 
     def _embed(self, texts: list[str]) -> list[list[float]]:
-        """Get embeddings from Ollama. Raises on failure."""
+        """Get embeddings from Ollama, batching to avoid OOM on small systems.
+
+        Splits the input into EMBED_BATCH_SIZE chunks and concatenates results.
+        Raises on failure.
+        """
         if not self.ollama:
             raise RuntimeError("Ollama not available for embedding")
 
-        result = self.ollama.embed(
-            model=self.cfg["embedding_model"],
-            input=texts,
-        )
+        batch_size = self.cfg.get("embed_batch_size", EMBED_BATCH_SIZE)
+        all_embeddings: list[list[float]] = []
 
-        # Handle different ollama package versions
-        if hasattr(result, "embeddings"):
-            return result.embeddings
-        return result["embeddings"]
+        for i in range(0, len(texts), batch_size):
+            batch = texts[i : i + batch_size]
+            result = self.ollama.embed(
+                model=self.cfg["embedding_model"],
+                input=batch,
+            )
+            if hasattr(result, "embeddings"):
+                all_embeddings.extend(list(e) for e in result.embeddings)
+            else:
+                all_embeddings.extend(list(e) for e in result["embeddings"])
+
+        return all_embeddings
 
     def _remove_file_chunks(self, file_key: str):
         """Remove all chunks for a file from the collection."""
@@ -479,8 +541,9 @@ class RAGEngine:
             query_embedding = self._embed([text])[0]
             keywords = self._extract_keywords(text)
 
-            # Fetch ALL chunks so keyword matches aren't missed
-            fetch_k = min(max(top_k * 3, 10, self._doc_count), self._doc_count)
+            # Fetch a limited superset so keyword boost can rerank without
+            # pulling the entire collection on every query (Pi-friendly).
+            fetch_k = min(max(top_k * 3, 10), self._doc_count)
             results = self.collection.query(
                 query_embeddings=[query_embedding],
                 n_results=fetch_k,
@@ -496,7 +559,16 @@ class RAGEngine:
             ):
                 doc_lower = doc.lower()
                 matched_kw = [kw for kw in keywords if kw in doc_lower]
-                boost = KEYWORD_BOOST * len(matched_kw) if matched_kw else 0.0
+                # Weight each keyword by length: longer terms are rarer and
+                # more discriminative (e.g. "SparkFun" >> "red").
+                # Clamped to [MIN_LEN, MAX_LEN] and normalised to [0, 1].
+                boost = 0.0
+                if matched_kw:
+                    span = KEYWORD_BOOST_MAX_LEN - KEYWORD_BOOST_MIN_LEN
+                    for kw in matched_kw:
+                        kw_len = max(KEYWORD_BOOST_MIN_LEN, min(len(kw), KEYWORD_BOOST_MAX_LEN))
+                        weight = (kw_len - KEYWORD_BOOST_MIN_LEN) / span
+                        boost += KEYWORD_BOOST * (0.5 + 0.5 * weight)
                 adjusted = max(dist - boost, 0.0)  # lower = better
                 candidates.append({
                     "doc": doc,

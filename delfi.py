@@ -118,6 +118,20 @@ def ollama_health_check(rag: RAGEngine, stop: threading.Event):
         stop.wait(30)  # check every 30 seconds
 
 
+def cache_flush_worker(router, stop: threading.Event):
+    """Periodically flush the response cache to disk.
+
+    Writing on every cache update thrashes SD cards on Pi. Batching writes
+    to once per minute reduces wear without losing much in a power-loss scenario.
+    """
+    while not stop.is_set():
+        stop.wait(60)
+        try:
+            router.flush_cache()
+        except Exception as e:
+            log.error(f"cache flush error: {e}")
+
+
 # --- Main ---
 
 
@@ -208,6 +222,10 @@ def main():
         target=ollama_health_check, args=(rag, stop_event), daemon=True
     ).start()
 
+    threading.Thread(
+        target=cache_flush_worker, args=(router, stop_event), daemon=True
+    ).start()
+
     # FactStore watcher: polls cache/sensor_feed.json for changes
     fact_store.watch(stop_event)
 
@@ -215,6 +233,7 @@ def main():
     def shutdown(sig, frame):
         log.info("shutting down...")
         stop_event.set()
+        router.flush_cache()  # write any pending cache entries before exit
         mesh_iface.close()
         if mesh_knowledge:
             mesh_knowledge.close()
