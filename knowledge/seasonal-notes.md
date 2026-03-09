@@ -1,102 +1,92 @@
-# Seasonal Notes — Ridgeline Station
+# Seasonal Notes — Maplewood Neighborhood
 
-A calendar of what to expect through the year at 9,200 ft in the Northern Colorado Rockies.
-
----
-
-## Winter (December – March)
-
-### Weather
-December and January are typically the coldest months. February begins the slow warming trend but remains solidly winter at this elevation. Snowpack builds through late February; peak snowpack usually occurs in late March to early April. Average snow depths in March: 40-55 inches. Expect temperatures below 0°F on the coldest nights (-15°F to -28°F possible in cold winters). Wind chill is consistently below -10°F during storms.
-
-### Wildlife Activity
-Winter is when large mammal sightings peak on cameras, because animals concentrate on lower, accessible forage. Elk herds are most cohesive in winter; the North Meadow herd (CAM-1) uses the same area daily. Mule deer are present but may drop to lower elevations in the deepest snow years. Coyotes are most vocal in January-February (breeding season). Mountain lion remain active year-round. Great horned owls begin courtship calling in January. Ravens are highly visible at carcasses and along elk herds.
-
-### Wildlife to Watch For (Winter)
-Elk herds, mule deer, coyote pairs (breeding), snowshoe hare (white phase), ermine (white phase), mountain chickadee flocks, Clark's nutcracker, common raven, occasional bald eagle, mountain lion (nocturnal, rare camera captures). Bear, ground squirrels, and chipmunks are all in hibernation or torpor — expect zero camera captures of these species December through March.
-
-### Hazard Notes
-- **Avalanche season** begins with first heavy snowfall (typically November) and extends through April. The chute above Spruce Hollow has avalanched in 3 of the last 10 winters. Monitor snowpack instability: new loading (6+ inches in 24 hrs), wind slab formation, and large temperature swings are the main triggers.
-- **Cold injury to equipment:** Camera battery performance drops significantly below 0°F. Photos may be blank (battery death mid-shot). Heated enclosures mitigate this.
-- **Road/trail closure:** Ridgeline Trail inaccessible without snowshoes/skis from approximately Nov 15 to April 30.
+A guide to what to expect in Maplewood through the year: weather patterns, community rhythms, recurring events, and practical seasonal advice for Pacific Northwest urban living.
 
 ---
 
-## Spring (April – May)
+## Winter (November – February)
 
 ### Weather
-April is still deeply winter at the station. Snow is typically still 20-40 inches deep in early April. Temperatures warm noticeably — highs reaching the 40s°F on clear days — but lows remain below freezing through May at elevation. Snowmelt accelerates dramatically in late April and May. Ridgeline Creek runs high and fast during snowmelt (typically peak runoff: May 10-25 depending on year). Late snowstorms ("spring blizzards") occur in April and even May; one of the largest snowfalls in station history was 19 inches on May 4, 2020.
+Maplewood winters are mild by national standards but persistently wet and gray. Temperatures rarely drop below 28°F at elevation; hard freezes are possible but typically last only a few days at a time. Snow is infrequent — the neighborhood typically sees significant snow accumulation (2+ inches) 1–3 times per winter, with most events melting within 24–48 hours. Ice is a more serious hazard than snow, occurring when brief freezing rain follows mild rain, coating sidewalks and roads.
 
-### Wildlife Activity
-Spring is the most dramatic season for wildlife activity. Bears emerge from dens typically late March to mid-April — exact timing depends on snowpack and individual animal. Bears are highly active immediately after emergence, seeking the first green vegetation and carrion. Elk calving begins late May; calves are born in the meadows and forest edges. Do not approach newborn calves — cows are aggressively protective. Migratory birds begin arriving: American robin (late March), mountain bluebird (late March-April), Lincoln's sparrow (May), Wilson's warbler (May). Canada geese occasionally fly over but do not nest at this elevation.
+Average winter temperatures: highs in the mid-40s°F, lows in the high-30s°F. January is typically the coldest month.
 
-### Flora
-Willows are the first plants to show green, often in early April while snow is still deep. Aspen buds break late April. Elk sedge greens up rapidly at the edges of snowmelt. Heartleaf arnica flowers first in late May, usually within days of snowmelt in the understory. Ground is intensely wet through May; social trails become muddy.
+Rainfall is highest November–January. Total annual precip: ~45 inches, with roughly 60% falling between November and March. Storms (wind + rain events) pass through on a roughly 5–7 day cycle at the height of winter.
 
-### Camera Activity
-Spring triggers the highest camera activity of the year. Bears trigger CAM-2 and CAM-3 frequently in April-May. Bull elk move back into higher elevations as snow recedes. Coyotes with pups begin appearing (late May). Raptors hunting snowmelt meadows for voles.
+The current winter (2025–26) has been wetter than average. Millbrook Creek has reached flood stage 8 times since November 1, compared to a seasonal average of 4–6 events.
+
+### Neighborhood Rhythms (Winter)
+- Holiday light displays and community decoration contests typically start December 1; MAPLEWOOD-ORACLE runs a community voting poll annually.
+- The neighborhood association holds its annual budget meeting in January (always well-attended).
+- Maplewood Elementary winter break: typically 2 weeks straddling Christmas/New Year's. School zone traffic temporarily much lighter; Garfield Middle on the same schedule.
+- Community Park usage drops significantly December–February; primarily dog walkers and the committed joggers.
+- The Greenway becomes the main winter commuter route for cyclists — paved, protected from wind, and usually passable except during flood events.
+- The community fridge (Oak & 51st) typically sees highest use in winter months.
+
+### Hazards & Reminders
+- **Black ice:** Sidewalk ice forms quickly and without warning on cold nights following rain. The Sycamore St downslope and the shaded sections of Oak Street under the big maples are the most frequent ice spots.
+- **Flooding:** Lower Greenway trail floods multiple times per winter. Monitor Millbrook Creek level (infrastructure log) before relying on the lower trail for commuting.
+- **Storm damage:** Large trees in Maplewood are generally healthy, but wind events (>40 mph gusts) regularly drop branches. The big-leaf maples along Maplewood Ave and the older Douglas firs along Millbrook Creek are the most common sources of limb drop.
+- **Windstorm prep:** Secure outdoor furniture, trash/recycling bins, and anything loose before forecast events. Power outages accompanying windstorms usually last 2–8 hours for most of the neighborhood; longer for edge-of-grid areas near Sycamore.
+
+---
+
+## Spring (March – May)
+
+### Weather
+March is still firmly winter-wet, but the light noticeably increases. Rain continues but with more sunny intervals. April is transitional — rain eases and the first genuine warm spells (60°F+) arrive. May is often beautiful: warm, clear, with the city's legendary spring bloom in full force.
+
+Late frosts are rare but can occur through mid-March. The last hard frost at this elevation is typically around March 10. May is generally frost-free and gardening-safe after mid-month.
+
+### Neighborhood Rhythms (Spring)
+- **Community Garden:** Plot lottery closes Feb 28. New season orientation typically late March. Plots are in the south section of Maplewood Community Park. Waiting list typically 20–30 households.
+- **Spring Clean-up Day:** Third Saturday in April — neighborhood-wide litter and invasive removal, organized by the Maplewood Neighborhood Association. One of the best-attended volunteer events of the year.
+- **Maplewood Plant Nursery** reopens early March — watch for announcement. First weekend is always busy.
+- **Greenway restoration work** (removal of invasive English ivy, Himalayan blackberry, and knotweed) occurs April–May when crews can access the creek bank before summer growth hides the roots. Volunteer events roughly monthly.
+- **School end-of-year events** (Maplewood Elementary): spring concerts in May, field day late May, last day of school typically June 15–20.
+
+### Hazards
+- **Millbrook flooding:** Creek levels remain elevated through March and into April as snowmelt (from eastern hills and the watershed above the neighborhood) combines with ongoing rain. Peak runoff typically March 10–25.
+- **Bicycle season ramp-up:** Greenway gets much busier; watch for cyclists at all trail crossings.
 
 ---
 
 ## Summer (June – August)
 
 ### Weather
-Short and dramatic. June is still cold at this elevation — frosts common through mid-June, occasional snow in early June. July and August are warm (highs 55-70°F), with intense afternoon thunderstorms almost daily from late June through August. Lightning is a serious hazard above treeline. Nights cool to the 30s°F even in July. No month is frost-free at the station.
+June is still variable — sunny periods interspersed with cold marine air and occasional rain. July and August are typically dry, warm, and often beautiful: highs 75–85°F, lows 55–60°F, very little rain (July averages just 0.8 inches of rain, the driest month of the year). Pacific Northwest summers are the trade-off for the wet winters.
 
-### Wildlife Activity
-Summer is the most species-rich season but large mammals are harder to find — they disperse across a much larger area as feeding is excellent everywhere. Bull elk are in velvet (growing antlers) June-August. Wildflower-dependent insects peak July-August. Breeding birds are nesting June-July; disturbance during this period should be minimized. Hummingbirds (broad-tailed most common) arrive with wildflower bloom (late June) and depart by September. Marmots and ground squirrels are active May-September.
+Wildfire smoke from regional fires (Oregon Cascades, eastern Washington) affects air quality in Maplewood on average 5–12 days each summer, typically August–September. AQI over 150 is possible in heavy smoke years. Check airnow.gov for real-time AQI.
 
-### Flora — Peak Bloom Timeline
-- Late May: Elk sedge, willow (pollen), first arnicas
-- June: Larkspur, Colorado blue columbine (state flower), American bistort, cow parsnip
-- July: Fireweed, pearly everlasting, yarrow, lupine, paintbrush — peak overall diversity
-- August: Late goldenrods, asters, gentian — season winding down
-- September: Aspen gold; willows yellow; final seed dispersal
+### Neighborhood Rhythms (Summer)
+- **Maplewood Block Party:** Typically held the second Saturday in August. Oak Street between 50th and 52nd is closed for the day. The largest single community event of the year — 400–600 people in recent years.
+- **Maplewood Farmers Market:** Every Thursday evening, June–September, in the library parking lot. Local produce, food trucks, live music. Started as a pop-up in 2022, now in its fourth year.
+- **Community Park** at peak use: youth soccer leagues, community garden, playground crowded on warm evenings and weekends.
+- **Millbrook Greenway:** Heaviest use of the year. Joggers, cyclists, dog walkers throughout daylight hours. Trail maintenance crew performs summer surface repairs July–August.
 
 ### Hazards
-- **Lightning:** Common afternoons July-August. Do not be on a ridge or above treeline after noon in summer.
-- **Flash flooding:** Ridgeline Creek can rise 2-3 feet in 30 minutes during intense storms. The creek crossing is impassable in major events.
-- **Biting insects:** Mosquitoes peak June-July after snowmelt. Horse flies and deer flies peak July-August in meadows. Head protection and long sleeves recommended.
+- **Heat:** Maplewood has a significant number of older homes with no air conditioning. During heat events (>90°F, especially multi-day), the library is a designated cooling center (open until 8pm Mon–Fri, 5pm Sat). Check on elderly or isolated neighbors.
+- **Theft/property crime:** Property crime typically increases in summer (more open windows, more outdoor belongings). Vehicle break-ins peak in July–August.
+- **Bicycle/pedestrian conflicts:** Greenway and park trail crowding leads to more conflicts; posted speed limit on paved sections is 10 mph for bikes.
+- **Wildfire smoke:** Check AQI before outdoor exercise. N95 masks recommended when AQI >150. The library has a small free supply of masks at the front desk during smoke events.
 
 ---
 
 ## Fall (September – November)
 
 ### Weather
-September is beautiful: cool, dry, stable. October brings the first hard frosts and the possibility of early snowstorms (first snow at the station typically arrives Oct 1-15). Night temperatures fall rapidly — sub-freezing by mid-October. November is transitional winter. Trail access begins to close by late November.
+September is often the best month of the year in the Pacific Northwest: dry, warm (70s°F), clear, and golden. October begins the return of rain; the transition can be abrupt. November is solidly wet and gray. The first storm systems of the new rain season arrive October–November.
 
-### Wildlife Activity — Peak Season
-Fall is the most exciting wildlife season. Elk rut peaks in late September. Bull elk bugle loudly from dusk to dawn and into mid-morning — the bugling carries for miles in the cool air. Bulls compete for harems, displaying, wrestling, and occasionally fighting seriously. Cows are constantly moving. Camera captures at CAM-1 (North Meadow) are outstanding during rut.
+Fall colors in Maplewood are modest by eastern US standards but real — the big-leaf maples along Maplewood Ave and Oak Street turn gold and orange October 10–25, and the ash trees in the Community Park provide some red tones.
 
-Bears are in hyperphagia (intense feeding) through October, gaining weight for denning. Berries, nuts, roots, and any available calorie source. Bears may travel 30+ miles per day during hyperphagia and are at their most visible and least cautious.
-
-Clark's nutcrackers are at maximum activity caching pine seeds in September-October. Watch for repeated trips to limber pine and whitebark pine.
-
-The first flocks of migratory finches (pine siskin, crossbills) pass through September-October. Mountain bluebirds depart late September.
-
-### Flora
-Aspens peak gold color typically September 20-October 5 at this elevation (slightly earlier than lower elevations; later than treeline). Duration is 1-2 weeks; peak is closely matched to night temperatures and elevation. Willows yellow simultaneously. By early October, leaves are down. Berries (serviceberry, chokecherry, mountain ash lower down) have been stripped by bears and birds.
+### Neighborhood Rhythms (Fall)
+- **Back to school:** Maplewood Elementary and Garfield Middle typically start the first week of September. School-zone traffic returns on Oak Street and Maplewood Ave.
+- **Greenway trail maintenance:** City parks performs tree trimming and invasive clearing in October before the wet season. Occasional brief trail closures.
+- **Community Garden close-out:** Plots must be cleared and winterized by October 31. Compost bins on-site for debris.
+- **Neighborhood Association annual meeting:** November. All residents invited. Covers budget, upcoming projects, and board elections. Historically held at the library community room.
+- **Halloween:** Always busy in Maplewood — large trick-or-treat turnout. The blocks between Oak and Sycamore, 50th to 53rd, are the traditional high-traffic area. Neighbors on this stretch typically buy 200+ pieces of candy. November 1 cleanup is organized by block captains.
 
 ### Hazards
-- **Bears:** Most bears are seen in fall as they fatten up. Do not leave food unattended near the station.
-- **Hunting season:** Elk rifle season typically runs late October-November in this zone. Bright orange is standard practice. Check current Colorado Parks & Wildlife season dates.
-- **Early winter:** A heavy October snowstorm (6+ inches) can trap unprepared hikers. Plan for winter conditions any time after October 1 at this elevation.
-
----
-
-## Annual Phenology Quick Reference
-
-| Event | Typical Date Range |
-|---|---|
-| First snow at station | Oct 1–15 |
-| Road closure (CR-129) | ~Nov 1 |
-| Bear enters den | Nov 1–15 |
-| Elk rut peak | Sep 20–Oct 5 |
-| Peak aspen color | Sep 20–Oct 5 |
-| Snowpack peak | Late March–early April |
-| Bear emerges from den | Late March–April 15 |
-| Trail opens (approx) | Late April–early May |
-| Elk calving | May 20–June 10 |
-| Peak wildflower bloom | July 10–August 5 |
-| Clark's nutcracker caching | September–October |
-| Elk bulls shed antlers | Late Feb–early March |
+- **Wet leaves:** Fallen maple leaves on paved surfaces (sidewalks, the Greenway) are extremely slippery when wet. This causes more pedestrian falls in October–November than any other hazard in the neighborhood.
+- **First storms:** The first significant windstorms of the fall season (typically October) cause the most branch drop, because trees still have leaves (increased wind resistance) and root zones can be saturated quickly.
+- **Heating system check:** Remind residents to test smoke and CO detectors and have furnaces/gas appliances inspected before November. Fire Station 14 offers free safety assessments by appointment.

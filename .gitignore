@@ -31,3 +31,4 @@ Thumbs.db
 
 .github/
 *.log
+knowledge/*.md
