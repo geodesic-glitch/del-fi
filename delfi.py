@@ -118,7 +118,7 @@ def ollama_health_check(rag: RAGEngine, stop: threading.Event):
         stop.wait(30)  # check every 30 seconds
 
 
-def cache_flush_worker(router, stop: threading.Event):
+def cache_flush_worker(router: Router, stop: threading.Event):
     """Periodically flush the response cache to disk.
 
     Writing on every cache update thrashes SD cards on Pi. Batching writes

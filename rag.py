@@ -40,6 +40,7 @@ DISTANCE_THRESHOLD = 0.35
 KEYWORD_BOOST = 0.15
 KEYWORD_BOOST_MIN_LEN = 3   # ignore very short keywords for boosting
 KEYWORD_BOOST_MAX_LEN = 12  # cap scaling so one long word doesn't dominate
+_KW_BOOST_SPAN = KEYWORD_BOOST_MAX_LEN - KEYWORD_BOOST_MIN_LEN  # precomputed
 
 # Words too common to be useful for keyword matching
 _STOP_WORDS = frozenset({
@@ -564,10 +565,9 @@ class RAGEngine:
                 # Clamped to [MIN_LEN, MAX_LEN] and normalised to [0, 1].
                 boost = 0.0
                 if matched_kw:
-                    span = KEYWORD_BOOST_MAX_LEN - KEYWORD_BOOST_MIN_LEN
                     for kw in matched_kw:
                         kw_len = max(KEYWORD_BOOST_MIN_LEN, min(len(kw), KEYWORD_BOOST_MAX_LEN))
-                        weight = (kw_len - KEYWORD_BOOST_MIN_LEN) / span
+                        weight = (kw_len - KEYWORD_BOOST_MIN_LEN) / _KW_BOOST_SPAN
                         boost += KEYWORD_BOOST * (0.5 + 0.5 * weight)
                 adjusted = max(dist - boost, 0.0)  # lower = better
                 candidates.append({
