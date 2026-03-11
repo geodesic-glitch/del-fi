@@ -66,6 +66,9 @@ DEFAULTS = {
     # answers and prepend them to improve question-style query alignment.
     # Only runs on new/changed files (content-hash cached). Requires Ollama.
     "synthetic_questions": False,
+    # Optional: use a different (larger) model just for synthetic question
+    # generation. Falls back to 'model' if unset.
+    "synthetic_questions_model": None,
 
     # --- FactStore: structured sensor / CV data ---
     # Path to the sensor feed JSON file. External scripts write readings here;

@@ -519,8 +519,9 @@ class RAGEngine:
             f"{chunk[:600]}"
         )
         try:
+            sq_model = self.cfg.get("synthetic_questions_model") or self.cfg["model"]
             result = self.ollama.generate(
-                model=self.cfg["model"],
+                model=sq_model,
                 prompt=prompt,
                 options={"num_predict": 120},
             )
