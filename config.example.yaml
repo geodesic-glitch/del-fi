@@ -3,7 +3,7 @@
 
 # --- Required ---
 node_name: "DEL-FI-001"
-model: "gemma3:4b-it-qat"   # Raspberry Pi: use llama3.2:1b — most larger models are too slow or unreliable on Pi hardware
+model: "granite4:micro-h"   # Raspberry Pi: use llama3.2:1b — most larger models are too slow or unreliable on Pi hardware
 
 # --- Optional (sensible defaults shown) ---
 
@@ -39,7 +39,7 @@ model: "gemma3:4b-it-qat"   # Raspberry Pi: use llama3.2:1b — most larger mode
 #                                 # lower toward 0.2 if only near-exact matches should count
 # keyword_boost: 0.1             # max distance reduction per matched keyword (default 0.15)
 # rag_top_k: 3                   # max chunks returned per query (default 3)
-# num_ctx: 2048                  # context window size (lower = faster)
+# num_ctx: 4096                  # cap context window (default: auto-detect from model)
 # num_predict: 128               # max output tokens (lower = faster)
 # persistent_cache: true         # cache responses to disk across restarts
 # busy_notice: true              # ack queued senders with "hang tight" message

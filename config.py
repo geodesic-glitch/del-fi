@@ -17,6 +17,9 @@ log = logging.getLogger("delfi.config")
 DEFAULTS = {
     "model": "qwen3:4b",
     "personality": "Helpful and concise community assistant.",
+    # Short one-liner shown by !about. If empty, the first sentence of
+    # personality is used instead.
+    "description": "",
     "knowledge_folder": "~/del-fi/knowledge",
     "max_response_bytes": 230,
     "mesh_protocol": "meshtastic",
@@ -29,7 +32,7 @@ DEFAULTS = {
     "log_level": "info",
     "ollama_host": "http://localhost:11434",
     "ollama_timeout": 120,
-    "num_ctx": 2048,
+    "num_ctx": None,   # None = auto-detect from model; set explicitly to cap downward
     "num_predict": 128,
     "persistent_cache": True,
     "busy_notice": True,

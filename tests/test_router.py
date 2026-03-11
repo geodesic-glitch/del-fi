@@ -154,6 +154,31 @@ def test_cmd_topics():
     assert "first-aid" in response
 
 
+def test_cmd_about_includes_name_and_topics():
+    router = _make_router()
+    response = router.route("!sender1", "!about")
+    assert "TEST-NODE" in response
+    assert "solar-power" in response
+    assert "trail-guide" in response
+    assert "first-aid" in response
+
+
+def test_cmd_about_uses_description_field():
+    router = _make_router()
+    router.cfg["description"] = "A test oracle for unit tests."
+    response = router.route("!sender1", "!about")
+    assert "A test oracle for unit tests." in response
+
+
+def test_cmd_about_falls_back_to_personality():
+    router = _make_router()
+    router.cfg["description"] = ""
+    router.cfg["personality"] = "You are TEST-NODE, a helpful assistant."
+    response = router.route("!sender1", "!about")
+    # Should extract a sentence from personality (stripping "You are TEST-NODE, ")
+    assert "helpful assistant" in response
+
+
 def test_cmd_unknown():
     router = _make_router()
     response = router.route("!sender1", "!foobar")
@@ -326,7 +351,7 @@ def test_all_commands_fit_byte_limit():
     max_bytes = router.cfg["max_response_bytes"]
 
     commands = [
-        "!help", "!status", "!topics", "!ping", "!peers",
+        "!help", "!about", "!status", "!topics", "!ping", "!peers",
         "!more", "!retry", "!foobar",
     ]
     for cmd in commands:

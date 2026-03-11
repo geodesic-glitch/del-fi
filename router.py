@@ -243,6 +243,7 @@ class Router:
 
         handlers = {
             "!help": self._cmd_help,
+            "!about": self._cmd_about,
             "!status": self._cmd_status,
             "!topics": self._cmd_topics,
             "!ping": self._cmd_ping,
@@ -268,9 +269,26 @@ class Router:
         return (
             f"{name} · AI oracle · {docs} docs\n"
             f"Ask anything in plain text.\n"
-            f"!topics !status !board !post\n"
+            f"!about !topics !status !board !post\n"
             f"!more !retry !forget !ping !peers !data"
         )
+
+    def _cmd_about(self, sender_id: str, arg: str) -> str:
+        """Describe this oracle and summarise its knowledge base."""
+        name = self.cfg["node_name"]
+
+        description = self.cfg.get("description", "").strip()
+        if not description:
+            # Fall back to the first sentence of the personality prompt.
+            personality = self.cfg.get("personality", "").strip()
+            # Strip leading "You are NAME, " framing so it reads naturally.
+            personality = re.sub(r"^You are [^,]+,\s*", "", personality)
+            m = re.search(r"^[^.!?]+[.!?]", personality)
+            description = m.group(0).strip() if m else personality[:120]
+
+        topics = self.rag.get_topics()
+        topic_str = ", ".join(topics) if topics else "none loaded"
+        return f"{name}: {description} Knows: {topic_str}"
 
     def _cmd_status(self, sender_id: str, arg: str) -> str:
         name = self.cfg["node_name"]

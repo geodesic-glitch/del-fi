@@ -71,6 +71,7 @@ class RAGEngine:
         self._rag_available = False
         self._lock = threading.Lock()
         self._doc_count = 0
+        self._model_native_ctx: int | None = None
 
         self._init_vectorstore()
         self._init_ollama()
@@ -109,6 +110,7 @@ class RAGEngine:
             # Health check: list models
             self.ollama.list()
             self._ollama_available = True
+            self._model_native_ctx = self._detect_model_ctx()
             log.info(f"ollama connected at {self.cfg['ollama_host']}")
         except Exception as e:
             log.warning(f"ollama not available (will retry): {e}")
@@ -120,6 +122,30 @@ class RAGEngine:
             return True
         self._init_ollama()
         return self._ollama_available
+
+    def _detect_model_ctx(self) -> int | None:
+        """Query ollama for the model's native context window size."""
+        try:
+            if not self.ollama:
+                return None
+            info = self.ollama.show(self.cfg["model"])
+            model_info = getattr(info, "modelinfo", {}) or {}
+            for key, val in model_info.items():
+                if key.endswith(".context_length"):
+                    ctx = int(val)
+                    log.info(f"detected model context window: {ctx} tokens")
+                    return ctx
+        except Exception as e:
+            log.debug(f"could not detect model context window: {e}")
+        return None
+
+    def _effective_num_ctx(self) -> int:
+        """Effective context window: model-native, capped by config if explicitly set."""
+        native = self._model_native_ctx
+        cfg_val = self.cfg.get("num_ctx")  # None if not explicitly configured
+        if native and cfg_val:
+            return min(native, cfg_val)  # config caps downward (memory constraints)
+        return native or cfg_val or 2048  # fallback if detection failed
 
     # --- Document Ingestion ---
 
@@ -633,19 +659,6 @@ class RAGEngine:
         """Generate a response using Ollama /api/generate.
 
         Returns response text, or None if generation fails.
-
-        TODO: Auto-detect the model's native context window size via
-        ollama.show(model) and use it instead of the hardcoded num_ctx
-        config default (2048).  For example, gemma3:12b supports 128K
-        but we currently cap at whatever the user sets manually.
-        Steps:
-          1. On startup (_init_ollama), call self.ollama.show(model)
-             and read the context_length from model parameters.
-          2. Use that as the default, but let the config override it
-             downward (useful for memory-constrained hardware).
-          3. Adjust _build_prompt's context budget accordingly.
-        This also affects num_predict — larger windows allow longer
-        responses, but LoRa's 230-byte limit makes that less relevant.
         """
         if not self._ollama_available or not self.ollama:
             return None
@@ -667,7 +680,7 @@ class RAGEngine:
                 prompt=prompt,
                 system=system,
                 options={
-                    "num_ctx": self.cfg.get("num_ctx", 2048),
+                    "num_ctx": self._effective_num_ctx(),
                     "num_predict": self.cfg.get("num_predict", 256),
                 },
             )
@@ -714,7 +727,7 @@ class RAGEngine:
         Trims context to fit within the token budget so the model has
         room for both the system prompt and its own response.
         """
-        num_ctx = self.cfg.get("num_ctx", 2048)
+        num_ctx = self._effective_num_ctx()
         num_predict = self.cfg.get("num_predict", 256)
         # Reserve tokens for system prompt (~150), question (~50), and generation
         max_context_chars = (num_ctx - num_predict - 200) * CHARS_PER_TOKEN
