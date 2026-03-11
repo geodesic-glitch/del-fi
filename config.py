@@ -15,8 +15,8 @@ import yaml
 log = logging.getLogger("delfi.config")
 
 DEFAULTS = {
-    "model": "qwen3:4b",
-    "personality": "Helpful and concise community assistant.",
+    "model": "granite4:micro-h",
+    "personality": "You are a helpful and concise community assistant.",
     # Short one-liner shown by !about. If empty, the first sentence of
     # personality is used instead.
     "description": "",
@@ -28,12 +28,15 @@ DEFAULTS = {
     "rate_limit_seconds": 30,
     "response_cache_ttl": 300,
     "embedding_model": "nomic-embed-text",
+    "similarity_threshold": 0.25,
+    "keyword_boost": 0.25,
+    "rag_top_k": 6,
     "channels": [],
     "log_level": "info",
     "ollama_host": "http://localhost:11434",
     "ollama_timeout": 120,
     "num_ctx": None,   # None = auto-detect from model; set explicitly to cap downward
-    "num_predict": 128,
+    "num_predict": 300,
     "persistent_cache": True,
     "busy_notice": True,
     "memory_max_turns": 0,
@@ -47,6 +50,22 @@ DEFAULTS = {
     "board_rate_limit": 3,
     "board_rate_window": 3600,
     "board_blocked_patterns": [],
+
+    # --- RAG tuning ---
+    # Chunk size and overlap for document ingestion. Smaller chunks improve
+    # retrieval precision; larger chunks carry more context per hit.
+    "chunk_size": 1024,    # chars (~256 tokens at 4 chars/token)
+    "chunk_overlap": 128,  # chars overlap between adjacent char-split chunks
+    # Widen the candidate pool before keyword-boost reranking.
+    # fetch_k = top_k * rag_fetch_multiplier (Pi-friendly default: 3).
+    "rag_fetch_multiplier": 3,
+    # Query expansion: before retrieval, ask the LLM for 2 alternative phrasings
+    # and merge their results. Improves recall at the cost of one extra LLM call.
+    "query_expansion": False,
+    # Synthetic questions: during ingestion, generate 3 questions each chunk
+    # answers and prepend them to improve question-style query alignment.
+    # Only runs on new/changed files (content-hash cached). Requires Ollama.
+    "synthetic_questions": False,
 
     # --- FactStore: structured sensor / CV data ---
     # Path to the sensor feed JSON file. External scripts write readings here;

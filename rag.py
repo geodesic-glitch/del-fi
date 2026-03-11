@@ -206,6 +206,11 @@ class RAGEngine:
         if not chunks:
             return False
 
+        # Optionally enrich each chunk with synthetic questions before embedding.
+        if self.cfg.get("synthetic_questions") and self._ollama_available:
+            log.info(f"  generating synthetic questions for {len(chunks)} chunks ({filepath.name})")
+            chunks = [self._enrich_with_questions(c, filepath.name) for c in chunks]
+
         # Log each chunk for diagnostics
         for i, chunk in enumerate(chunks):
             preview = chunk.replace('\n', ' | ')[:100]
@@ -260,6 +265,12 @@ class RAGEngine:
         Each strategy preserves the document preamble (title + intro)
         for context in every chunk.
         """
+        # Prefer config values; only use defaults when callers pass the module constants
+        if chunk_size == DEFAULT_CHUNK_SIZE:
+            chunk_size = self.cfg.get("chunk_size", DEFAULT_CHUNK_SIZE)
+        if overlap == DEFAULT_CHUNK_OVERLAP:
+            overlap = self.cfg.get("chunk_overlap", DEFAULT_CHUNK_OVERLAP)
+
         text = text.strip()
         if not text:
             return []
@@ -493,6 +504,35 @@ class RAGEngine:
             start += chunk_size - overlap
         return chunks
 
+    def _enrich_with_questions(self, chunk: str, filename: str) -> str:
+        """Prepend LLM-generated questions to a chunk to improve query alignment.
+
+        Asking the model what questions a chunk answers causes its embedding to
+        align much better with real user questions (document enrichment /
+        reverse-HyDE). Falls back to the original chunk on any error.
+        """
+        if not self._ollama_available or not self.ollama:
+            return chunk
+        prompt = (
+            f"Read this excerpt from '{filename}' and write 3 short questions "
+            "that this text directly answers. Output only the questions, one per line.\n\n"
+            f"{chunk[:600]}"
+        )
+        try:
+            result = self.ollama.generate(
+                model=self.cfg["model"],
+                prompt=prompt,
+                options={"num_predict": 120},
+            )
+            response = result.response if hasattr(result, "response") else result.get("response", "")
+            questions = response.strip()
+            if not questions:
+                return chunk
+            return f"[Questions this answers]\n{questions}\n\n{chunk}"
+        except Exception as e:
+            log.warning(f"synthetic question generation failed: {e}")
+            return chunk
+
     def _embed(self, texts: list[str]) -> list[list[float]]:
         """Get embeddings from Ollama, batching to avoid OOM on small systems.
 
@@ -546,7 +586,35 @@ class RAGEngine:
         words = re.findall(r'[a-zA-Z0-9]+', text.lower())
         return [w for w in words if w not in _STOP_WORDS and len(w) >= 2]
 
-    def query(self, text: str, top_k: int = 3) -> list[dict]:
+    def _expand_query(self, query: str) -> list[str]:
+        """Return [original] + up to 2 LLM-generated rephrasings.
+
+        Improves recall by retrieving against multiple phrasings and merging
+        results. Falls back to [original] on any failure.
+        """
+        if not self._ollama_available or not self.ollama:
+            return [query]
+        prompt = (
+            "Rephrase the following question in 2 different ways to improve document search. "
+            "Return only the rephrased questions, one per line, no numbering.\n\n"
+            f"Question: {query}"
+        )
+        try:
+            result = self.ollama.generate(
+                model=self.cfg["model"],
+                prompt=prompt,
+                options={"num_predict": 80},
+            )
+            response = result.response if hasattr(result, "response") else result.get("response", "")
+            lines = [l.strip() for l in response.strip().splitlines() if l.strip()]
+            extras = lines[:2]
+            log.debug(f"query expansion: {extras}")
+            return [query] + extras
+        except Exception as e:
+            log.warning(f"query expansion failed, using original: {e}")
+            return [query]
+
+    def query(self, text: str, top_k: int | None = None) -> list[dict]:
         """Retrieve relevant document chunks for a query.
 
         Uses hybrid search: vector similarity + keyword boosting.
@@ -554,36 +622,56 @@ class RAGEngine:
         so entity lookups like "Where SparkFun?" find the right chunk
         even when embeddings alone rank it poorly.
 
+        When query_expansion is enabled in config, the query is rephrased
+        by the LLM into 2 alternatives; all phrasings are retrieved and
+        merged (keeping best distance per chunk) before reranking.
+
         Returns list of {text, source, file, similarity} dicts,
         sorted by relevance. Empty list if nothing matches or RAG is down.
         """
         if not self._rag_available or not self.collection or self._doc_count == 0:
             return []
 
+        top_k = top_k if top_k is not None else self.cfg.get("rag_top_k", 3)
+
         # Allow per-deployment tuning; stored as a distance (1 - similarity).
         # Lower value = stricter match required.
         threshold = self.cfg.get("similarity_threshold", DISTANCE_THRESHOLD)
 
         try:
-            query_embedding = self._embed([text])[0]
             keywords = self._extract_keywords(text)
+
+            # Optionally expand the query to multiple phrasings for better recall.
+            queries = self._expand_query(text) if self.cfg.get("query_expansion") else [text]
 
             # Fetch a limited superset so keyword boost can rerank without
             # pulling the entire collection on every query (Pi-friendly).
-            fetch_k = min(max(top_k * 3, 10), self._doc_count)
-            results = self.collection.query(
-                query_embeddings=[query_embedding],
-                n_results=fetch_k,
-                include=["documents", "metadatas", "distances"],
-            )
+            multiplier = self.cfg.get("rag_fetch_multiplier", 3)
+            fetch_k = min(max(top_k * multiplier, 10), self._doc_count)
+
+            # Collect candidates across all query phrasings, keeping only the
+            # best (lowest) raw distance seen for each unique chunk ID.
+            seen: dict[str, dict] = {}
+            for q in queries:
+                q_embedding = self._embed([q])[0]
+                results = self.collection.query(
+                    query_embeddings=[q_embedding],
+                    n_results=fetch_k,
+                    include=["documents", "metadatas", "distances"],
+                )
+                for doc, meta, dist in zip(
+                    results["documents"][0],
+                    results["metadatas"][0],
+                    results["distances"][0],
+                ):
+                    cid = str(meta.get("filepath", "")) + "::" + str(meta.get("chunk", ""))
+                    if cid not in seen or dist < seen[cid]["raw_dist"]:
+                        seen[cid] = {"doc": doc, "meta": meta, "raw_dist": dist}
 
             # Build scored candidates with keyword boost
             candidates = []
-            for doc, meta, dist in zip(
-                results["documents"][0],
-                results["metadatas"][0],
-                results["distances"][0],
-            ):
+            for entry in seen.values():
+                doc, meta, dist = entry["doc"], entry["meta"], entry["raw_dist"]
                 doc_lower = doc.lower()
                 matched_kw = [kw for kw in keywords if kw in doc_lower]
                 # Weight each keyword by length: longer terms are rarer and
@@ -594,7 +682,7 @@ class RAGEngine:
                     for kw in matched_kw:
                         kw_len = max(KEYWORD_BOOST_MIN_LEN, min(len(kw), KEYWORD_BOOST_MAX_LEN))
                         weight = (kw_len - KEYWORD_BOOST_MIN_LEN) / _KW_BOOST_SPAN
-                        boost += KEYWORD_BOOST * (0.5 + 0.5 * weight)
+                        boost += self.cfg.get("keyword_boost", KEYWORD_BOOST) * (0.5 + 0.5 * weight)
                 adjusted = max(dist - boost, 0.0)  # lower = better
                 candidates.append({
                     "doc": doc,
@@ -674,6 +762,12 @@ class RAGEngine:
         log.debug(f"  === USER PROMPT ===\n{prompt}")
         log.debug(f"  === END PROMPT ===")
 
+        num_ctx = self._effective_num_ctx()
+        num_predict = self.cfg.get("num_predict", 128)
+        est_tokens = (len(system) + len(prompt)) // CHARS_PER_TOKEN
+        pct = int(100 * est_tokens / num_ctx) if num_ctx else 0
+        log.info(f"  prompt: ~{est_tokens} tokens / {num_ctx} ctx ({pct}% used, {num_predict} reserved for reply)")
+
         try:
             result = self.ollama.generate(
                 model=self.cfg["model"],
@@ -681,7 +775,7 @@ class RAGEngine:
                 system=system,
                 options={
                     "num_ctx": self._effective_num_ctx(),
-                    "num_predict": self.cfg.get("num_predict", 256),
+                    "num_predict": self.cfg.get("num_predict", 128),
                 },
             )
 
@@ -702,16 +796,10 @@ class RAGEngine:
         personality = self.cfg["personality"]
 
         return (
-            f"You are {name}, a helpful AI assistant serving a community over "
-            f"low-bandwidth mesh radio. {personality} "
-            f"Answer ONLY using the provided context. "
-            f"Do not speculate, infer, or add any information not explicitly present in the context. "
-            f"If the context does not contain the answer, say so plainly — do not guess. "
-            f"If a context source header shows a data age (e.g. '~26 hr ago'), include that "
-            f"staleness caveat naturally in your answer so the user knows the data may be outdated. "
-            f"End your reply with the source filename in parentheses, e.g. (wildlife-guide.md). "
-            f"Reply in 2-3 short sentences. Always finish your last sentence. "
-            f"Do not use markdown formatting. Write plain text only."
+            f"You are {name}, a community assistant on a mesh radio network. {personality} "
+            f"Answer ONLY using the provided context. If the answer is not in the context, say so. "
+            f"If a source shows a data age, mention it. End with the source filename in parentheses. "
+            f"Be brief and direct. Write 2-3 plain sentences."
         )
 
     def _build_prompt(
@@ -728,7 +816,7 @@ class RAGEngine:
         room for both the system prompt and its own response.
         """
         num_ctx = self._effective_num_ctx()
-        num_predict = self.cfg.get("num_predict", 256)
+        num_predict = self.cfg.get("num_predict", 128)
         # Reserve tokens for system prompt (~150), question (~50), and generation
         max_context_chars = (num_ctx - num_predict - 200) * CHARS_PER_TOKEN
 
