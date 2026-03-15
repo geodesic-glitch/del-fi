@@ -526,6 +526,16 @@ class Router:
                 # tell the user explicitly than to fabricate an answer.
                 log.info("  no context found — declining to answer")
                 name = self.cfg["node_name"]
+                if self.cfg.get("enable_suggestions_fallback") and self.rag.rag_available:
+                    fallback_chunks = self.rag.suggest(text)
+                    if fallback_chunks:
+                        log.info(f"  fallback: attempting generation with {len(fallback_chunks)} below-threshold chunks")
+                        response = self.rag.generate(
+                            text, context_chunks=fallback_chunks, history=history,
+                            board_context=board_context,
+                        )
+                        if response:
+                            return self._finalize(sender_id, response)
                 response = (
                     f"{name}: I don't have anything in my knowledge base about that. "
                     f"Try !topics to see what I know."

@@ -70,6 +70,20 @@ DEFAULTS = {
     # generation. Falls back to 'model' if unset.
     "synthetic_questions_model": None,
 
+    # --- Small model / oracle tuning ---
+    # Cap context fed to the LLM (tokens). None = use full computed budget.
+    # Useful for small models with limited effective context windows.
+    "max_context_tokens": None,
+    # Use a compact system prompt with explicit brevity constraints.
+    # Automatically enabled by oracle profiles for known small models.
+    "small_model_prompt": False,
+    # When no chunk passes the similarity threshold, surface the nearest
+    # neighbours as related-topic suggestions instead of a hard "I don't know."
+    "enable_suggestions_fallback": False,
+    # Place the highest-scoring chunk last in the prompt (recency bias).
+    # Small models attend more strongly to tokens near the end of context.
+    "reorder_context": False,
+
     # --- FactStore: structured sensor / CV data ---
     # Path to the sensor feed JSON file. External scripts write readings here;
     # del-fi polls it every fact_watch_interval_seconds for changes.
@@ -90,6 +104,22 @@ DEFAULTS = {
         "camera", "detected", "detection", "spotted", "sighted",
         "last seen", "cam-1", "cam-2", "cam-3", "cam1", "cam2", "cam3",
     ],
+}
+
+# Oracle profiles: per-model default overrides for known small models.
+# These are applied automatically in load_config() when the configured
+# model name contains the profile key (case-insensitive substring match).
+# Any key explicitly set in config.yaml takes priority over the profile.
+ORACLE_PROFILES: dict[str, dict] = {
+    "gemma3:1b": {
+        "similarity_threshold": 0.35,
+        "rag_top_k": 3,
+        "keyword_boost": 0.15,
+        "max_context_tokens": 512,
+        "small_model_prompt": True,
+        "enable_suggestions_fallback": True,
+        "reorder_context": True,
+    },
 }
 
 # Protocol-specific defaults merged when mesh_protocol is set
@@ -120,6 +150,15 @@ MESH_DEFAULTS = {
     "tag_responses": True,
     "reject_contradictions": True,
 }
+
+
+def _match_profile(model: str) -> dict | None:
+    """Return oracle profile overrides for a known model, or None."""
+    model_lower = model.lower()
+    for profile_key, profile_vals in ORACLE_PROFILES.items():
+        if profile_key in model_lower:
+            return profile_vals
+    return None
 
 
 def load_config(config_path: str | None = None) -> dict:
@@ -153,6 +192,15 @@ def load_config(config_path: str | None = None) -> dict:
 
     # Merge defaults (model defaults to qwen3:4b if not specified)
     cfg = {**DEFAULTS, **raw}
+
+    # Apply oracle profile for known small models.
+    # Profile keys not explicitly set in config.yaml take profile values.
+    profile = _match_profile(cfg.get("model", ""))
+    if profile:
+        for key, val in profile.items():
+            if key not in raw:
+                cfg[key] = val
+        log.debug(f"oracle profile applied for model '{cfg['model']}'")
 
     # Normalize log_level to lowercase
     cfg["log_level"] = str(cfg["log_level"]).lower()

@@ -42,6 +42,16 @@ KEYWORD_BOOST_MIN_LEN = 3   # ignore very short keywords for boosting
 KEYWORD_BOOST_MAX_LEN = 12  # cap scaling so one long word doesn't dominate
 _KW_BOOST_SPAN = KEYWORD_BOOST_MAX_LEN - KEYWORD_BOOST_MIN_LEN  # precomputed
 
+# Compact system prompt for small models. Shorter, explicit brevity constraint,
+# and no secondary instructions (source citation, age caveats) that small models
+# struggle to follow reliably.
+SMALL_MODEL_SYSTEM_PROMPT = (
+    "You are {name}, a community assistant. {personality} "
+    "Answer using ONLY the context below. "
+    'If the context does not contain the answer, say "I don\'t know." '
+    "Be brief. 1-3 sentences maximum."
+)
+
 # Words too common to be useful for keyword matching
 _STOP_WORDS = frozenset({
     "a", "an", "the", "is", "it", "in", "on", "at", "to", "for",
@@ -735,6 +745,44 @@ class RAGEngine:
             log.error(f"retrieval failed: {e}")
             return []
 
+    def suggest(self, text: str, n: int = 3) -> list[dict]:
+        """Return top-n nearby chunks regardless of similarity threshold.
+
+        Used for fallback generation: when no chunk passes the normal threshold,
+        attempt to answer using the nearest available content. The LLM (with
+        small_model_prompt) will say "I don't know" if the context isn't relevant.
+        Returns the same dict format as query().
+        """
+        if not self._rag_available or not self.collection or self._doc_count == 0:
+            return []
+        try:
+            q_embedding = self._embed([text])[0]
+            results = self.collection.query(
+                query_embeddings=[q_embedding],
+                n_results=min(n + 2, self._doc_count),
+                include=["documents", "metadatas", "distances"],
+            )
+            docs = results.get("documents") or []
+            metas = results.get("metadatas") or []
+            dists = results.get("distances") or []
+            chunks = []
+            for doc, meta, dist in zip(
+                (docs[0] if docs else [])[:n],
+                (metas[0] if metas else [])[:n],
+                (dists[0] if dists else [])[:n],
+            ):
+                chunks.append({
+                    "text": doc,
+                    "source": meta.get("source", "local"),
+                    "file": meta.get("file", "unknown"),
+                    "filepath": meta.get("filepath", ""),
+                    "similarity": round(1 - dist, 2),
+                })
+            return chunks
+        except Exception as e:
+            log.warning(f"suggest() failed: {e}")
+            return []
+
     # --- Generation ---
 
     def generate(
@@ -751,6 +799,12 @@ class RAGEngine:
         """
         if not self._ollama_available or not self.ollama:
             return None
+
+        # Recency bias: place best chunk last so small models attend to it more.
+        # query() returns chunks sorted best-first; reversing puts the best match
+        # nearest to the question, which small models weight more heavily.
+        if context_chunks and self.cfg.get("reorder_context"):
+            context_chunks = list(reversed(context_chunks))
 
         system = self._build_system_prompt()
         prompt = self._build_prompt(
@@ -796,6 +850,9 @@ class RAGEngine:
         name = self.cfg["node_name"]
         personality = self.cfg["personality"]
 
+        if self.cfg.get("small_model_prompt"):
+            return SMALL_MODEL_SYSTEM_PROMPT.format(name=name, personality=personality)
+
         return (
             f"You are {name}, a community assistant on a mesh radio network. {personality} "
             f"Answer ONLY using the provided context. If the answer is not in the context, say so. "
@@ -820,6 +877,10 @@ class RAGEngine:
         num_predict = self.cfg.get("num_predict", 128)
         # Reserve tokens for system prompt (~150), question (~50), and generation
         max_context_chars = (num_ctx - num_predict - 200) * CHARS_PER_TOKEN
+        # Cap to max_context_tokens if set (for small models with limited effective window)
+        token_cap = self.cfg.get("max_context_tokens")
+        if token_cap:
+            max_context_chars = min(max_context_chars, token_cap * CHARS_PER_TOKEN)
 
         parts = []
         context_chars = 0
