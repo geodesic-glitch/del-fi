@@ -1,5 +1,7 @@
 # The Shattered Realm — World Lore
 
+The foundational setting document for DUNGEON-ORACLE. Last reviewed: April 2026. For character classes, see classes.md. For monsters and threats, see monsters.md. For game mechanics, see rules.md.
+
 ## The Setting
 
 The Shattered Realm is a world fractured by an ancient cataclysm known as the Sundering — when the god-king Malachar attempted to ascend to divinity and detonated his own soul across the continent. Magic became wild and unpredictable. Great cities collapsed into the earth. Dungeons erupted from the crust as the land folded over old vaults, temples, and ruins.

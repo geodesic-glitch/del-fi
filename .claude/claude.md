@@ -327,7 +327,7 @@ They do not start the radio listener. They are safe to re-run at any time.
 
 | Module | Key public methods |
 |--------|-------------------|
-| `WikiEngine` | `build(file=None)`, `query(q, peer_ctx="", history="") → (str, str)`, `lint() → list[str]`, `watch(interval)` |
+| `WikiEngine` | `build(file=None)`, `patch(file) → dict`, `query(q, peer_ctx="", history="") → (str, str)`, `lint() → list[str]`, `watch(interval)` |
 | `PeerCache` | `lookup(q) → str|None`, `store(q, answer, peer_id)`, `prune()` |
 | `GossipDirectory` | `receive(announcement)`, `referral(q) → str|None`, `announce() → str` |
 | `Router` | `handle(sender, text) → str` |
@@ -413,9 +413,14 @@ model: "gemma3:4b-it-qat"
 
 ```yaml
 wiki_folder: ./wiki                  # path to compiled wiki; default ./wiki
-wiki_builder_model: "qwen2.5:7b"     # model for --build-wiki; falls back to model
+wiki_builder_model: "qwen2.5:7b"     # model for --build-wiki (full synthesis); falls back to model
 wiki_rebuild_on_start: false         # run --build-wiki automatically at daemon startup
 wiki_stale_after_days: 30            # days before --lint-wiki flags a page as stale
+wiki_watch_enabled: true             # whether the file-watch background thread runs
+wiki_patch_model: ""                 # model for watch()-triggered incremental patches;
+                                     # defaults to model (serving model)
+wiki_patch_threshold_pct: 40         # if >40% of source lines changed, watch() routes to
+                                     # build() instead of patch()
 ```
 
 **Oracle profiles** — auto-applied by substring match on `model`:

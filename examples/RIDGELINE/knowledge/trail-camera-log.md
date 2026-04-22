@@ -1,6 +1,55 @@
 # Trail Camera Log — Ridgeline Station
 
-Three cameras are active: CAM-1 (North Meadow), CAM-2 (Creek Crossing), CAM-3 (Spruce Hollow). All timestamps are local Mountain Time. Images stored on SD cards, checked monthly. Species confirmed visually unless noted "track only."
+Three cameras are active: CAM-1 (North Meadow), CAM-2 (Creek Crossing), CAM-3 (Spruce Hollow). All timestamps are local Mountain Time. Images stored on SD cards, checked monthly. Species confirmed visually unless noted "track only." For species background, see wildlife-guide.md.
+
+## Apr 22, 2026
+
+**06:38 · CAM-2 Creek Crossing**
+Black bear — single adult male (estimated 250+ lb). First confirmed bear on camera this season. Investigated creek bank systematically, likely searching for carrion in high-water runoff. Active ~12 minutes, then moved south into spruce. Tracks also present at CAM-3 (see Apr 21 scat find in weather log). Bears active at this elevation since ~Apr 10–14 based on VALLEY-ORACLE's lower-elevation reports.
+
+**07:02 · CAM-1 North Meadow**
+Elk — 4 cows, no calves yet (calving starts late May). All four in noticeably better condition than late February — beginning to recover from winter. Browsing willow tips above snow edge. Herd significantly reduced from winter peak (7–15); several individuals have already moved to higher terrain.
+
+**08:15 · CAM-2 Creek Crossing**
+American dipper — single bird on exposed rock in fast-moving water. Creek running high and turbid from snowmelt. Dipper probing shallow eddies at creek margin. Same individual present here all winter.
+
+## Apr 21, 2026
+
+**05:14 · CAM-3 Spruce Hollow**
+Coyote — 2 individuals (mated pair). Moving quickly N to S through the hollow. Both in thin early-spring coat, slightly ragged. One individual rolled briefly on something in the snow (scent rolling). Pups not expected on camera until May–June.
+
+**14:52 · CAM-1 North Meadow**
+Mountain bluebird — 1 male, cobalt blue. First spring migrant captured on camera this season. Hunting from exposed willow stems at meadow edge. Also visible: 2 dark-eyed juncos foraging on exposed soil patches.
+
+**18:30 · CAM-1 North Meadow**
+Mule deer — 2 does and 1 buck (small 2-point, velvet antlers just emerging as small nubs). Deer moving upslope from lower winter range as snow permits.
+
+## Apr 20, 2026
+
+**04:10 · CAM-3 Spruce Hollow**
+Snowshoe hare — 1 individual. Coat in mid-transition: ~60% brown patchy, 40% white remaining. Transition timing is photoperiod-driven, not temperature-driven, so hares appear mismatched against patchy snow/bare ground. This individual's transition is slightly ahead of average.
+
+**06:21 · CAM-2 Creek Crossing**
+Mule deer — 3 does feeding on willow catkins along creek bank. Willows just breaking bud — first real green food source of the year for browsers.
+
+**15:44 · CAM-1 North Meadow**
+American robin — 3 individuals. Hunting along south-facing snow edge for earthworms in thawing soil. Robins are the earliest spring migrants to reach this elevation. Their arrival marks the beginning of invertebrate emergence.
+
+## Apr 19, 2026
+
+**07:40 · CAM-2 Creek Crossing**
+Mountain lion — tracks only. Fresh prints in overnight light snow (~2.5 in wet). Print: 3.4 in, round, no claw marks. Single animal moving upstream heading NW. Stride: ~28 in. Clear lion identification. No visual capture. The adult female that held this territory through winter likely still present.
+
+**09:15 · CAM-1 North Meadow**
+Clark's nutcracker — 2 birds probing snow near spruce edge. Cache retrieval behavior — birds excavating stored seeds from under remaining snow pack.
+
+## Apr 17, 2026
+
+**05:33 · CAM-1 North Meadow**
+Elk herd — 6 cows. Moving north and upslope toward higher terrain. Beginning of seasonal elevation migration as snow recedes. Camera activity at CAM-1 will decline through May as herd disperses to summer range.
+
+**11:06 · CAM-3 Spruce Hollow**
+Red fox — single individual. Spring shed coat: patchy and thin. Mousing along hollow floor where snow recedes and vole runways are being exposed. Three pounce attempts observed, 1 apparent success.
 
 ## Feb 18, 2026
 

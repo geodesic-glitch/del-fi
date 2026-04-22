@@ -92,11 +92,15 @@ class RAGEngine:
         """Initialize ChromaDB. On failure, RAG retrieval is disabled."""
         try:
             import chromadb
+            from chromadb.config import Settings
 
             db_path = self.cfg["_vectorstore_dir"]
             os.makedirs(db_path, exist_ok=True)
 
-            client = chromadb.PersistentClient(path=db_path)
+            client = chromadb.PersistentClient(
+                path=db_path,
+                settings=Settings(anonymized_telemetry=False),
+            )
             self.collection = client.get_or_create_collection(
                 name="knowledge",
                 metadata={"hnsw:space": "cosine"},

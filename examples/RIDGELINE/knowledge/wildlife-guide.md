@@ -1,6 +1,6 @@
 # Wildlife Guide — Ridgeline Station Area
 
-Species documented at or within 2 miles of Ridgeline Station. Status notes reflect year-round presence unless noted.
+Species documented at or within 2 miles of Ridgeline Station. Last reviewed: April 2026. For recent sightings and camera captures, see trail-camera-log.md.
 
 ---
 
@@ -24,7 +24,7 @@ Smaller than a wolf (35-50 lb), with a pointed muzzle, bushy tail with black tip
 
 ### Gray Wolf (Canis lupus) — Possible
 Status: Rare, range expanding in Colorado since 2021 reintroduction in Routt/Grand Counties.
-Larger than coyotes (70-130 lb). Track size: front print 4-5 inches long (vs coyote's 2.5 in). Stride is longer with a more direct register (hind foot lands near front track). Wolves tend to travel in packs and leave a wide trail pattern. Colorado Parks & Wildlife released 10 wolves in Dec 2023 in North Park (roughly 40 miles SE); documented movements have reached Routt National Forest. The Feb 17 large canid sighting at CAM-2 is under investigation. Report all suspected wolf sightings to CPW at 1-800-332-4155.
+Larger than coyotes (70-130 lb). Track size: front print 4-5 inches long (vs coyote's 2.5 in). Stride is longer with a more direct register (hind foot lands near front track). Wolves tend to travel in packs and leave a wide trail pattern. Colorado Parks & Wildlife confirmed in March 2026 that the Apr 2026 area canid tracks are consistent with a lone dispersing wolf; no pack activity confirmed in the immediate area as of April 2026. Report all suspected wolf sightings to CPW at 1-800-332-4155.
 
 ### Black Bear (Ursus americanus)
 Status: Seasonal (April–November). Denning in winter.

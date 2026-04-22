@@ -1,98 +1,66 @@
 # Community Activity Log — Maplewood Neighborhood
 
-Recent events, sightings, reports, and neighborhood activity. Entries logged by community members via the MAPLEWOOD-ORACLE node and by block captains. All times local Pacific Time.
+Recent events, reports, and neighborhood activity logged by community members via MAPLEWOOD-ORACLE and by block captains. All times local Pacific Time. For infrastructure status (creek levels, road closures, power), see infrastructure.md.
 
 ---
 
-## Feb 19, 2026
+## Apr 22, 2026
 
-**08:34 · Garfield Ave & 51st St**
-Vehicle break-in reported — dark blue sedan, window smashed, items taken from back seat. Owner filed online police report (case #26-04412). Reminder: do not leave visible items in vehicles. This is the third vehicle break-in on this block in six weeks.
+**08:15 · Maplewood Branch Library (node location)**
+MAPLEWOOD-ORACLE knowledge base updated with new LLM-compiled wiki. Run `!topics` to see all available topics. Node uptime: 18 days since last restart.
 
-**09:15 · Community Park (Oak & 50th)**
-Park crew confirmed the new basketball court resurfacing is complete. Court is open. New painted lines and fresh hoop nets. Thanks to the Parks Dept and to the neighborhood association for the grant push.
+**09:40 · Community Park (Oak & 50th)**
+Spring Clean-Up Day setup underway. Volunteer check-in at the park shelter from 9am–noon. Gloves, bags, and grabbers provided. Rain is forecast at 2pm — bring a layer. 47 volunteers signed up as of this morning.
 
-**11:02 · Maplewood Ave & Sycamore (south end)**
-Greenway trail flooding confirmed at the Sycamore underpass section — standing water after overnight rain. Lower trail closed from Sycamore to Maple Grove access point. Upper trail (north of Oak) remains clear. See infrastructure log for creek level data.
+**11:20 · Garfield Ave & 52nd St**
+Vehicle break-in reported — green SUV, passenger window smashed overnight, bag taken from back seat. Owner filed report online (case #26-09871). Fourth break-in on this block this month. Non-emergency tip line: (555) 743-2200.
 
-**14:45 · Block 5100–5200 Maplewood Ave**
-Lost dog — medium black lab mix, red collar with no tags visible, found wandering near the library. Resident holding at 5144 Maplewood. Contact: (555) 743-XXXX or message via node. Microchip status unknown.
-
-## Feb 18, 2026
-
-**07:22 · Millbrook Creek Greenway (Oak St bridge)**
-Two coyotes sighted on the Greenway, just north of the Oak Street bridge, at first light. Moving south along the creek bank. Typical winter behavior — coyotes regularly use the Greenway corridor as a travel route. Keep small dogs leashed and close to you on the trail, especially at dawn and dusk. Coyote sightings should be reported to the city's Urban Wildlife line: (555) 743-8800.
-
-**10:30 · Maplewood Elementary School**
-Message from Principal Fuentes: school will hold a delayed start (10am) on Friday Feb 21 for professional development. After-care opens normally at 7:30am. Note this is NOT a full day off.
-
-**13:51 · Garfield Ave commercial strip**
-Birdhouse Coffee posted they will close early (3pm) on Feb 20 for a private event. Blue Elm Café will be open normal hours.
-
-**17:40 · 5200 block Oak Street**
-Manhole cover reported loose and rattling — noise audible to nearby residents. Reported to city works. Reference: cityworks ticket #26-11882.
-
-**19:05 · Maplewood Ave & Oak (node location)**
-A neighbor reports seeing someone attempting door handles on parked cars along the 5300 block of Maplewood Ave around 8:30pm last night (Feb 17). No break-ins confirmed at that location, but worth being aware. Lock your car.
-
-## Feb 17, 2026
-
-**06:45 · Millbrook Creek Greenway**
-Creek level reached 4.8 ft at the Oak St gauge by 6am — above the 4.5 ft minor flood threshold. Lower trail submerged at Sycamore underpass by 7am. Trail crew posted closure signs. See infrastructure log for level history.
-
-**12:10 · Eastside Hardware (Garfield Ave)**
-Owner posted note: they will be closed Monday Feb 23 for Presidents' Day. Reopening Tuesday Feb 24.
-
-**14:30 · Community Park**
-Graffiti reported on the west face of the picnic shelter wall — tags, non-threatening. Reported to parks department. Expected response time 3–5 business days.
-
-**22:15 · Garfield Ave & 49th**
-Significant noise complaint: loud music from the apartment building at 4911 Garfield, multiple floors, audible from the street. Non-emergency police called. Officers responded at 22:45. Music stopped per the reporting neighbor.
-
-## Feb 16, 2026
-
-**08:00 · MAPLEWOOD-ORACLE status**
-Node back online after 6-hour power outage (Feb 15 overnight). Library battery backup sustained approximately 5.5 hours before drain. Grid power restored at 02:30. All systems nominal.
-
-**09:30 · Garfield & 52nd commuter area**
-Bus line 22 running approximately 15 minutes late this morning due to the overnight road flooding on the Garfield Ave/Creek Road intersection (resolved by 10am). Normal service resumed by 11am.
-
-**11:45 · Maplewood Community Park**
-Reminder from Parks: the Community Room reservation system is currently down for maintenance. Contact the library desk directly to book dates through March 7.
-
-**16:20 · 900 block Sycamore St (south)**
-Suspicious vehicle report: older white van parked on the street without moving for approximately 60+ hours. Reported to non-emergency. Officers did a drive-by at 17:10 — no violation, moved on its own later that evening.
-
-## Feb 15, 2026
-
-**03:45 · Citywide (affects Maplewood)**
-Power outage began — traced to a substation fault on the east grid. Approximately 4,800 customers affected including most of Maplewood. MAPLEWOOD-ORACLE on battery backup. Outage duration: ~7 hours.
-
-**09:30 · Maplewood Ave & Garfield (north end)**
-After-effects of overnight storm: a large street tree (mature big-leaf maple, approximately 70 ft) dropped a major limb onto the sidewalk on the 5400 block of Maplewood Ave, blocking one lane. City tree crew responded by noon; limb removed by 14:30. No injuries.
-
-**15:20 · Millbrook Creek Greenway**
-Trail partially reopened following storm. Sycamore underpass still flooded. Upper section (Oak to Garfield) passable but muddy.
-
-## Feb 14, 2026
-
-**07:00 · Maplewood Neighborhood (general)**
-Winter storm warning in effect. Rain/wind event expected 8am Feb 14 through 6am Feb 15. Gusts up to 55 mph forecast. City advises: secure any loose outdoor items, be aware of possible fallen branches and power outages.
-
-**16:05 · Community Fridge (Oak & 51st)**
-Community fridge was restocked this morning by a community volunteer (thank you J.W.). Donations included rice, canned goods, and fresh produce. Currently well-stocked.
-
-**18:45 · Maplewood Elementary**
-School announced via robocall: school is open Feb 15 on normal schedule (district monitoring road conditions; families will be notified by 6am Feb 15 if schedule changes). Update: school did open, see Feb 15 entries.
-
-## Feb 13, 2026
-
-**10:15 · Maplewood Branch Library**
-New free workshop announced: Basic Home Electrical Safety — Feb 28, 6:30pm, Community Room. Presented by Fire Station 14. Free, walk-in. Covers GFCI outlets, extension cord hazards, smoke/CO detectors.
-
-**14:45 · Block captains (general)**
-February neighborhood association meeting recap now posted on the Maplewood NA website. Key items: traffic calming petition update (signatures at 847/1000 — final push underway), community garden plot lottery open through Feb 28, park resurfacing confirmed for basketball court.
+**14:00 · Millbrook Creek Greenway (Oak St bridge)**
+Creek level 3.1 ft at Oak St gauge — normal range. Upper and lower trail both open and dry. Coho salmon monitoring season ended in December; Friends of Millbrook Creek recorded 31 adult coho in the Maplewood reach this year, up from 23 last year. See organizations-guide.md for FMC contact.
 
 ---
 
-*To add an entry to this log, message MAPLEWOOD-ORACLE on the mesh with your location, time, and a brief description. Entries are moderated by the Digital Commons working group.*
+## Apr 21, 2026
+
+**07:30 · Garfield Ave commercial strip**
+Birdhouse Coffee (5010 Garfield) reopened after 3-day renovation — new espresso machine installed, same hours. Blue Elm Café (5240 Garfield) hosting free community breakfast Saturday 7–10am as part of MNA spring kickoff.
+
+**10:45 · Maplewood Elementary School**
+Principal Fuentes announced: school will hold its annual Spring Science Fair on May 7, 5–7pm. All community members welcome. 6th-grade projects from Garfield Middle will also be featured this year.
+
+**16:30 · 5200 block Oak Street**
+Water main repair crew finished work at Oak & 52nd. Water service restored to all affected addresses. Disruption lasted approximately 4 hours (12:30pm–4:30pm). Road temporarily closed to traffic during repair; now fully open.
+
+---
+
+## Apr 20, 2026
+
+**09:00 · Maplewood Community Garden**
+Season opening day. All 42 plots claimed; 4 ADA beds also occupied. Plot holders received orientation from garden coordinator Priya Sharma. Reminder: organic practices only — no synthetic pesticides or herbicides. Water access available April 1–Oct 31.
+
+**13:15 · Garfield Ave & 49th (near Fire Station 14)**
+Fire Station 14 hosting open house Saturday Apr 26, 10am–1pm. Free home fire safety assessments and CPR demo. All ages welcome. See local-resources.md for station contact info.
+
+**19:00 · MNA Monthly Meeting — Library Community Room**
+Meeting recap: (1) Spring Clean-Up Day confirmed for Apr 22. (2) Traffic-calming proposal for Garfield Ave between 49th and 53rd approved — city to install raised crosswalks and signage by June. (3) Digital Commons reported MAPLEWOOD-ORACLE wiki upgrade complete.
+
+---
+
+## Apr 18, 2026
+
+**07:50 · Millbrook Creek Greenway**
+Two coyotes sighted on the Greenway south of Oak St bridge at sunrise — typical spring behavior. Coyote denning season underway (April–May); females more defensive near den sites. Keep dogs on leash, especially small breeds. Report sightings to city urban wildlife: (555) 743-8800.
+
+**12:30 · Maplewood Ave & Sycamore**
+New crosswalk countdown signals installed at Maplewood Ave & Sycamore intersection (south end). City engineers say timing coordinated with elementary school dismissal (2:55pm). Pedestrian safety upgrade following 2025 advocacy by Maplewood Families coalition.
+
+---
+
+## Summary — April 2026
+
+Active issues: Garfield Ave vehicle break-ins (4 incidents this month, block 5200). Infrastructure: all normal (creek 3.1 ft, power stable, roads clear). Upcoming: Spring Clean-Up Day Apr 22, Fire Station open house Apr 26, Science Fair May 7. Community garden open for the season. Coho salmon count record high (31 adults, 2025–26 season).
+
+---
+
+*To add an entry, message MAPLEWOOD-ORACLE on the mesh with your location, time, and a brief description. Entries moderated by the Maplewood Digital Commons working group.*
+

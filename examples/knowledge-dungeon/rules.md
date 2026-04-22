@@ -1,5 +1,7 @@
 # Delver's Handbook — Game Rules
 
+Core rules for DUNGEON-ORACLE. Last reviewed: April 2026. For class-specific rules, see classes.md. For monster stats, see monsters.md.
+
 ## Core Mechanics
 
 ### Checks & Dice

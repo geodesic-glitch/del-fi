@@ -52,9 +52,28 @@ class WikiEngine:
 
     def build(self, file_path: str | None = None) -> dict:
         """
-        Run --build-wiki pipeline.
+        Run --build-wiki pipeline. Uses wiki_builder_model (large, high-quality synthesis).
         If file_path is given, rebuild only that source file's wiki pages.
         Returns summary: {"pages_updated": int, "pages_created": int, "errors": list}
+
+        Use this for: initial deployment build, periodic full re-synthesis,
+        manual rebuild after structural changes to knowledge/ files.
+        """
+
+    def patch(self, file_path: str) -> dict:
+        """
+        Apply an incremental update to the wiki page for the given source file.
+        Uses the serving model (model config key, small/edge model) — NOT wiki_builder_model.
+
+        The patch is constrained: provide (existing wiki page + changed content),
+        ask the small model to add/update only the changed facts without restructuring
+        the page. The foundation built by build() is preserved.
+
+        Called by watch() when a source file changes.
+        NOT used for initial builds or peer-sourced content.
+
+        Returns summary: {"page": str, "action": "updated"|"rebuilt", "error": str|None}
+        If the patch fails (model error, parse failure), falls back to build(file_path).
         """
 
     def query(
@@ -78,7 +97,8 @@ class WikiEngine:
     def watch(self, interval: int = 60) -> None:
         """
         Background thread. Polls knowledge/ folder for file changes.
-        On change: calls self.build(file_path=changed_file).
+        On change: calls self.patch(changed_file) — uses small serving model.
+        Only calls self.build(changed_file) as a fallback if patch() fails.
         Runs until daemon shutdown.
         """
 
@@ -469,6 +489,92 @@ LINT RESULT: 2 warnings, 0 errors
 3. Old ChromaDB collection (`del_fi_knowledge`) is left on disk but not written to.
 4. After a `--build-wiki` run, the new collection (`del_fi_wiki`) is populated.
 5. `rag.py` is removed in a follow-up commit once tests pass.
+
+---
+
+## 13. Two-Tier Build System
+
+### 13.1 Motivation
+
+`--build-wiki` (`build()`) uses the large `wiki_builder_model` to synthesise raw
+source documents into well-structured wiki pages. This is a deliberate, offline
+batch step — good output quality, but slow and resource-heavy. Running it on
+every file change in production would be impractical on edge hardware.
+
+The serving model (`model`) is small (1B–4B), already running, and capable of
+a **constrained** update task: given an existing wiki page as scaffold, append
+or modify only the changed facts. This is much simpler than synthesising from
+scratch, and within the ability of a 1B parameter model.
+
+```
+wiki_builder_model (7B+)  →  build()   →  Foundation wiki — full synthesis
+                                           Run before deployment, or manually.
+
+model (1B–4B, serving)    →  patch()   →  Incremental update — append/update only
+                                           Run by watch() on file change.
+```
+
+### 13.2 Patch prompt
+
+```
+SYSTEM:
+You are updating an existing wiki page for {node_name}.
+Do NOT restructure the page. Do NOT remove existing content.
+Add the new facts into the appropriate section(s).
+If new content contradicts existing claims, keep the old text,
+mark it superseded, and add the new claim (see contradiction format below).
+Output ONLY the full updated wiki page. No commentary.
+
+Contradiction format:
+> [superseded {today} by {source_filename}]
+<new claim>
+
+EXISTING WIKI PAGE:
+{existing_wiki_page}
+
+NEW/CHANGED CONTENT FROM SOURCE ({source_filename}):
+{diff_or_new_content}
+```
+
+### 13.3 What constitutes a "patch" vs a "full rebuild"
+
+| Scenario | Action | Model used |
+|----------|--------|-----------|
+| New entries appended to a log file (e.g. `community-log.md`) | `patch()` | serving model |
+| A sensor reading updated in-place | `patch()` | serving model |
+| Source file restructured significantly | `build(file_path)` | builder model |
+| New source file added to `knowledge/` | `build(file_path)` | builder model |
+| Source file deleted | `build()` (full, to remove stale refs) | builder model |
+| Manual `--build-wiki` CLI invocation | `build()` | builder model |
+
+`watch()` detects structural changes (> X% of lines changed, or file size change
+> `wiki_patch_threshold_pct` config key, default 40%) and routes to `build()`
+instead of `patch()` for those cases.
+
+### 13.4 Patch fallback
+
+If `patch()` fails (model error, parse error, empty output, malformed frontmatter),
+`WikiEngine` logs a warning and falls back to `build(file_path)` using the
+builder model. If the builder model is also unavailable, the existing wiki page
+is preserved unchanged and the failure is logged to `wiki/log.md`.
+
+### 13.5 ChromaDB on patch
+
+After a successful `patch()`, the wiki page embedding in ChromaDB is updated:
+the old document is replaced with the patched page content. Same as after `build()`.
+
+### 13.6 Peer knowledge — trust boundary
+
+Peer-sourced answers (from `PeerCache`, Tier 2) do **not** flow into the wiki
+automatically. Reasons:
+- Trust: a peer node may hallucinate; its answer should never become a local
+  wiki fact presented as ground truth.
+- Scope: the wiki represents **this node's knowledge**. Peer knowledge is
+  explicitly labelled `[via PEER-NODE]` at query time.
+
+If a deployment needs to incorporate verified content from a trusted peer node,
+the operator must manually copy it into `knowledge/` and run `--build-wiki`.
+There is no automated wiki injection from peer sources.
 
 ---
 

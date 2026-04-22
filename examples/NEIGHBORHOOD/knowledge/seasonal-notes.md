@@ -1,6 +1,6 @@
 # Seasonal Notes — Maplewood Neighborhood
 
-A guide to what to expect in Maplewood through the year: weather patterns, community rhythms, recurring events, and practical seasonal advice for Pacific Northwest urban living.
+A guide to what to expect in Maplewood through the year: weather patterns, community rhythms, recurring events, and practical seasonal advice for Pacific Northwest urban living. Last reviewed: April 2026. For current conditions, see infrastructure.md. For active organizations and events, see organizations-guide.md.
 
 ---
 
@@ -13,7 +13,7 @@ Average winter temperatures: highs in the mid-40s°F, lows in the high-30s°F. J
 
 Rainfall is highest November–January. Total annual precip: ~45 inches, with roughly 60% falling between November and March. Storms (wind + rain events) pass through on a roughly 5–7 day cycle at the height of winter.
 
-The current winter (2025–26) has been wetter than average. Millbrook Creek has reached flood stage 8 times since November 1, compared to a seasonal average of 4–6 events.
+The 2025–26 winter was wetter than average. Millbrook Creek reached flood stage 8 times (vs. seasonal average of 4–6), including a minor flood Feb 14–15 peaking at 5.4 ft.
 
 ### Neighborhood Rhythms (Winter)
 - Holiday light displays and community decoration contests typically start December 1; MAPLEWOOD-ORACLE runs a community voting poll annually.
@@ -78,6 +78,20 @@ Wildfire smoke from regional fires (Oregon Cascades, eastern Washington) affects
 September is often the best month of the year in the Pacific Northwest: dry, warm (70s°F), clear, and golden. October begins the return of rain; the transition can be abrupt. November is solidly wet and gray. The first storm systems of the new rain season arrive October–November.
 
 Fall colors in Maplewood are modest by eastern US standards but real — the big-leaf maples along Maplewood Ave and Oak Street turn gold and orange October 10–25, and the ash trees in the Community Park provide some red tones.
+
+### Neighborhood Rhythms (Fall)
+- **Farmers market closes:** Last Thursday in September.
+- **Community Garden:** Season closes October 31. Beds must be cleared by then or they are reassigned. See organizations-guide.md for coordinator contact.
+- **Salmon monitoring:** Friends of Millbrook Creek runs coho spawner surveys October–December. Volunteers welcome. 2025–26 season: 31 adults confirmed in the Maplewood reach (record count for this location).
+- **Halloween:** MNA coordinates trick-or-treat hours (usually 5–8pm Oct 31) and posts safe route suggestions. Garfield Ave closed briefly for the parade. See community-log.md for current year notes.
+- **MNA budget planning:** Begins November; annual budget meeting in January.
+- **Community Fridge (Oak & 51st):** Use increases as temperatures drop. Restockers appreciate donations of warm canned goods and shelf-stable items.
+
+### Hazards (Fall)
+- **Wet leaves:** Leaf drop peaks mid-October to early November. Sidewalks and the bike lane on Maplewood Ave become treacherous when leaves are wet. Worst spots: Maplewood Ave under the big-leaf maples, shaded Oak Street sections.
+- **First storms:** The return of wind and rain typically brings at least one downed-limb event October–November. Check community-log.md after significant storms for downed-tree reports.
+- **Creek ramp-up:** Millbrook Creek begins rising in late October as the watershed re-saturates. First flooding events of the season arrive November. Monitor via infrastructure.md.
+- **Clocks back:** Daylight Saving ends first Sunday in November. Dusk shifts from ~7pm to ~5pm; pedestrian and cyclist visibility drops sharply on evening commutes.
 
 ### Neighborhood Rhythms (Fall)
 - **Back to school:** Maplewood Elementary and Garfield Middle typically start the first week of September. School-zone traffic returns on Oak Street and Maplewood Ave.

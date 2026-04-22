@@ -1,6 +1,6 @@
 # Flora Guide — Ridgeline Station Area
 
-Vegetation at 9,200 ft in the Northern Colorado Rockies is classified as subalpine forest, dominated by conifers with riparian willow/alder corridors and small natural meadows. Above treeline (roughly 11,500 ft in this range) alpine tundra begins, accessible from the station via a 2+ mile hike.
+Vegetation at 9,200 ft in the Northern Colorado Rockies. Last reviewed: April 2026. For seasonal bloom timing, see seasonal-notes.md.
 
 ---
 

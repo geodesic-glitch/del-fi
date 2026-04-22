@@ -45,6 +45,9 @@ If config.yaml is missing, the daemon exits with an error (not a default).
 | `wiki_rebuild_on_start` | bool | `false` | No | Run `--build-wiki` automatically when daemon starts. Blocking. |
 | `wiki_stale_after_days` | int | `30` | No | Days before `--lint-wiki` flags a wiki page as stale. |
 | `time_sensitive_files` | list[str] | `[]` | No | Source filenames whose wiki pages get freshness headers in query context. |
+| `wiki_watch_enabled` | bool | `true` | No | Whether `watch()` background thread runs. Disable if knowledge/ files are static. |
+| `wiki_patch_model` | str | `""` | No | Ollama model tag for incremental `patch()` updates triggered by `watch()`. Defaults to `model` (serving model). Set to a slightly larger model if patch quality on the serving model is poor. |
+| `wiki_patch_threshold_pct` | int | `40` | No | If a changed source file has > this % of lines changed, `watch()` routes to `build()` (builder model) instead of `patch()` (patch model). Range: 1–100. |
 
 ### 2.3 Retrieval
 

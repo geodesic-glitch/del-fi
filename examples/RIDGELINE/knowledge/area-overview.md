@@ -1,8 +1,6 @@
 # Ridgeline Station — Area Overview
 
-## Location & Terrain
-
-Ridgeline Station sits at 9,240 ft elevation in the Colorado Rockies, near the northern edge of the Elk River Valley. The station occupies a forested ridgeline above treeline transition, roughly 4 miles west of the nearest paved road (County Road 129). The nearest town is Clark, CO, approximately 7 miles east.
+Ridgeline Station sits at 9,240 ft elevation in the Colorado Rockies, near the northern edge of the Elk River Valley. The station occupies a forested ridgeline above treeline transition, roughly 4 miles west of the nearest paved road (County Road 129). The nearest town is Clark, CO, approximately 7 miles east. Last reviewed: April 2026. For current weather and sensor data, see weather-station.md. For recent wildlife, see trail-camera-log.md.
 
 The terrain is classic subalpine: dense Engelmann spruce and subalpine fir on north-facing slopes, with open south-facing meadows that retain snow well into May. A seasonal creek (Ridgeline Creek) runs through the drainage 300 ft below the station, feeding into the Elk River system. At higher elevations (above 10,500 ft), the zone transitions to alpine tundra.
 

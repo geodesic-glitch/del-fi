@@ -15,7 +15,7 @@ import yaml
 log = logging.getLogger("del_fi.config")
 
 DEFAULTS: dict = {
-    "model": "gemma3:4b-it-qat",
+    "model": "gemma4:4b",
     "personality": "You are a helpful and concise community assistant.",
     "description": "",
     # --- Wiki (v0.2) ---
@@ -41,6 +41,7 @@ DEFAULTS: dict = {
     # --- Ollama ---
     "ollama_host": "http://localhost:11434",
     "ollama_timeout": 120,
+    "wiki_build_timeout": 600,  # seconds per page; large models need more time
     "embedding_model": "nomic-embed-text",
     "num_ctx": None,
     "num_predict": 300,
@@ -79,6 +80,21 @@ DEFAULTS: dict = {
 # when the configured model name contains the profile key (substring, case-insensitive).
 # Keys NOT explicitly set in config.yaml take the profile value.
 ORACLE_PROFILES: dict[str, dict] = {
+    "gemma4:2b": {
+        "similarity_threshold": 0.35,
+        "rag_top_k": 2,
+        "max_context_tokens": 512,
+        "small_model_prompt": True,
+        "reorder_context": True,
+    },
+    "gemma4:4b": {
+        "similarity_threshold": 0.28,
+        "rag_top_k": 4,
+    },
+    "gemma4:12b": {
+        "similarity_threshold": 0.25,
+        "rag_top_k": 5,
+    },
     "gemma3:1b": {
         "similarity_threshold": 0.35,
         "rag_top_k": 2,

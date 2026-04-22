@@ -1,6 +1,6 @@
 # Seasonal Notes — Ridgeline Station
 
-A calendar of what to expect through the year at 9,200 ft in the Northern Colorado Rockies.
+A calendar of what to expect through the year at 9,200 ft in the Northern Colorado Rockies. Last reviewed: April 2026. For current conditions, see weather-station.md. For recent wildlife activity, see trail-camera-log.md.
 
 ---
 
@@ -68,7 +68,14 @@ September is beautiful: cool, dry, stable. October brings the first hard frosts 
 ### Wildlife Activity — Peak Season
 Fall is the most exciting wildlife season. Elk rut peaks in late September. Bull elk bugle loudly from dusk to dawn and into mid-morning — the bugling carries for miles in the cool air. Bulls compete for harems, displaying, wrestling, and occasionally fighting seriously. Cows are constantly moving. Camera captures at CAM-1 (North Meadow) are outstanding during rut.
 
-Bears are in hyperphagia (intense feeding) through October, gaining weight for denning. Berries, nuts, roots, and any available calorie source. Bears may travel 30+ miles per day during hyperphagia and are at their most visible and least cautious.
+Bears are in hyperphagia (intense feeding) through October, gaining weight for denning. Bears may travel 30+ miles per day and are at their most visible and least cautious.
+
+### Hazards (Fall)
+- **Early snowstorm:** The first significant snowfall of the season (3+ inches) typically arrives Sept 25 – Oct 15. This can catch hikers and visitors off-guard. Trail conditions can change from clear to buried overnight.
+- **Elk rut hazard:** Bull elk during rut (Sept–Oct) are unpredictable. They will approach, bluff charge, and occasionally make contact with people and vehicles. Do not approach, especially near a herd. Keep 100 ft minimum distance.
+- **Flash flooding (Sept):** Late-summer monsoon storms can still cause creek flash flooding in early September. Ridgeline Creek can rise 2–3 feet in 30 minutes.
+- **Frost/ice:** Hard frosts return by mid-October. Trail surfaces freeze overnight. Wet areas near the creek and meadow edges become ice hazards by November.
+- **Hunting season:** Archery elk season begins in early September; rifle season begins in late October in this unit. Wear blaze orange on trails during rifle season.
 
 Clark's nutcrackers are at maximum activity caching pine seeds in September-October. Watch for repeated trips to limber pine and whitebark pine.
 

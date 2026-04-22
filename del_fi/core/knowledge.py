@@ -119,6 +119,7 @@ class WikiEngine:
         self._wiki_dir = Path(cfg["wiki_folder"])
         self._knowledge_dir = Path(cfg.get("knowledge_folder", "./knowledge"))
         self._ollama = None
+        self._ollama_build = None
         self._ollama_available = False
         self._collection = None
         self._rag_available = False
@@ -142,17 +143,29 @@ class WikiEngine:
             self._ollama.list()
             self._ollama_available = True
             log.info(f"ollama connected at {self.cfg['ollama_host']}")
+            # Separate client with a longer timeout for --build-wiki.
+            # Large builder models (e.g. 26B) can take several minutes per page.
+            build_timeout = self.cfg.get("wiki_build_timeout", 600)
+            self._ollama_build = Client(
+                host=self.cfg["ollama_host"],
+                timeout=build_timeout,
+            )
         except Exception as e:
             log.warning(f"ollama not available (will retry): {e}")
             self._ollama_available = False
+            self._ollama_build = None
 
     def _init_vectorstore(self):
         """Initialize ChromaDB for wiki-page semantic search. Optional."""
         try:
             import chromadb
+            from chromadb.config import Settings
             db_path = self.cfg["_vectorstore_dir"]
             os.makedirs(db_path, exist_ok=True)
-            client = chromadb.PersistentClient(path=db_path)
+            client = chromadb.PersistentClient(
+                path=db_path,
+                settings=Settings(anonymized_telemetry=False),
+            )
             self._collection = client.get_or_create_collection(
                 name="del_fi_wiki",
                 metadata={"hnsw:space": "cosine"},
@@ -235,6 +248,68 @@ class WikiEngine:
 
         return written
 
+    # Build token budget: enough for a complete wiki page (≤600 words ≈ 800 tokens)
+    # plus frontmatter. We use 1600 to give headroom; the larger builder model
+    # handles this without issue. A second pass is attempted if truncation is detected.
+    _BUILD_NUM_PREDICT = 1600
+    _BUILD_NUM_PREDICT_RETRY = 2400  # wider budget for retry pass
+
+    def _is_truncated(self, text: str) -> bool:
+        """Return True when the LLM output appears to have been cut mid-generation."""
+        if not text:
+            return True
+        stripped = text.rstrip()
+        # Sentence ends with a terminal punctuation mark, a closing code fence,
+        # or a markdown list item end. Mid-word / mid-sentence cuts do not.
+        terminal = (".", "!", "?", "```", ">", "*", "-")
+        for t in terminal:
+            if stripped.endswith(t):
+                return False
+        # Also accept lines that end with a closing bracket/paren (cross-refs)
+        if stripped.endswith((")", "]", "]]")):
+            return False
+        return True
+
+    def _generate_wiki_page(
+        self, filename: str, prompt: str, model: str, max_retries: int = 2
+    ) -> str | None:
+        """Generate a wiki page with truncation detection and retry.
+
+        Returns the completed wiki text, or None on unrecoverable failure.
+        """
+        budgets = [self._BUILD_NUM_PREDICT] + [self._BUILD_NUM_PREDICT_RETRY] * max_retries
+
+        client = self._ollama_build or self._ollama
+        for attempt, budget in enumerate(budgets):
+            try:
+                response = client.generate(
+                    model=model,
+                    prompt=prompt,
+                    options={"num_predict": budget, "temperature": 0.1},
+                )
+                text = response.response.strip()
+            except Exception as e:
+                log.error(f"LLM build failed for {filename} (attempt {attempt + 1}): {e}")
+                return None
+
+            if not self._is_truncated(text):
+                if attempt > 0:
+                    log.info(f"  {filename}: truncation resolved on attempt {attempt + 1}")
+                return text
+
+            log.warning(
+                f"  {filename}: output appears truncated at {len(text)} chars "
+                f"(attempt {attempt + 1}/{len(budgets)}) — retrying with budget {budget} → "
+                f"{budgets[attempt + 1] if attempt + 1 < len(budgets) else 'N/A'}"
+            )
+
+        # Final attempt exhausted — log and return what we have rather than failing
+        log.warning(
+            f"  {filename}: could not resolve truncation after {max_retries + 1} attempts; "
+            f"saving best result ({len(text)} chars)"
+        )
+        return text
+
     def _build_page(self, source_path: Path, model: str) -> bool:
         """Build a single wiki page from a source file. Returns True if written."""
         try:
@@ -259,15 +334,8 @@ class WikiEngine:
         )
 
         log.info(f"  compiling {source_path.name} → wiki...")
-        try:
-            response = self._ollama.generate(
-                model=model,
-                prompt=prompt,
-                options={"num_predict": 800, "temperature": 0.1},
-            )
-            wiki_text = response.response.strip()
-        except Exception as e:
-            log.error(f"LLM build failed for {source_path.name}: {e}")
+        wiki_text = self._generate_wiki_page(source_path.name, prompt, model)
+        if wiki_text is None:
             with self._lock:
                 del self._file_hashes[key]  # allow retry next time
             return False

@@ -1,63 +1,69 @@
 # Weather Station — Ridgeline Station
 
-## Current Conditions (as of Feb 18, 2026 · 07:42 local)
+## Current Conditions (as of Apr 22, 2026 · 07:15 local)
 
-- **Temperature:** 14°F (-10°C)
-- **Wind:** NW 8 mph, gusting to 22 mph
-- **Wind chill:** 3°F (-16°C)
-- **Humidity:** 58%
-- **Pressure:** 24.72 inHg, rising slowly
-- **Sky:** Partly cloudy, high thin overcast
-- **Visibility:** 8+ miles
-- **Snow depth (ground):** 38 inches
-- **Solar output:** 112W (29% of peak, morning angle + thin cloud)
+- **Temperature:** 38°F (3°C)
+- **Wind:** WSW 6 mph, calm at dawn
+- **Humidity:** 72%
+- **Pressure:** 24.88 inHg, steady
+- **Sky:** Clear, cumulus building on western ridgelines by midday
+- **Visibility:** 15+ miles
+- **Snow depth (ground):** 21 inches (down from 53 in peak March; melting 1–2 in/day on clear afternoons)
+- **Solar output:** 198W (53% of peak at morning angle; full output by 10:00)
+- **Ridgeline Creek:** Running high and turbid — active snowmelt runoff. CAM-2 gauge: 1.8 ft (normal for this date; peak runoff expected May 5–20).
 
-Conditions are cold and clear following the storm clearance on Feb 17. Temperatures are expected to moderate slightly by afternoon, reaching a high near 24°F. Wind chill advisory remains in effect until noon.
+Spring thaw in full acceleration. Forecast high 52°F. South-facing slopes largely clear; north-facing stands still carrying full pack. Creek crossing passable but fast-moving — use caution.
 
-## 7-Day Log (Feb 11–18, 2026)
+## 7-Day Log (Apr 16–22, 2026)
 
-### Feb 18 (today)
-- High: 24°F (forecast) · Low so far: 11°F · Wind: NW 8–22 mph
-- Precip: None · Snow depth: 38 in · Sky: Partly cloudy
+### Apr 22 (today)
+- High: 52°F (forecast) · Low: 28°F · Wind: WSW 6 mph
+- Precip: None · Snow depth: 21 in · Sky: Mostly clear
 
-### Feb 17
-- High: 19°F · Low: 5°F · Wind: NW 15–35 mph gusts
-- Precip: 0.3 in SWE (snow water equivalent) overnight, 3 in new snow
-- Snow depth: 38 in (38 before storm, 41 at peak, compacted back to 38 after)
-- Notes: Windy all day. Wind loading on spruce canopy triggered minor snapbacks in north meadow. Wolf tracks (or large coyote — unclear) found along creek overnight.
+### Apr 21
+- High: 49°F · Low: 26°F · Wind: SW 4–8 mph
+- Precip: None · Snow depth: 22 in · Sky: Sunny with afternoon cirrus
+- Notes: Bear scat found near CAM-3 trail — first confirmed bear sign of 2026 season. Snow depth dropped 3 in in 24 hrs due to warm afternoon.
 
-### Feb 16
-- High: 28°F · Low: 12°F · Wind: Calm to light SW 3 mph
-- Precip: None · Snow depth: 35 in · Sky: Clear all day
-- Notes: Best solar day in a week. Battery fully charged by 13:30. Excellent visibility.
+### Apr 20
+- High: 46°F · Low: 24°F · Wind: Calm
+- Precip: None · Snow depth: 25 in · Sky: Clear all day
+- Notes: Best solar day this spring. Battery bank 100% by 11:30. Elk herd split — 6 moved to higher terrain, 4 remain at CAM-1. Robins heard calling at dawn (first of season at station).
 
-### Feb 15
-- High: 31°F · Low: 17°F · Wind: S 5–12 mph
-- Precip: None · Snow depth: 35 in · Sky: Mostly sunny with afternoon building cumulus
-- Notes: Warm for mid-February. Surface crusting on south-facing slopes. Elk herd active in north meadow AM.
+### Apr 19
+- High: 44°F · Low: 22°F · Wind: NW 5–10 mph
+- Precip: 0.2 in SWE (1.5 in wet spring snow overnight, melted by noon)
+- Snow depth: 26 in · Sky: Overcast AM, clearing PM
+- Notes: Late-season dusting. Creek gauge 1.9 ft. Mountain lion tracks found at CAM-2 crossing in overnight snow.
 
-### Feb 14
-- High: 22°F · Low: 8°F · Wind: W 12–28 mph
-- Precip: 0.6 in SWE overnight, ~6 in new snow during day
-- Snow depth: 35 in · Sky: Overcast, light to moderate snowfall AM-PM
-- Notes: Winter storm moved through. Heavy new snow coverage on cameras, reduced trigger activity. Snow depth jumped from 29 to 35 inches.
+### Apr 18
+- High: 41°F · Low: 19°F · Wind: W 8–15 mph
+- Precip: None · Snow depth: 27 in · Sky: Partly cloudy, windy
+- Notes: Wind-driven melt on exposed south slopes. Elk and deer tracks on bare south-facing meadow sections.
 
-### Feb 13
-- High: 18°F · Low: 4°F · Wind: SW 6–15 mph increasing
-- Precip: 0.1 in SWE · Snow depth: 29 in · Sky: Clouds thickening, storm approach
-- Notes: Storm front approaching from the west. Barometric pressure dropped sharply. Elk moved to lower, wind-protected areas late afternoon.
+### Apr 17
+- High: 38°F · Low: 17°F · Wind: Calm
+- Precip: None · Snow depth: 28 in · Sky: Clear
+- Notes: Cold overnight, hard refreeze. Mountain bluebird (1 male) photographed at CAM-1 at 14:52 — first spring migrant of season.
 
-### Feb 12
-- High: 26°F · Low: 9°F · Wind: Calm to light NE 4 mph
-- Precip: None · Snow depth: 29 in · Sky: Clear
-- Notes: Cold clear morning. Ravens active near station at 08:15. Mountain chickadees at feeding station all day.
+### Apr 16
+- High: 45°F · Low: 23°F · Wind: SW 10–18 mph
+- Precip: None · Snow depth: 29 in · Sky: Mostly clear, breezy
+- Notes: Strong afternoon melt. Creek gauge 2.0 ft. Willow buds breaking along creek. Alder catkins releasing pollen.
 
-### Feb 11
-- High: 29°F · Low: 13°F · Wind: W 5–10 mph
-- Precip: None · Snow depth: 29 in · Sky: Mostly clear, light cirrus afternoon
-- Notes: Quiet day. Snowshoe hare tracks overnight along north meadow edge. Coyote heard at 03:45.
+## Historical Climate Averages for April at 9,200 ft (Northern Colorado Rockies)
 
-## Historical Climate Averages for February at 9,200 ft (Northern Colorado Rockies)
+| Metric | April Average |
+|--------|---------------|
+| High temperature | 40–48°F |
+| Low temperature | 18–26°F |
+| Monthly precip (rain equivalent) | 2.8 in |
+| Snow depth (early April) | 35–55 in |
+| Snow depth (late April) | 10–30 in |
+| Peak snowpack | Late March to early April |
+| Peak creek runoff | May 10–25 |
+
+Spring is the most variable season at this elevation. Late snowstorms (6+ inches) are possible through May. Largest recorded spring snowfall at the station: 19 in on May 4, 2020.
 
 - Avg high: 27°F (-3°C)
 - Avg low: 6°F (-14°C)

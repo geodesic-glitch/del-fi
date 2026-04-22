@@ -1,6 +1,6 @@
 # Organizations & Community Groups — Maplewood Neighborhood
 
-A guide to the active organizations, working groups, and recurring programs in and around Maplewood. Knowing who does what is often the fastest way to get something done.
+A guide to the active organizations, working groups, and recurring programs in and around Maplewood. Last reviewed: April 2026. For resources (food bank, library, etc.), see local-resources.md. For seasonal events, see seasonal-notes.md.
 
 ---
 
@@ -58,7 +58,7 @@ Activities:
 
 **Contact:** friendsofmillbrook@maplewoodna.org | Monthly email list signup on the MNA website.
 
-Status: Coho returns in fall 2025 — 23 adults confirmed in the Maplewood reach, a record for this monitoring period.
+Status: Coho returns in fall 2025–26 — 31 adults confirmed in the Maplewood reach, a record high for this monitoring location. Spawner surveys run October–December.
 
 ### Maplewood Community Garden
 Located in the south portion of Maplewood Community Park. 42 plots (standard 10x20 ft) plus 4 ADA-accessible raised beds. Managed by the MNA.

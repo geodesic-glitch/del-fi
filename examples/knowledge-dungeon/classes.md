@@ -1,5 +1,7 @@
 # Character Classes — Delver's Handbook
 
+Class reference for DUNGEON-ORACLE. Last reviewed: April 2026. For combat rules, see rules.md. For common enemies by class, see monsters.md.
+
 ## Fighter
 
 **Role:** Frontline combatant. The most versatile martial class.

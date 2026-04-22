@@ -1,31 +1,57 @@
-# Ridgeline Station — Area Overview
+# Maplewood Neighborhood — Area Overview
 
-## Location & Terrain
+Maplewood is a residential neighborhood in the eastern portion of the city, roughly bounded by Garfield Avenue (north), the Millbrook Creek Greenway (east), Sycamore Street (south), and the SR-7 overpass corridor (west). The neighborhood covers approximately 0.9 square miles and around 2,200 households. MAPLEWOOD-ORACLE serves as a community information hub, neighborhood communications relay, and oracle for local services, infrastructure, and events. Last reviewed: April 2026.
 
-Ridgeline Station sits at 9,240 ft elevation in the Colorado Rockies, near the northern edge of the Elk River Valley. The station occupies a forested ridgeline above treeline transition, roughly 4 miles west of the nearest paved road (County Road 129). The nearest town is Clark, CO, approximately 7 miles east.
+---
 
-The terrain is classic subalpine: dense Engelmann spruce and subalpine fir on north-facing slopes, with open south-facing meadows that retain snow well into May. A seasonal creek (Ridgeline Creek) runs through the drainage 300 ft below the station, feeding into the Elk River system. At higher elevations (above 10,500 ft), the zone transitions to alpine tundra.
+## Location & Character
 
-## Station Infrastructure
+**Neighborhood center:** Maplewood Ave & Oak Street — community park, library, and node location.
+**Commercial strip:** Garfield Ave between 48th and 54th Streets — coffee shops, hardware, groceries.
+**Greenway:** Millbrook Creek Greenway runs the full eastern edge — 1.4 miles of paved trail within neighborhood boundaries.
+**Housing:** Predominantly single-family residential — craftsman bungalows (1920s–40s), mid-century ranch homes, newer infill. Apartments concentrated near Garfield Ave.
+**Population:** Mixed-age. Longtime homeowners in the interior, younger renters near Garfield Ave, families with children in the south end near the school cluster.
 
-The station runs on a 200W solar array with a 400Ah lithium battery bank. In winter, a small wind turbine supplements power during low-sunlight weeks. The station includes: three trail cameras (CAM-1 North Meadow, CAM-2 Creek Crossing, CAM-3 Spruce Hollow), a Davis Instruments Vantage Pro2 weather station on a 10 ft mast, and a Meshtastic LoRa node for mesh communication.
+---
 
-Power status: sufficient through winter with clear skies; marginal during extended overcast periods (>5 days). Generator backup is at the trailhead cache (4 mi east).
+## Node Infrastructure
 
-## Access
+**Node name:** MAPLEWOOD-ORACLE
+**Hardware:** Meshtastic LoRa node, Raspberry Pi 5, roof-mounted antenna
+**Location:** Roof of Maplewood Branch Library, corner of Maplewood Ave & Oak St
+**Power:** Library AC supply with battery backup (~5–6 hours runtime, confirmed Feb 2026 outage)
+**Administered by:** Maplewood Digital Commons working group (sub-group of the Maplewood Neighborhood Association)
+**Coverage:** Most of Maplewood; partial coverage into Garfield Ave commercial strip and lower Greenway
 
-Summer: Accessible via Ridgeline Trail from Clark trailhead. 4.2 miles, ~1,900 ft gain. Moderate.
-Winter: Snowmobile or ski access only. Trail is typically buried under 3-5 ft of snow Dec-Apr.
-Road closure: County Road 129 closes to vehicles at the Forest Service gate (mile marker 6) around Nov 1 and reopens in late April depending on snowpack.
+---
 
-## Surrounding Protected Areas
+## Key Infrastructure
 
-The station is within the Routt National Forest boundary, adjacent to the Mount Zirkel Wilderness (~2 miles west). No motorized access within Wilderness boundary. Part of the upper Colorado Rockies wildlife corridor used seasonally by elk, mule deer, and large carnivores including mountain lion and occasional black bear (bear dormant in winter).
+- **Primary streets:** Maplewood Ave (N-S spine), Oak St (E-W), Garfield Ave (N boundary/commercial)
+- **Transit:** Bus line 22 (Garfield Ave, ~10 min peak service); Bus line 45 (Oak St, hourly). Nearest light rail: Eastside Station, 0.8 miles NE via Oak St.
+- **Schools:** Maplewood Elementary (K–5, 750 students, 900 Maplewood Ave); Garfield Middle (6–8, 4600 Garfield Ave, just outside north boundary)
+- **Parks:** Maplewood Community Park (2.1 acres, Oak & 50th Ave); Millbrook Creek Greenway (1.4 miles paved trail)
+- **Library:** Maplewood Branch Library, 5400 Maplewood Ave — Mon–Fri 10am–8pm, Sat 10am–5pm, closed Sun. Free public WiFi. Community room (40 seats, reservable online or by phone).
+- **Emergency services:** Fire Station 14, 49th & Garfield Ave (0.4 miles from node). Nearest ER: Valley Medical Center, 2.1 miles west via SR-7.
 
-## Neighboring Nodes
+---
 
-VALLEY-ORACLE is located at 6,800 ft, 9 miles southeast near the Elk River trailhead. SUMMIT-POST is a unmanned sensor node at 11,100 ft on Hahns Peak, mainly weather data. Both nodes are reachable via Meshtastic mesh.
+## Neighboring Mesh Nodes
+
+**EASTSIDE-RELAY** — Eastside Light Rail Station, 0.8 miles NE. Primary gateway to the city mesh backbone. Strong link; 5–7 hops to downtown.
+
+**GARFIELD-NODE** — Garfield Community Center, 0.6 miles NW. Covers the commercial strip and adjacent apartment blocks.
+
+**MILLBROOK-SENSOR** — Millbrook Creek gauging station (city-operated), 0.5 miles SE. Environmental monitor: creek water level, temperature, weather data. Occasional outages during power events.
+
+---
 
 ## General Notes
 
-Wildlife activity peaks at dawn and dusk year-round. The north meadow (CAM-1 zone) is the best single spot for large mammal sightings. The creek crossing (CAM-2) records the highest species diversity due to water access. Predator sign (mountain lion, coyote) concentrates along the ridge above Spruce Hollow.
+Maplewood has a highly active neighborhood association. Block captains organized for most of the residential grid. Birdhouse Coffee (5010 Garfield) and Blue Elm Café (5240 Garfield) function as community gathering spaces.
+
+The Millbrook Creek Greenway is the primary commuter and recreation route. The lower section near Sycamore St floods several times per winter — see infrastructure.md for current creek levels.
+
+Crime profile is moderate: mostly property crime (vehicle break-ins, occasional mail theft). The main ongoing safety concern is pedestrian safety on Garfield Ave (ongoing traffic-calming advocacy since 2023).
+
+For community organizations, see organizations-guide.md. For local services and contacts, see local-resources.md. For infrastructure status, see infrastructure.md. For recent events, see community-log.md.

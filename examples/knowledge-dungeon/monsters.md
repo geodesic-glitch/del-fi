@@ -1,5 +1,7 @@
 # Bestiary — Common Dungeon Creatures
 
+Enemy reference for DUNGEON-ORACLE. Last reviewed: April 2026. For combat mechanics, see rules.md. For the dungeons these creatures inhabit, see world-lore.md.
+
 ## Threat Tiers
 - **Green (Levels 1–2):** Manageable for a fresh party
 - **Yellow (Levels 3–5):** Dangerous for unprepared groups
