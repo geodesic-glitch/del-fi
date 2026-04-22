@@ -234,7 +234,7 @@
 
 <!-- Status bar -->
 <div class="statusbar">
-  <span>DEL-FI NET v0.1</span>
+  <span>DEL-FI NET v0.2</span>
   <span id="clock"></span>
 </div>
 
@@ -278,7 +278,9 @@ Del-Fi nodes sit on <span class="white">900 MHz and 2.4 GHz meshes simultaneousl
 
 Plug in sensors or cameras and the <span class="white">FactStore</span> answers measurement queries directly -- no LLM, no hallucination on facts.
 
-<span class="dim">Seven Python files. Four dependencies. That's it.</span>
+Drop documents into <span class="white">knowledge/</span>, run <span class="white">--build-wiki</span> once, and the LLM compiles them into a structured wiki. At query time it searches the wiki -- not raw docs -- so even a 1B model gets clean, focused context. The wiki compounds: each new source updates existing pages without losing what came before.
+
+<span class="dim">One package. Four dependencies. Fully offline.</span>
 </pre>
 </section>
 
@@ -307,17 +309,18 @@ Plug in sensors or cameras and the <span class="white">FactStore</span> answers 
   <span class="box-title magenta">QUICK START</span>
   <pre>
 <span class="dim">  $</span> <span class="green">curl -fsSL https://ollama.com/install.sh | sh</span>
-<span class="dim">  $</span> <span class="green">ollama pull granite4:3b</span>
-<span class="dim">  $</span> <span class="green">ollama pull nomic-embed-text</span>
-<span class="dim">  $</span> <span class="green">git clone https://github.com/geodesic-glitch/del-fi.git</span>
-<span class="dim">  $</span> <span class="green">cd del-fi && pip install -r requirements.txt</span>
-<span class="dim">  $</span> <span class="green">cp config.example.yaml ~/del-fi/config.yaml</span>
-<span class="dim">  $</span> <span class="green">python delfi.py</span>
+<span class="dim">  $</span> <span class="green">ollama pull gemma4:4b && ollama pull nomic-embed-text</span>
+<span class="dim">  $</span> <span class="green">git clone https://github.com/geodesic-glitch/del-fi.git && cd del-fi</span>
+<span class="dim">  $</span> <span class="green">pip install -r requirements.txt</span>
+<span class="dim">  $</span> <span class="green">cp config.example.yaml config.yaml</span>  <span class="dim"># set node_name and model</span>
+<span class="dim">  $</span> <span class="green">python main.py --build-wiki</span>  <span class="dim"># compile knowledge/ → wiki/</span>
+<span class="dim">  $</span> <span class="green">python main.py</span>
 
-  That's 6 commands. Edit config.yaml to set node_name and model.
+  Edit config.yaml to set node_name, model, and personality.
+  Drop .md or .txt files into knowledge/ and re-run --build-wiki.
   Everything else has sensible defaults.
 
-  <span class="dim">No radio? Test with:</span>  python delfi.py --simulator
+  <span class="dim">No radio? Test with:</span>  python main.py --simulator
 </pre>
 </section>
 
@@ -413,25 +416,32 @@ Plug in sensors or cameras and the <span class="white">FactStore</span> answers 
 <section class="box box-fixed">
   <span class="box-title blue">ARCHITECTURE</span>
   <pre>
-<span class="dim">[LoRa Radio]</span> &lt;--serial/tcp--&gt; <span class="dim">[Mesh Adapter]</span> &lt;--&gt; <span class="dim">[Router]</span> &lt;--&gt; <span class="dim">[RAG Engine]</span>
+<span class="dim">[LoRa Radio]</span> &lt;--serial/tcp--&gt; <span class="dim">[Mesh Adapter]</span> &lt;--&gt; <span class="dim">[Router]</span> &lt;--&gt; <span class="dim">[Tier Hierarchy]</span>
                                      |               |               |
-                              <span class="dim">(meshtastic</span>    <span class="dim">[Formatter]</span>    <span class="dim">[Mesh Knowledge]</span>
-                               <span class="dim">or meshcore)</span>   <span class="dim">[FactStore]</span>
+                              <span class="dim">(meshtastic</span>    <span class="dim">[Formatter]</span>    Tier 0  <span class="white">FactStore</span>   sensor feed, no LLM
+                               <span class="dim">or meshcore)</span>               Tier 1  <span class="white">WikiEngine</span>  BM25 + LLM on compiled wiki
+                                                           Tier 2  <span class="white">PeerCache</span>   trusted peer Q&amp;A
+                                                           Tier 3  <span class="white">GossipDir</span>   referrals only
 
-<span class="white">delfi.py</span> .............. entry point, daemon lifecycle, worker thread
-<span class="white">config.py</span> ............. YAML loading, validation, defaults
-<span class="white">facts.py</span> .............. FactStore: sensor / CV data, Tier 0 routing
-  <span class="dim">cache/sensor_feed.json</span>  external scripts write readings here
-  <span class="dim">structured facts bypass the LLM entirely -- no hallucination on values</span>
-<span class="white">mesh/</span> ................. pluggable mesh protocol adapters
-  <span class="dim">base.py</span> ............. abstract MeshAdapter interface
-  <span class="dim">meshtastic_adapter.py</span>  Meshtastic radios (serial/TCP/BLE)
-  <span class="dim">meshcore_adapter.py</span>    MeshCore radios (stub -- ready to implement)
-  <span class="dim">simulator.py</span> ........ stdin/stdout for development
-<span class="white">router.py</span> ............. command dispatch, query pipeline, cache
-<span class="white">rag.py</span> ................ ChromaDB indexing, Ollama embeddings
-<span class="white">formatter.py</span> .......... markdown stripping, sentence truncation
-<span class="white">meshknowledge.py</span> ...... gossip, peer cache, referrals
+<span class="white">main.py</span> ................. entry point, daemon lifecycle, --build-wiki, --lint-wiki
+<span class="white">del_fi/</span>
+  <span class="dim">config.py</span> ............. YAML loading, validation, oracle profiles
+  <span class="dim">core/</span>
+    <span class="white">knowledge.py</span> ......... WikiEngine: compile knowledge/ → wiki/, BM25 query, lint
+      <span class="dim">knowledge/</span> .......... raw source docs (human-owned, gitignored)
+      <span class="dim">wiki/</span> ............... LLM-compiled pages, rebuilt via --build-wiki
+    <span class="white">router.py</span> ........... command dispatch, tier routing, !more buffer
+    <span class="white">formatter.py</span> ........ 230-byte enforcement, UTF-8 safety, chunking
+    <span class="white">facts.py</span> ............ FactStore: sensor feed, Tier 0 fast path
+      <span class="dim">cache/sensor_feed.json</span>  external scripts write readings here
+    <span class="white">peers.py</span> ............ PeerCache (Tier 2) + GossipDirectory (Tier 3)
+    <span class="white">memory.py</span> ........... per-sender conversation history, TTL
+    <span class="white">board.py</span> ............ community message board, !post / !board
+  <span class="dim">mesh/</span>
+    <span class="dim">base.py</span> ............. abstract MeshAdapter interface
+    <span class="dim">meshtastic_adapter.py</span>  Meshtastic radios (serial/TCP/BLE)
+    <span class="dim">meshcore_adapter.py</span>    MeshCore radios (stub -- ready to implement)
+    <span class="dim">simulator.py</span> ........ stdin/stdout for development
 </pre>
 </section>
 
