@@ -1,14 +1,24 @@
-# Del-Fi configuration
-# Copy this file to ~/del-fi/config.yaml and edit it.
+# Del-Fi configuration (v0.2)
+# Copy this file to config.yaml and edit it.
+# Run --build-wiki before first use to compile your knowledge/ folder.
 
 # --- Required ---
 node_name: "DEL-FI-001"
-model: "gemma3:1b"   # Raspberry Pi: use gemma3:1b — most larger models are too slow or unreliable on Pi hardware
+model: "gemma3:1b"   # Raspberry Pi: use gemma3:1b or llama3.2:1b
 
 # --- Optional (sensible defaults shown) ---
 
 # mesh_protocol: meshtastic       # meshtastic | meshcore
 # personality: "Helpful and concise community assistant."
+#
+# --- Example: Wilderness Observatory ---
+# node_name: "RIDGELINE"
+# model: "gemma3:4b-it-qat"
+# personality: >
+#   You are RIDGELINE, a field science oracle at a remote wilderness
+#   observatory. You speak plainly and precisely. Prioritise safety
+#   information. Distances in miles, temperatures in Fahrenheit.
+#   Two sentences maximum per answer.
 #
 # --- Example: Cyberpunk RPG Game Master ---
 # node_name: "NEON-ORACLE"
@@ -16,38 +26,60 @@ model: "gemma3:1b"   # Raspberry Pi: use gemma3:1b — most larger models are to
 #   You are NEON-ORACLE, the Game Master for Neon Abyss — a gritty
 #   cyberpunk RPG set in the mega-city of Neo-Seattle, 2089.
 #   You speak in clipped, noir-inflected prose. Second person, present
-#   tense. Every answer should move the story forward: describe what
-#   the player sees, hears, or feels, then end with a choice or a
-#   tension — never a dead end. Keep it to 2-3 sentences max.
-#   When players ask to do something, set the stakes and ask for a
-#   roll (2d6 + stat). Narrate the outcome with consequences.
-#   Draw NPCs, locations, prices, and lore from your knowledge docs.
-#   If a player seems idle, drop a short quest hook — a strange
-#   message on their HUD, a stranger with a job, or trouble finding
-#   them. Never break character. Never mention being an AI.
+#   tense. Every answer should move the story forward. 2-3 sentences max.
 #   Sign off each transmission: // NEON-ORACLE
-# knowledge_folder: ~/del-fi/knowledge
+#
+# knowledge_folder: ./knowledge
 # max_response_bytes: 230
 # radio_connection: serial       # serial | tcp | ble
 # radio_port: /dev/ttyUSB0       # or hostname:port for TCP
 # rate_limit_seconds: 30
 # response_cache_ttl: 300
 # embedding_model: "nomic-embed-text"
-# similarity_threshold: 0.2     # cosine distance cutoff (0.0–1.0); lower = stricter match
-#                                 # default 0.35 requires ~0.65 similarity — rejects loose topic matches
-#                                 # raise toward 0.5 if too many queries return "I don't know"
-#                                 # lower toward 0.2 if only near-exact matches should count
-# keyword_boost: 0.5             # max distance reduction per matched keyword (default 0.15)
-# rag_top_k: 16                   # max chunks returned per query (default 3)
-# num_ctx: 4096                  # cap context window (default: auto-detect from model)
-# num_predict: 128               # max output tokens (lower = faster)
-# persistent_cache: true         # cache responses to disk across restarts
-# busy_notice: true              # ack queued senders with "hang tight" message
-# auto_send_chunks: 3            # auto-send first N chunks before prompting !more (0/1 = always prompt)
-# channels: []                   # empty = listen on all channels
+# similarity_threshold: 0.28    # cosine similarity cutoff; higher = stricter
+# rag_top_k: 4                   # wiki pages returned per vector query
+# num_ctx: 4096                  # cap context window
+# num_predict: 300               # max output tokens
+# persistent_cache: true
+# busy_notice: true
+# auto_send_chunks: 3
+# channels: []
 # log_level: info
 # ollama_host: "http://localhost:11434"
-# ollama_timeout: 120            # seconds
+# ollama_timeout: 120
+
+# --- Wiki Knowledge System (v0.2) ---
+# Run: python main.py --build-wiki   to compile knowledge/ → wiki/
+# Run: python main.py --lint-wiki    to check wiki health
+#
+# wiki_folder: ./wiki                   # compiled wiki output directory
+# wiki_builder_model: "qwen2.5:7b"     # larger model for --build-wiki
+#                                       # falls back to 'model' if unset
+# wiki_rebuild_on_start: false          # auto-rebuild at daemon startup
+# wiki_stale_after_days: 30             # days before --lint-wiki flags a page
+# wiki_watch_interval_seconds: 60       # how often to detect knowledge/ changes
+#
+# time_sensitive_files:                 # these pages get age headers in context
+#   - weather-station.md
+#   - trail-camera-log.md
+#   - community-log.md
+
+# --- Fallback message ---
+# Returned when no tier produces an answer (default shown).
+# fallback_message: "I don't have docs on that. Try !topics to see what I know."
+
+# --- Sensor / FactStore (Tier 0) ---
+# External scripts write sensor readings to cache/sensor_feed.json.
+# Queries containing these keywords are answered directly from the feed.
+#
+# fact_query_keywords:
+#   - temperature
+#   - humidity
+#   - wind
+#   - pressure
+#   - battery
+#   - solar
+# fact_watch_interval_seconds: 30
 
 # --- Conversation Memory (off by default) ---
 # Enables per-sender conversation history so the oracle remembers
@@ -82,28 +114,21 @@ model: "gemma3:1b"   # Raspberry Pi: use gemma3:1b — most larger models are to
 #   connection: serial             # serial | tcp
 #   baud_rate: 115200
 
-# --- Mesh Knowledge (entirely optional — uncomment to enable) ---
+# --- Trusted Peers + Gossip (Tier 2 / Tier 3) ---
+# Peer nodes whose answers are cached locally (Tier 2).
+# Gossip announcements build a referral directory (Tier 3, no caching).
 #
-# mesh_knowledge:
-#   gossip:
-#     enabled: true
-#     announce_interval: 14400    # seconds (4 hours)
-#     directory_ttl: 86400        # seconds (24 hours)
+# trusted_peers:                  # node names to trust for peer cache
+#   - MARINA-ORACLE
+#   - TRAIL-ANGEL-AT
 #
-#   peers:
-#     - node_id: "!a1b2c3d4"
-#       name: "MARINA-ORACLE"
-#     - node_id: "!e5f6g7h8"
-#       name: "TRAIL-ANGEL-AT"
+# peer_cache_ttl: 86400           # seconds before peer answers expire (24 hrs)
+# max_cache_entries: 500          # max cached peer answers
+# gossip_announce_interval: 14400 # seconds between gossip broadcasts (4 hrs)
+
+# --- MeshCore-specific (only when mesh_protocol: meshcore) ---
 #
-#   sync:
-#     enabled: true
-#     window_start: "02:00"       # local time
-#     window_end: "05:00"
-#     max_cache_age: 7d
-#     max_cache_entries: 500
-#
-#   serve_to_peers: false         # OFF by default — privacy first
-#   tag_responses: true           # always show provenance to users
-#   reject_contradictions: true   # discard peer answers that conflict
-#                                 # with local documents
+# meshcore:
+#   port: "/dev/ttyUSB0"          # serial port or host:port for TCP
+#   connection: serial             # serial | tcp
+#   baud_rate: 115200

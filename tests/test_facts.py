@@ -2,14 +2,10 @@
 
 import json
 import os
-import sys
 import tempfile
 import time
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from facts import FactStore, _age, _format_age, _format_ts
-from router import Router
+from del_fi.core.facts import FactStore, _age, _age_label
 
 
 # --- Helpers ---
@@ -30,7 +26,6 @@ def _make_cfg(tmpdir: str) -> dict:
         "_cache_dir": os.path.join(tmpdir, "cache"),
         "_gossip_dir": os.path.join(tmpdir, "gossip"),
         "_vectorstore_dir": os.path.join(tmpdir, "vectorstore"),
-        "mesh_knowledge": None,
         "embedding_model": "nomic-embed-text",
         "ollama_host": "http://localhost:11434",
         "ollama_timeout": 120,
@@ -343,72 +338,82 @@ def test_age_invalid_returns_zero():
 
 
 def test_format_age_seconds():
-    assert _format_age(45) == "45 sec"
+    assert _age_label(45) == "45 sec"
 
 
 def test_format_age_minutes():
-    assert _format_age(180) == "3 min"
+    assert _age_label(180) == "3 min"
 
 
 def test_format_age_hours():
-    assert _format_age(7200) == "2 hr"
+    assert _age_label(7200) == "2 hr"
 
 
 def test_format_age_days():
-    assert _format_age(172800) == "2 day(s)"
+    assert _age_label(172800) == "2 day(s)"
 
 
 # --- Tier 0 routing tests (via Router) ---
 
 
-class MockRAG:
-    """Minimal mock RAGEngine — tracks generate() calls."""
+class MockWiki:
+    """Minimal mock WikiEngine — tracks query() calls."""
 
     def __init__(self):
-        self._ollama_available = True
-        self._rag_available = True
-        self._doc_count = 5
-        self.generate_called = False
+        self.query_called = False
 
     @property
     def available(self):
-        return self._ollama_available
+        return True
 
     @property
     def rag_available(self):
-        return self._rag_available
+        return True
 
     @property
-    def doc_count(self):
-        return self._doc_count
+    def page_count(self):
+        return 3
 
     def get_topics(self):
         return ["wildlife-guide", "trail-camera-log", "weather-station"]
 
-    def query(self, text, top_k=3):
-        return []
+    def query(self, text, peer_ctx="", history="", board_context=""):
+        self.query_called = True
+        return "Mock LLM response.", True
 
-    def generate(self, text, context_chunks=None, peer_context=None,
-                 history="", board_context=""):
-        self.generate_called = True
-        return "Mock LLM response."
+    def suggest(self, text):
+        return None
+
+
+class MockPeerCache:
+    def lookup(self, q): return None
+    def store(self, *a, **kw): pass
+
+
+class MockGossipDir:
+    peer_count = 0
+    def list_peers(self): return []
+    def receive(self, nid, txt): pass
+    def referral(self, q): return None
+    def announce(self): return ""
 
 
 def _make_router_with_facts(tmpdir: str, facts: dict | None = None) -> tuple:
     """Create a Router+FactStore pair with pre-loaded facts."""
+    from del_fi.core.router import Router
     cfg = _make_cfg(tmpdir)
-    mock_rag = MockRAG()
+    wiki = MockWiki()
     fs = FactStore(cfg)
     if facts:
         fs.ingest(facts)
-    router = Router(cfg, mock_rag, mesh_knowledge=None, fact_store=fs)
-    return router, mock_rag, fs
+    router = Router(cfg, wiki, MockPeerCache(), MockGossipDir(), fact_store=fs)
+    return router, wiki, fs
 
 
 def test_tier0_intercepts_temperature_query():
-    """Temperature query hits FactStore directly — no LLM call."""
+    """Temperature query hits FactStore directly — no wiki.query() call."""
     with tempfile.TemporaryDirectory(prefix="delfi-test-") as tmpdir:
-        router, mock_rag, _ = _make_router_with_facts(tmpdir, {
+        router, wiki, _ = _make_router_with_facts(tmpdir, {
             "temperature_f": {
                 "value": -4.2,
                 "unit": "°F",
@@ -420,13 +425,13 @@ def test_tier0_intercepts_temperature_query():
         response = router.route("sender1", "what is the temperature right now")
         assert response is not None
         assert "-4.2" in response
-        assert mock_rag.generate_called is False
+        assert wiki.query_called is False
 
 
 def test_tier0_intercepts_camera_query():
     """Camera detection query hits FactStore directly."""
     with tempfile.TemporaryDirectory(prefix="delfi-test-") as tmpdir:
-        router, mock_rag, _ = _make_router_with_facts(tmpdir, {
+        router, wiki, _ = _make_router_with_facts(tmpdir, {
             "cam1_last_detection": {
                 "value": "7 elk",
                 "timestamp": _fresh_ts(),
@@ -437,7 +442,7 @@ def test_tier0_intercepts_camera_query():
         response = router.route("sender1", "what did cam1 detect last")
         assert response is not None
         assert "elk" in response
-        assert mock_rag.generate_called is False
+        assert wiki.query_called is False
 
 
 def test_tier0_stale_fact_includes_caveat():
@@ -458,9 +463,9 @@ def test_tier0_stale_fact_includes_caveat():
 
 
 def test_tier0_misses_non_sensor_query():
-    """Non-sensor query falls through Tier 0 to RAG (no direct response)."""
+    """Non-sensor query falls through Tier 0 to wiki."""
     with tempfile.TemporaryDirectory(prefix="delfi-test-") as tmpdir:
-        router, mock_rag, _ = _make_router_with_facts(tmpdir, {
+        router, wiki, _ = _make_router_with_facts(tmpdir, {
             "temperature_f": {
                 "value": -4.2,
                 "unit": "°F",
@@ -468,23 +473,19 @@ def test_tier0_misses_non_sensor_query():
                 "source": "weather-station",
             }
         })
-        # Pure knowledge query — no sensor keywords, no matching fact key tokens
-        router.route("sender1", "tell me about elk migration patterns")
-        # generate was never called (RAG returned [] and fell to no-context refusal)
-        # but crucially, Tier 0 did NOT intercept it
-        # The response should be the refusal message, not a sensor reading
         response = router.route("sender1", "tell me about elk migration patterns")
         assert response is not None
         assert "-4.2" not in response
 
 
 def test_tier0_no_facts_falls_through():
-    """When FactStore is empty, _tier0_facts returns None and we hit RAG refusal."""
+    """When FactStore is empty, query falls through to wiki."""
     with tempfile.TemporaryDirectory(prefix="delfi-test-") as tmpdir:
-        router, mock_rag, _ = _make_router_with_facts(tmpdir, facts=None)
+        router, wiki, _ = _make_router_with_facts(tmpdir, facts=None)
         response = router.route("sender1", "what is the temperature")
         assert response is not None
-        assert mock_rag.generate_called is False  # no context → hard refusal
+        # wiki.query should have been called since Tier 0 had no facts
+        assert wiki.query_called is True
 
 
 def test_cmd_data_no_facts():

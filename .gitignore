@@ -1,14 +1,24 @@
-# Runtime data
+# --- Runtime state: per-deployment, never commit ---
 vectorstore/
+wiki/
 cache/
 gossip/
 seen_senders.txt
-
+conversation_memory.json
+board.json
 *.log
-# User config (contains local paths, not portable)
+
+# --- Config: user-specific, contains local paths ---
+# Commit config.example.yaml instead. See examples/ for deployment templates.
 config.yaml
 
-# Python
+# --- Knowledge: deployment-specific raw source documents ---
+# Operators keep their private knowledge files local; they are not portable.
+# See examples/ for templates and the GUIDE.md for authoring guidelines.
+knowledge/*.md
+knowledge/*.txt
+
+# --- Python ---
 __pycache__/
 *.pyc
 *.pyo
@@ -18,17 +28,12 @@ build/
 .venv/
 venv/
 
-# IDE
-.github/
+# --- IDE ---
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# OS
+# --- OS ---
 .DS_Store
 Thumbs.db
-
-.github/
-*.log
-knowledge/*.md

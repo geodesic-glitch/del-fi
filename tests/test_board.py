@@ -1,13 +1,10 @@
 """Tests for board.py — community message board."""
 
 import os
-import sys
 import tempfile
 import time
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from board import Board, MAX_POST_LENGTH
+from del_fi.core.board import Board, MAX_POST_LENGTH
 
 
 def _make_cfg(**overrides):

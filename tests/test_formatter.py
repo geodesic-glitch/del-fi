@@ -4,13 +4,7 @@ Covers: markdown stripping, whitespace collapsing, sentence boundary
 detection, byte counting, chunking, [!more] placement, provenance tags.
 """
 
-import sys
-import os
-
-# Add project root to path
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from formatter import (
+from del_fi.core.formatter import (
     byte_len,
     chunk_text,
     clean_text,

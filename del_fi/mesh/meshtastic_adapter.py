@@ -9,18 +9,14 @@ import queue
 import threading
 import time
 
-from formatter import chunk_text
-from mesh.base import MeshAdapter
+from del_fi.core.formatter import chunk_text
+from del_fi.mesh.base import MeshAdapter
 
-log = logging.getLogger("delfi.mesh.meshtastic")
+log = logging.getLogger("del_fi.mesh.meshtastic")
 
 
 class MeshtasticAdapter(MeshAdapter):
-    """Real Meshtastic radio interface.
-
-    Connects to a physical radio, subscribes to incoming text messages
-    via the meshtastic pub/sub system, and enqueues them for the router.
-    """
+    """Real Meshtastic radio interface."""
 
     protocol_name = "Meshtastic"
 
@@ -52,11 +48,9 @@ class MeshtasticAdapter(MeshAdapter):
                 from meshtastic.ble_interface import BLEInterface
                 self.interface = BLEInterface(address=port)
 
-            # Get our own node ID so we never reply to ourselves
             node_info = self.interface.getMyNodeInfo()
             self.my_node_id = node_info.get("user", {}).get("id", None)
 
-            # Subscribe to incoming text messages
             from pubsub import pub
             pub.subscribe(self._on_receive, "meshtastic.receive.text")
 
@@ -80,26 +74,21 @@ class MeshtasticAdapter(MeshAdapter):
             if not sender or not text:
                 return
 
-            # Don't reply to ourselves
             if sender == self.my_node_id:
                 return
 
-            # Deduplicate retransmits
             with self._lock:
                 if msg_id in self._seen_ids:
                     return
                 self._seen_ids.add(msg_id)
-                # Prevent unbounded growth
                 if len(self._seen_ids) > self._seen_max:
                     self._seen_ids = set(list(self._seen_ids)[-500:])
 
-            # Broadcasts: log but don't respond
             is_broadcast = to in (0xFFFFFFFF, 4294967295)
             if is_broadcast:
                 log.info(f"← broadcast from {sender}: {text[:60]}")
                 return
 
-            # Rate limit freeform queries (commands bypass)
             is_command = text.strip().startswith("!")
             if not is_command:
                 with self._lock:
@@ -128,7 +117,6 @@ class MeshtasticAdapter(MeshAdapter):
         if len(encoded) <= max_bytes:
             return self._send_one(dest_id, text)
 
-        # Safety net: chunk messages that somehow exceed the limit
         chunks = chunk_text(text, max_bytes)
         for i, chunk in enumerate(chunks):
             if not self._send_one(dest_id, chunk):
@@ -139,7 +127,6 @@ class MeshtasticAdapter(MeshAdapter):
         return True
 
     def _send_one(self, dest_id: str, text: str) -> bool:
-        """Send a single text message to a destination node."""
         try:
             self.interface.sendText(text, destinationId=dest_id)
             log.info(f"  ✓ sent {len(text.encode('utf-8'))} bytes → {dest_id}")
@@ -161,7 +148,6 @@ class MeshtasticAdapter(MeshAdapter):
         return self._connected
 
     def close(self):
-        """Clean shutdown."""
         self._should_run = False
         if self.interface:
             try:

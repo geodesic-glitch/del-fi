@@ -1,13 +1,10 @@
 """Tests for memory.py — per-sender conversation memory."""
 
 import os
-import sys
 import tempfile
 import time
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from memory import ConversationMemory
+from del_fi.core.memory import ConversationMemory
 
 
 def _make_cfg(**overrides):
