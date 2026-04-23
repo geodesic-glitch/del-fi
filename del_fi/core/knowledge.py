@@ -47,48 +47,84 @@ _STOP_WORDS = frozenset({
 # Compact system prompt for small models
 SMALL_MODEL_SYSTEM = (
     "You are {name}, a community assistant. {personality} "
-    "Answer using ONLY the context below. "
-    'If the context does not contain the answer, say "I don\'t know." '
+    "You are given a wiki index summary followed by the full source document(s) it indexes. "
+    "Answer using ONLY the source content below. "
+    "If the source does not directly answer the question, share the most relevant "
+    "information from it and note what it covers. Never state facts not in the source. "
     "Be brief. 1-3 sentences maximum."
 )
 
 STANDARD_SYSTEM = (
     "You are {name}, a community assistant. {personality} "
-    "Answer using ONLY the provided context. "
-    "If the context does not contain the answer, say \"I don't know.\" "
+    "You are given a wiki index summary followed by the full source document(s) it indexes. "
+    "Answer using ONLY the provided source content. "
+    "If the source does not directly answer the question, share the closest relevant "
+    "information it does contain and briefly note what topic it covers. "
+    "Never state facts not in the source. "
     "Be concise and factual. Cite the source document name when relevant."
+)
+
+# Short phrases that indicate the LLM refused to answer from context.
+# Used to detect useless responses and fall through to suggest().
+_IDK_PATTERNS = (
+    "i don't know",
+    "i do not know",
+    "i'm not sure",
+    "i am not sure",
+    "don't have information",
+    "do not have information",
+    "not mentioned in the context",
+    "not in the context",
+    "not provided in the context",
+    "context does not contain",
+    "context doesn't contain",
+    "context doesn't mention",
+    "context does not mention",
+    "cannot answer",
+    "can't answer",
+    "no information available",
 )
 
 # Build prompt: given raw source content, produce a structured wiki page
 WIKI_BUILD_PROMPT = """\
-You are a knowledge compiler. Given the raw source document below, extract
-all meaningful entities, facts, relationships, and procedures into a
-structured wiki page. Format EXACTLY as shown:
+You are a knowledge compiler. Your job is to turn a raw source document into
+a SEARCH INDEX page. This wiki page will be used to FIND the source document
+at query time — the raw source is always available for full detail. Therefore:
+
+- Maximise keyword and entity coverage. Every name, place, date, organisation,
+  measurement, and topic must appear somewhere in the page — even if only
+  in a heading or tag — so keyword search can find it.
+- Section headings should name the topic precisely (e.g. "Spring Clean-Up Day"
+  not "Events").
+- Use [[page-slug]] cross-references freely. They are how the system navigates
+  between topics at query time.
+- Summaries can be brief (1-2 sentences). Full detail lives in the source file.
+
+Format EXACTLY as shown:
 
 ---
 title: <page title>
-tags: [tag1, tag2, tag3]
+tags: [tag1, tag2, tag3, ...]
 sources: [{filename}]
 last_ingested: {today}
 ---
 
 # <page title>
 
-## <Section Heading>
+## <Precise Section Topic>
 
-<2-4 sentences per fact/entity. Include: what, key properties, relationships
-to other topics. Use [[page-slug]] cross-references for related topics.>
+<1-2 sentences. Key facts, dates, measurements. [[cross-ref]] any related pages.>
 
-## <Another Section>
+## <Another Precise Section Topic>
 
 ...
 
 Rules:
-- Be factual and terse. No filler.
-- Cross-reference with [[double-brackets]] when another topic is mentioned.
+- Be factual. No filler.
 - If the source contradicts an existing claim, annotate the old text:
   > [superseded {today} by {filename}]
-- Keep the total page under 600 words.
+- Keep the total page under 500 words.
+- tags: must include every major searchable keyword from the document.
 - Do NOT include meta-commentary, only the wiki content.
 
 Source document ({filename}):
@@ -376,11 +412,11 @@ class WikiEngine:
             if tg:
                 tags = tg.group(1).strip()
 
-        # Extract first sentence of body for summary
+        # Extract first sentence of body for summary (single-line, safe for table)
         body = text[fm_match.end():].strip() if fm_match else text
-        s = re.search(r"[A-Z][^.!?]{10,}[.!?]", body)
+        s = re.search(r"[A-Z][^.!?\n]{10,}[.!?]", body)
         if s:
-            summary = s.group(0)[:100]
+            summary = s.group(0).replace("\n", " ").replace("|", "-")[:100]
 
         row = f"| [[{slug}]] | {summary} | {tags} | {today} |"
 
@@ -437,24 +473,53 @@ class WikiEngine:
         if not page_slugs and self._rag_available:
             page_slugs = self._vector_search(q)
 
+        # Step 3 (fallback): search wiki page bodies directly when index misses
+        if not page_slugs:
+            page_slugs = self._content_search(q)
+
         if not page_slugs:
             return "", False
 
-        # Step 3: Read top pages
+        # Step 3: Read top pages, then follow sources: links into knowledge/
         context_parts = []
         for slug in page_slugs[:3]:
             page_path = self._wiki_dir / f"{slug}.md"
             if not page_path.exists():
                 continue
-            page_text = page_path.read_text(encoding="utf-8", errors="replace")
+            wiki_text = page_path.read_text(encoding="utf-8", errors="replace")
+
             # Annotate time-sensitive pages with staleness
             ts_files = self.cfg.get("time_sensitive_files", [])
+            age_header = ""
             if any(f.replace(".md", "") in slug for f in ts_files):
                 age_note = self._staleness_note(page_path)
                 if age_note:
-                    context_parts.append(f"[{slug} — {age_note}]\n{page_text}")
-                    continue
-            context_parts.append(page_text)
+                    age_header = f"[{slug} — {age_note}]\n"
+
+            # Follow sources: links → read raw knowledge files for full detail
+            src_files = self._extract_sources(wiki_text)
+            source_texts: list[str] = []
+            for src_file in src_files:
+                src_path = self._knowledge_dir / src_file
+                if src_path.exists():
+                    try:
+                        raw = src_path.read_text(encoding="utf-8", errors="replace")
+                        source_texts.append(f"[Source: {src_file}]\n{raw}")
+                    except Exception as exc:
+                        log.warning(f"could not read source {src_file}: {exc}")
+
+            if source_texts:
+                # Source files are the primary context; wiki index is the header
+                section = (
+                    age_header
+                    + f"[Wiki index: {slug}]\n{wiki_text}\n\n"
+                    + "\n\n".join(source_texts)
+                )
+            else:
+                # No source file available — fall back to wiki page alone
+                section = age_header + wiki_text
+
+            context_parts.append(section)
 
         if not context_parts:
             return "", False
@@ -473,8 +538,13 @@ class WikiEngine:
                 context = "\n\n---\n\n".join(context_parts)
 
         # Step 5: Assemble and generate
-        return self._generate(q, context, peer_ctx=peer_ctx, history=history,
-                              board_context=board_context), True
+        answer = self._generate(q, context, peer_ctx=peer_ctx, history=history,
+                                board_context=board_context)
+        # _generate returns "" on IDK or exception — treat as no match so the
+        # router falls through to suggest() rather than caching a dead response.
+        if not answer:
+            return "", False
+        return answer, True
 
     def _generate(
         self,
@@ -516,10 +586,24 @@ class WikiEngine:
                 prompt=prompt,
                 options=options,
             )
-            return response.response.strip()
+            text = response.response.strip()
         except Exception as e:
             log.error(f"LLM generation failed: {e}")
             return ""
+
+        # If the LLM refused to answer from context, return "" so the caller
+        # falls through to suggest() rather than caching a useless response.
+        if self._is_idk_response(text):
+            log.info("LLM returned IDK response — falling through to suggest()")
+            return ""
+        return text
+
+    def _is_idk_response(self, text: str) -> bool:
+        """Return True when the LLM response is a bare refusal."""
+        if not text or len(text) > 180:
+            return not text  # long responses are probably useful
+        lower = text.lower()
+        return any(p in lower for p in _IDK_PATTERNS)
 
     def suggest(self, query: str) -> str:
         """Return a soft suggestion when no wiki page matches well."""
@@ -567,6 +651,45 @@ class WikiEngine:
 
         threshold = 0.0
         return [slug for score, slug in ranked if score > threshold]
+
+    def _extract_sources(self, wiki_text: str) -> list[str]:
+        """Parse the sources: [...] list from a wiki page's YAML frontmatter."""
+        fm_match = re.match(r"^---\n(.*?)\n---", wiki_text, re.DOTALL)
+        if not fm_match:
+            return []
+        src_m = re.search(r"^sources:\s*\[(.+)\]", fm_match.group(1), re.MULTILINE)
+        if not src_m:
+            return []
+        return [
+            s.strip().strip("\"'")
+            for s in src_m.group(1).split(",")
+            if s.strip()
+        ]
+
+    def _content_search(self, query: str) -> list[str]:
+        """Last-resort fallback: score wiki page bodies by raw term frequency.
+
+        Used when BM25 index search and vector search both return nothing.
+        Returns pages ranked by how many query terms appear in the full body.
+        """
+        query_terms = _tokenize(query)
+        if not query_terms:
+            return []
+
+        scored: list[tuple[int, str]] = []
+        for page_path in self._wiki_dir.glob("*.md"):
+            if page_path.name in ("index.md", "log.md"):
+                continue
+            try:
+                body = page_path.read_text(encoding="utf-8", errors="replace").lower()
+                score = sum(body.count(term) for term in query_terms)
+                if score > 0:
+                    scored.append((score, page_path.stem))
+            except Exception:
+                continue
+
+        scored.sort(reverse=True)
+        return [slug for _, slug in scored]
 
     # --- Vector search ---
 

@@ -184,7 +184,9 @@ def run_daemon(cfg: dict, simulator: bool):
     msg_queue: queue.Queue = queue.Queue()
     mesh_iface = create_interface(cfg, simulator, msg_queue)
 
-    if not simulator:
+    if simulator:
+        mesh_iface.connect()
+    else:
         if not mesh_iface.connect():
             log.warning("radio not connected — entering reconnect loop")
             threading.Thread(
@@ -346,6 +348,23 @@ def main():
         action="store_true",
         help="Check wiki health and exit",
     )
+    parser.add_argument(
+        "--gui",
+        action="store_true",
+        help="Open the web-based configuration and management GUI",
+    )
+    parser.add_argument(
+        "--gui-port",
+        type=int,
+        default=5174,
+        metavar="PORT",
+        help="Port for the GUI server (default: 5174)",
+    )
+    parser.add_argument(
+        "--no-browser",
+        action="store_true",
+        help="Start GUI without opening a browser window",
+    )
     args = parser.parse_args()
 
     cfg = load_config(args.config)
@@ -357,6 +376,12 @@ def main():
 
     if args.lint_wiki:
         run_lint_wiki(cfg)
+
+    if args.gui:
+        from del_fi.gui import launch
+        launch(cfg, args.config or "config.yaml",
+               port=args.gui_port, open_browser=not args.no_browser)
+        return
 
     run_daemon(cfg, simulator=args.simulator)
 
