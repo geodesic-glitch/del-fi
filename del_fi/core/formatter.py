@@ -135,12 +135,15 @@ def format_response(
     """
     text = clean_text(text)
 
+    if not text:
+        return "(no response)", ["(no response)"], False
+
     if provenance:
-        tag = f" [via {provenance}]"
+        tag = f"[via {provenance}] "
         tag_bytes = byte_len(tag)
         budget = max_bytes - tag_bytes
         if budget > 20:
-            text = truncate_at_sentence(text, budget) + tag
+            text = tag + truncate_at_sentence(text, budget)
         else:
             text = truncate_at_sentence(text, max_bytes)
 

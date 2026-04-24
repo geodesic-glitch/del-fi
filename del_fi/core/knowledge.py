@@ -769,6 +769,20 @@ class WikiEngine:
 
     # --- Lint ---
 
+    # Valid wiki page slug: lowercase letters, digits, hyphens only.
+    # Inline mentions like [[Apr 22, 2026]], [[Birdhouse Coffee]], [[cityelectric.gov/outage]]
+    # are intentionally excluded — they are narrative references, not page links.
+    _SLUG_PAT = re.compile(r"^[a-z0-9][a-z0-9-]*$")
+
+    @staticmethod
+    def _is_page_slug(ref: str) -> bool:
+        return bool(WikiEngine._SLUG_PAT.match(ref))
+
+    @staticmethod
+    def _normalise_ref(ref: str) -> str:
+        """Strip .md suffix so [[area-overview.md]] resolves like [[area-overview]]."""
+        return ref[:-3] if ref.endswith(".md") else ref
+
     def lint(self) -> list[str]:
         """Check wiki health. Returns list of issue strings."""
         issues: list[str] = []
@@ -781,8 +795,21 @@ class WikiEngine:
             return ["wiki/index.md missing — run --build-wiki"]
 
         index_content = index_path.read_text(encoding="utf-8", errors="replace")
-        indexed_slugs = set(
-            re.findall(r"\[\[([^\]]+)\]\]", index_content)
+
+        # Extract page slugs only from the first column of index table rows.
+        # Pattern: start-of-line | optional-spaces [[slug]]
+        #
+        # Using re.findall(r"\[\[...\]\]", full_text) is unreliable because a
+        # malformed unclosed [[ref in a summary column causes [^\]]+ to greedily
+        # swallow newlines and consume the [[slug]] on the following row.
+        # Anchoring to "^ | [[slug]]" makes the extraction independent of what
+        # appears in later columns.
+        indexed_slugs: set[str] = set(
+            re.findall(
+                r"^\|\s*\[\[([a-z0-9][a-z0-9-]*)\]\]",
+                index_content,
+                re.MULTILINE,
+            )
         )
 
         pages = {
@@ -819,14 +846,18 @@ class WikiEngine:
                 except ValueError:
                     pass
 
-        # Missing cross-refs: [[ref]] in a page that doesn't exist
+        # Missing cross-refs: [[slug]] in a page body that looks like a page link
+        # but has no corresponding wiki file.  Skip inline mentions (dates, proper
+        # nouns, URLs) — only check refs that are valid kebab-case page slugs.
         for slug in sorted(pages):
             page_path = self._wiki_dir / f"{slug}.md"
             text = page_path.read_text(encoding="utf-8", errors="replace")
             refs = set(re.findall(r"\[\[([^\]]+)\]\]", text))
             for ref in sorted(refs):
-                ref_path = self._wiki_dir / f"{ref}.md"
-                if not ref_path.exists():
+                norm = self._normalise_ref(ref)
+                if not self._is_page_slug(norm):
+                    continue   # inline mention — not a page link
+                if norm not in pages:
                     issues.append(f"missing cross-ref: [[{ref}]] in {slug}.md")
 
         today = date.today().isoformat()

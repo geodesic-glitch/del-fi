@@ -130,6 +130,7 @@ class ConversationMemory:
                 for sender, e in self._store.items()
             }
             tmp = self._memory_file + ".tmp"
+            os.makedirs(os.path.dirname(tmp), exist_ok=True)
             with open(tmp, "w") as f:
                 json.dump(data, f)
             os.replace(tmp, self._memory_file)

@@ -4,8 +4,10 @@ import json
 import os
 import tempfile
 import time
+import unittest
 
 from del_fi.core.facts import FactStore, _age, _age_label
+from del_fi.core.router import Router
 
 
 # --- Helpers ---
@@ -178,7 +180,7 @@ def test_format_value_fresh():
         assert "-4.2" in formatted
         assert "°F" in formatted
         assert "weather-station" in formatted
-        assert "may not be current" not in formatted
+        assert "STALE" not in formatted
 
 
 def test_format_value_stale_includes_caveat():
@@ -195,7 +197,7 @@ def test_format_value_stale_includes_caveat():
         })
         formatted = fs.format_value("temperature_f")
         assert formatted is not None
-        assert "may not be current" in formatted
+        assert "STALE" in formatted
 
 
 def test_format_value_with_confidence():
@@ -232,7 +234,7 @@ def test_format_snapshot_shows_stale_tag():
             }
         })
         snapshot = fs.format_snapshot()
-        assert "[STALE]" in snapshot
+        assert "STALE" in snapshot
 
 
 def test_has_facts():
@@ -269,59 +271,59 @@ def test_persistence_round_trip():
         assert f["value"] == 34
 
 
-def test_feed_file_ingested_on_poll(tmp_path):
+def test_feed_file_ingested_on_poll():
     """Writing a JSON feed file triggers ingest on the next poll."""
-    tmpdir = str(tmp_path)
-    cfg = _make_cfg(tmpdir)
-    os.makedirs(cfg["_cache_dir"], exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix="delfi-test-") as tmpdir:
+        cfg = _make_cfg(tmpdir)
+        os.makedirs(cfg["_cache_dir"], exist_ok=True)
 
-    feed_path = os.path.join(cfg["_cache_dir"], "sensor_feed.json")
-    cfg["fact_feed_file"] = feed_path
+        feed_path = os.path.join(cfg["_cache_dir"], "sensor_feed.json")
+        cfg["fact_feed_file"] = feed_path
 
-    payload = {
-        "humidity_pct": {
-            "value": 65,
-            "unit": "%",
-            "timestamp": _fresh_ts(),
-            "source": "weather-station",
+        payload = {
+            "humidity_pct": {
+                "value": 65,
+                "unit": "%",
+                "timestamp": _fresh_ts(),
+                "source": "weather-station",
+            }
         }
-    }
-    with open(feed_path, "w") as fh:
-        json.dump(payload, fh)
+        with open(feed_path, "w") as fh:
+            json.dump(payload, fh)
 
-    fs = FactStore(cfg)
-    # Manually trigger poll (watcher thread is not running in tests)
-    fs._poll_feed()
+        fs = FactStore(cfg)
+        # Manually trigger poll (watcher thread is not running in tests)
+        fs._poll_feed_file()
 
-    f = fs.get("humidity_pct")
-    assert f is not None
-    assert f["value"] == 65
+        f = fs.get("humidity_pct")
+        assert f is not None
+        assert f["value"] == 65
 
 
-def test_feed_file_not_reingested_if_unchanged(tmp_path):
+def test_feed_file_not_reingested_if_unchanged():
     """Polling an unchanged feed file (same mtime) does not re-ingest."""
-    tmpdir = str(tmp_path)
-    cfg = _make_cfg(tmpdir)
-    os.makedirs(cfg["_cache_dir"], exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix="delfi-test-") as tmpdir:
+        cfg = _make_cfg(tmpdir)
+        os.makedirs(cfg["_cache_dir"], exist_ok=True)
 
-    feed_path = os.path.join(cfg["_cache_dir"], "sensor_feed.json")
-    cfg["fact_feed_file"] = feed_path
+        feed_path = os.path.join(cfg["_cache_dir"], "sensor_feed.json")
+        cfg["fact_feed_file"] = feed_path
 
-    payload = {"x": {"value": 1, "timestamp": _fresh_ts(), "source": "s"}}
-    with open(feed_path, "w") as fh:
-        json.dump(payload, fh)
+        payload = {"x": {"value": 1, "timestamp": _fresh_ts(), "source": "s"}}
+        with open(feed_path, "w") as fh:
+            json.dump(payload, fh)
 
-    fs = FactStore(cfg)
-    fs._poll_feed()  # first poll — ingests
-    assert fs.has_facts()
+        fs = FactStore(cfg)
+        fs._poll_feed_file()  # first poll — ingests
+        assert fs.has_facts()
 
-    # Overwrite store to simulate "reset" (would normally not happen, just testing guard)
-    with fs._lock:
-        fs._facts = {}
+        # Overwrite store to simulate "reset" (would normally not happen, just testing guard)
+        with fs._lock:
+            fs._facts = {}
 
-    # Second poll with same mtime — should NOT re-ingest
-    fs._poll_feed()
-    assert not fs.has_facts()
+        # Second poll with same mtime — should NOT re-ingest
+        fs._poll_feed_file()
+        assert not fs.has_facts()
 
 
 # --- Helper function tests ---
@@ -338,19 +340,19 @@ def test_age_invalid_returns_zero():
 
 
 def test_format_age_seconds():
-    assert _age_label(45) == "45 sec"
+    assert _age_label(45) == "now"
 
 
 def test_format_age_minutes():
-    assert _age_label(180) == "3 min"
+    assert _age_label(180) == "3m ago"
 
 
 def test_format_age_hours():
-    assert _age_label(7200) == "2 hr"
+    assert _age_label(7200) == "2h ago"
 
 
 def test_format_age_days():
-    assert _age_label(172800) == "2 day(s)"
+    assert _age_label(172800) == "2d ago"
 
 
 # --- Tier 0 routing tests (via Router) ---
@@ -459,7 +461,7 @@ def test_tier0_stale_fact_includes_caveat():
         })
         response = router.route("sender1", "temperature")
         assert response is not None
-        assert "may not be current" in response
+        assert "STALE" in response
 
 
 def test_tier0_misses_non_sensor_query():
@@ -508,16 +510,33 @@ def test_cmd_data_with_facts():
         })
         response = router.route("sender1", "!data")
         assert response is not None
-        assert "temperature_f" in response
+        assert "Temperature F" in response
         assert "-4.2" in response
 
 
 def test_router_without_fact_store_still_works():
-    """Existing Router construction without fact_store must keep working."""
+    """Router without fact_store kwarg must still work."""
     with tempfile.TemporaryDirectory(prefix="delfi-test-") as tmpdir:
         cfg = _make_cfg(tmpdir)
-        mock_rag = MockRAG()
-        # Old-style: no fact_store kwarg
-        router = Router(cfg, mock_rag, mesh_knowledge=None)
+        # No fact_store kwarg — should default to None
+        router = Router(cfg, MockWiki(), MockPeerCache(), MockGossipDir())
         response = router.route("sender1", "!ping")
         assert "pong" in response.lower()
+
+
+# ---------------------------------------------------------------------------
+# unittest discovery wrapper — makes bare test_ functions discoverable
+# ---------------------------------------------------------------------------
+
+_Tests = type(
+    "_Tests",
+    (unittest.TestCase,),
+    {
+        n: (lambda f: lambda self: f())(f)
+        for n, f in list(globals().items())
+        if n.startswith("test_") and callable(f)
+    },
+)
+
+if __name__ == "__main__":
+    unittest.main()

@@ -4,6 +4,9 @@ Covers: markdown stripping, whitespace collapsing, sentence boundary
 detection, byte counting, chunking, [!more] placement, provenance tags.
 """
 
+import sys
+import unittest
+
 from del_fi.core.formatter import (
     byte_len,
     chunk_text,
@@ -233,26 +236,19 @@ def test_format_whitespace_only():
     assert first  # fallback message
 
 
-# --- Run tests ---
+# ---------------------------------------------------------------------------
+# unittest discovery wrapper — makes bare test_ functions discoverable
+# ---------------------------------------------------------------------------
+
+_Tests = type(
+    "_Tests",
+    (unittest.TestCase,),
+    {
+        n: (lambda f: lambda self: f())(f)
+        for n, f in list(globals().items())
+        if n.startswith("test_") and callable(f)
+    },
+)
 
 if __name__ == "__main__":
-    import inspect
-
-    passed = 0
-    failed = 0
-
-    for name, func in sorted(inspect.getmembers(sys.modules[__name__], inspect.isfunction)):
-        if name.startswith("test_"):
-            try:
-                func()
-                passed += 1
-                print(f"  ✓ {name}")
-            except AssertionError as e:
-                failed += 1
-                print(f"  ✗ {name}: {e}")
-            except Exception as e:
-                failed += 1
-                print(f"  ✗ {name}: {type(e).__name__}: {e}")
-
-    print(f"\n{passed} passed, {failed} failed")
-    sys.exit(1 if failed else 0)
+    unittest.main()

@@ -3,6 +3,7 @@
 import os
 import tempfile
 import time
+import unittest
 
 from del_fi.core.memory import ConversationMemory
 
@@ -194,3 +195,21 @@ def test_hard_cap():
     mem = ConversationMemory(cfg)
     # Should be clamped to 50
     assert mem.max_turns == 50
+
+
+# ---------------------------------------------------------------------------
+# unittest discovery wrapper — makes bare test_ functions discoverable
+# ---------------------------------------------------------------------------
+
+_Tests = type(
+    "_Tests",
+    (unittest.TestCase,),
+    {
+        n: (lambda f: lambda self: f())(f)
+        for n, f in list(globals().items())
+        if n.startswith("test_") and callable(f)
+    },
+)
+
+if __name__ == "__main__":
+    unittest.main()

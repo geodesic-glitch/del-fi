@@ -128,6 +128,7 @@ class Board:
     @property
     def post_count(self) -> int:
         with self._lock:
+            self._expire()
             return len(self._posts)
 
     def format_for_context(self, query: str = "") -> str:
