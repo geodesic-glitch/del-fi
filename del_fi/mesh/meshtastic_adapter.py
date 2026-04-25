@@ -5,6 +5,7 @@ Subscribes to incoming text messages and enqueues them for the router.
 """
 
 import logging
+import collections
 import queue
 import threading
 import time
@@ -24,8 +25,7 @@ class MeshtasticAdapter(MeshAdapter):
         super().__init__(cfg, msg_queue)
         self.interface = None
         self.my_node_id: str | None = None
-        self._seen_ids: set[int] = set()
-        self._seen_max = 1000
+        self._seen_ids: collections.deque = collections.deque(maxlen=500)
         self._rate_limits: dict[str, float] = {}
         self._lock = threading.Lock()
         self._connected = False
@@ -49,7 +49,8 @@ class MeshtasticAdapter(MeshAdapter):
                 self.interface = BLEInterface(address=port)
 
             node_info = self.interface.getMyNodeInfo()
-            self.my_node_id = node_info.get("user", {}).get("id", None)
+            if node_info is not None:
+                self.my_node_id = node_info.get("user", {}).get("id", None)
 
             from pubsub import pub
             pub.subscribe(self._on_receive, "meshtastic.receive.text")
@@ -80,9 +81,7 @@ class MeshtasticAdapter(MeshAdapter):
             with self._lock:
                 if msg_id in self._seen_ids:
                     return
-                self._seen_ids.add(msg_id)
-                if len(self._seen_ids) > self._seen_max:
-                    self._seen_ids = set(list(self._seen_ids)[-500:])
+                self._seen_ids.append(msg_id)
 
             is_broadcast = to in (0xFFFFFFFF, 4294967295)
             if is_broadcast:
@@ -102,8 +101,8 @@ class MeshtasticAdapter(MeshAdapter):
             log.info(f'← query from {sender}: "{text[:80]}"')
             self.msg_queue.put((sender, text.strip()))
 
-        except Exception as e:
-            log.error(f"error handling incoming message: {e}")
+        except Exception:
+            log.exception("error handling incoming message")
 
     def send_dm(self, dest_id: str, text: str) -> bool:
         """Send a direct message to a node. Chunks if necessary."""
@@ -131,8 +130,8 @@ class MeshtasticAdapter(MeshAdapter):
             self.interface.sendText(text, destinationId=dest_id)
             log.info(f"  ✓ sent {len(text.encode('utf-8'))} bytes → {dest_id}")
             return True
-        except Exception as e:
-            log.error(f"send failed to {dest_id}: {e}")
+        except Exception:
+            log.exception(f"send failed to {dest_id}")
             return False
 
     def reconnect_loop(self):
@@ -149,6 +148,11 @@ class MeshtasticAdapter(MeshAdapter):
 
     def close(self):
         self._should_run = False
+        try:
+            from pubsub import pub
+            pub.unsubscribe(self._on_receive, "meshtastic.receive.text")
+        except Exception:
+            pass
         if self.interface:
             try:
                 self.interface.close()

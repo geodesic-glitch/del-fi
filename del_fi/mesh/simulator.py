@@ -90,7 +90,7 @@ class SimulatorAdapter(MeshAdapter):
 
     @property
     def connected(self) -> bool:
-        return True
+        return self._should_run
 
     def close(self):
         self._should_run = False

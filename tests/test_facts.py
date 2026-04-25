@@ -335,8 +335,10 @@ def test_age_fresh():
     assert 100 < age < 200
 
 
-def test_age_invalid_returns_zero():
-    assert _age("not-a-date") == 0.0
+def test_age_invalid_returns_inf():
+    # Bad timestamps are treated as infinitely stale (not fresh)
+    import math
+    assert math.isinf(_age("not-a-date"))
 
 
 def test_format_age_seconds():

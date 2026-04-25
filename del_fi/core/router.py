@@ -105,6 +105,8 @@ class Router:
         self._cache_file = os.path.join(cfg["_cache_dir"], "response_cache.json")
         self._cache_dirty = False
 
+        self._query_queue = None  # set by main.py after query_queue is created
+
         self._load_seen_senders()
         if cfg.get("persistent_cache", True):
             self._load_disk_cache()
@@ -303,6 +305,10 @@ class Router:
             if self.cfg.get("persistent_cache", True):
                 self._save_disk_cache()
             log.info(f"cache evicted for retry: {key[:40]}")
+        if self._query_queue is not None:
+            self._query_queue.put((sender_id, last))
+            return "Retrying..."
+        # Fallback when called outside main daemon (tests, GUI)
         return self._handle_query(sender_id, last)
 
     def _cmd_forget(self, sender_id: str, arg: str) -> str:
@@ -502,7 +508,7 @@ class Router:
             with open(self._cache_file, "w") as f:
                 json.dump(data, f)
         except Exception:
-            pass
+            log.exception("disk cache save failed")
 
     def _mark_seen(self, sender_id: str):
         self._seen_senders.add(sender_id)

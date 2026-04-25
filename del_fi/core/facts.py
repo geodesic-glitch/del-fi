@@ -135,12 +135,20 @@ class FactStore:
 
         if f["is_stale"]:
             ts_str = _iso_short(f["timestamp"])
-            conf_str = f", {int(conf * 100)}% conf" if conf is not None else ""
+            conf_str = (
+                f", {int(conf * 100)}% conf"
+                if isinstance(conf, (int, float))
+                else ""
+            )
             return (
                 f"{label}: {value}{unit} ({source}, as of {ts_str} — STALE{conf_str})"
             )
 
-        conf_str = f", {int(conf * 100)}% conf" if conf is not None else ""
+        conf_str = (
+            f", {int(conf * 100)}% conf"
+            if isinstance(conf, (int, float))
+            else ""
+        )
         return f"{label}: {value}{unit} ({source}, {age_str}{conf_str})"
 
     def format_snapshot(self) -> str:
@@ -262,7 +270,8 @@ def _age(timestamp: str) -> float:
             dt = dt.replace(tzinfo=timezone.utc)
         return (datetime.now(timezone.utc) - dt).total_seconds()
     except Exception:
-        return 0.0
+        log.warning(f"could not parse fact timestamp: {timestamp!r} — treating as stale")
+        return float("inf")
 
 
 def _age_label(age_seconds: float) -> str:

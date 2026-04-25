@@ -108,6 +108,10 @@ def chunk_text(text: str, max_bytes: int) -> list[str]:
                 .decode("utf-8", errors="ignore")
                 .strip()
             )
+            if not forced:
+                # Content is unencodable within budget (e.g. single emoji > max_bytes).
+                # Discard to prevent infinite loop.
+                break
             chunks.append(forced)
             remaining = remaining[len(forced):].strip()
             continue

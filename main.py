@@ -230,6 +230,7 @@ def run_daemon(cfg: dict, simulator: bool):
 
     # ─── Query worker ──────────────────────────────────────────────────────
     query_queue: queue.Queue = queue.Queue()
+    router.query_queue = query_queue  # enables !retry re-queue to worker thread
     worker_busy = threading.Event()
     pending_senders: set[str] = set()
     pending_lock = threading.Lock()

@@ -87,6 +87,8 @@ class PeerCache:
         Matching uses Jaccard similarity on word tokens; returns the
         highest-scoring result above JACCARD_THRESHOLD.
         """
+        if self._db is None:
+            return None
         query_tokens = _tokenize(query)
         if not query_tokens:
             return None
@@ -125,6 +127,8 @@ class PeerCache:
         self, query: str, answer: str, peer_id: str, peer_name: str
     ):
         """Cache an answer from a peer node. Only accepts trusted peers."""
+        if self._db is None:
+            return
         if not peer_id.upper() in self._trusted and not peer_name.upper() in self._trusted:
             log.debug(f"ignoring answer from untrusted peer {peer_name!r}")
             return
@@ -143,6 +147,8 @@ class PeerCache:
 
     def prune(self):
         """Remove expired entries and enforce max_cache_entries."""
+        if self._db is None:
+            return
         now = time.time()
         with self._lock:
             conn = self._conn()
@@ -163,6 +169,8 @@ class PeerCache:
 
     @property
     def entry_count(self) -> int:
+        if self._db is None:
+            return 0
         with self._lock:
             conn = self._conn()
             return conn.execute("SELECT COUNT(*) FROM peer_cache").fetchone()[0]
@@ -175,14 +183,14 @@ class PeerCache:
             conn.execute("PRAGMA journal_mode=WAL")
             conn.executescript(self.CREATE_DDL)
             conn.commit()
-            self._db: sqlite3.Connection = conn
+            self._db: sqlite3.Connection | None = conn
             log.info(f"peer cache ready at {self._db_path}")
         except Exception as e:
-            log.error(f"could not init peer cache DB: {e}")
-            raise
+            log.error(f"could not init peer cache DB: {e} — peer cache disabled")
+            self._db = None
 
     def _conn(self) -> sqlite3.Connection:
-        return self._db
+        return self._db  # type: ignore[return-value]  # callers guard against None
 
 
 # ─────────────────────────── GossipDirectory ──────────────────────────────

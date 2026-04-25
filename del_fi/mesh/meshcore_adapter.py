@@ -95,11 +95,19 @@ class MeshCoreAdapter(MeshAdapter):
             return False
 
     def reconnect_loop(self):
+        # MeshCore is a stub — connect() always returns False.
+        # Log once and back off to avoid log spam until the library is implemented.
+        logged_stub_warning = False
         while self._should_run:
             if not self._connected:
-                log.info("attempting MeshCore reconnect...")
+                if not logged_stub_warning:
+                    log.warning(
+                        "MeshCore adapter is a stub — "
+                        "reconnect_loop will not establish a real connection"
+                    )
+                    logged_stub_warning = True
                 self.connect()
-            time.sleep(10)
+            time.sleep(60)  # long backoff: stub will never succeed
 
     @property
     def connected(self) -> bool:

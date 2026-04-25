@@ -23,6 +23,10 @@ DEFAULTS: dict = {
     "wiki_builder_model": None,          # falls back to model if unset
     "wiki_rebuild_on_start": False,
     "wiki_stale_after_days": 30,
+    "wiki_watch_enabled": True,
+    "wiki_watch_interval_seconds": 60,
+    "wiki_patch_model": "",
+    "wiki_patch_threshold_pct": 40,
     "time_sensitive_files": ["weather-station.md", "trail-camera-log.md"],
     # --- Retrieval ---
     "max_response_bytes": 230,
@@ -233,13 +237,19 @@ def load_config(config_path: str | None = None) -> dict:
     # Mesh knowledge
     if "mesh_knowledge" in raw and raw["mesh_knowledge"]:
         mk = raw["mesh_knowledge"]
-        merged: dict = {}
-        for key, default_val in MESH_DEFAULTS.items():
-            if isinstance(default_val, dict) and key in mk and isinstance(mk[key], dict):
-                merged[key] = {**default_val, **mk[key]}
-            else:
-                merged[key] = mk.get(key, default_val)
-        cfg["mesh_knowledge"] = merged
+        if not isinstance(mk, dict):
+            log.warning(
+                f"mesh_knowledge must be a dict, got {type(mk).__name__!r} — ignoring"
+            )
+            cfg["mesh_knowledge"] = None
+        else:
+            merged: dict = {}
+            for key, default_val in MESH_DEFAULTS.items():
+                if isinstance(default_val, dict) and key in mk and isinstance(mk[key], dict):
+                    merged[key] = {**default_val, **mk[key]}
+                else:
+                    merged[key] = mk.get(key, default_val)
+            cfg["mesh_knowledge"] = merged
     else:
         cfg["mesh_knowledge"] = None
 
